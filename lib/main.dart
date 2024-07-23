@@ -39,16 +39,16 @@ class _MyAppState extends State<MyApp> {
       home: Scaffold(
           appBar : AppBar(
             backgroundColor: Colors.lightGreen,
-            title: Text(titles[selectedIndex] + "")
+            title: Text("${titles[selectedIndex]}")
           ),
 
-          floatingActionButton: FloatingActionButton(
-            child:const Icon(Icons.add),
-            onPressed: (){
+          // floatingActionButton: FloatingActionButton(
+          //   child:const Icon(Icons.add),
+          //   onPressed: (){
               
-              print("Among Us");
-            },
-          ),
+          //     print("Among Us");
+          //   },
+          // ),
 
           bottomNavigationBar: BottomNavigationBar(
             items: const [
@@ -86,9 +86,7 @@ class _MyAppState extends State<MyApp> {
           //     );
           // },
           // )
-          body: <Widget>[
-            Events(), Teams(), Favorited()
-          ][selectedIndex]
+          body: <Widget>[Events(), Teams(), Favorited()][selectedIndex]
          
            
       )

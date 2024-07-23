@@ -1,96 +1,18 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:async';
 import 'dart:io';
+import 'eventListing.dart';
 
-class EventListing {
-  final String name;
-  final String country;
-  final String city;
-  final String dateStart;
+class Events extends StatefulWidget {
+  const Events({super.key});
 
-  const EventListing({
-    required this.name,
-    required this.country,
-    required this.city,
-    required this.dateStart,
-  });
-
-  static fromJson(Map<String, dynamic> json){
-    List<EventListing> allEvents = [];
-    List eventList = json['events'];
-    
-    for (var i = 0; i < eventList.length; i++){
-      if(int.parse(eventList[i]['type']) < 12 || int.parse(eventList[i]['type']) > 16){
-        allEvents.add(EventListing(
-          name: eventList[i]['name'], 
-          country: eventList[i]['country'], 
-          city: eventList[i]['city'], 
-          dateStart: eventList[i]['dateStart'].substring(0, 10), 
-        ));
-      }   
-    }
-
-    mergeSortDate(allEvents);
-
-    for (var i = 0; i < allEvents.length; i++){
-      String name = allEvents[i].name;
-      String country = allEvents[i].country;
-      String city = allEvents[i].city;
-      String dateStart = allEvents[i].dateStart;
-
-      print("$i: $name, $country, $city, $dateStart");
-    }
-
-    return allEvents;
-  }
-
-  static int toJulianDate(String date){
-    return int.parse(date.substring(0,4) + date.substring(5, 7) + date.substring(8, 10));
-  }
-
-  static void mergeSortDate(List<EventListing> arr){
-      if (arr.length <= 1){
-        return;
-      }
-
-      int mid = (arr.length / 2).floor() ;
-      
-      List<EventListing> L = arr.sublist(0, mid);
-      List<EventListing> R = arr.sublist(mid, arr.length);
-    
-      mergeSortDate(L);
-      mergeSortDate(R);
-
-      int i = 0;
-      int j = 0;
-      int k = 0;
-
-      while(i < L.length && j < R.length){
-        if (toJulianDate(L[i].dateStart) < toJulianDate(R[j].dateStart)){
-          arr[k] = L[i];
-          i++;
-        }else{
-          arr[k] = R[j];
-          j++;
-        }
-        k++;
-      }
-
-      while(i < L.length){
-        arr[k] = L[i];
-        i++;
-        k++;
-      }
-
-      while(j < R.length){
-        arr[k] = R[j];
-        j++;
-        k++;
-      }
-  } 
+  @override
+  State<Events> createState() => _EventsState();
 }
+
 
 Future<List<EventListing>> fetchEvents() async {
   String user = "jwong123";
@@ -101,20 +23,39 @@ Future<List<EventListing>> fetchEvents() async {
   final response = await http.get(Uri.parse('https://ftc-api.firstinspires.org/v2.0/2023/events'), headers: {"Authorization": "Basic $encodedToken"});
 
   if(response.statusCode == 200){
+    print("API CALL SUCCESS");
     return EventListing.fromJson(json.decode(response.body) as Map<String,dynamic>);
   }else{
     throw Exception(response.statusCode);
   }
+}
 
+List<List<EventListing>> splitWeeks(String seasonStart, List<EventListing> dataList){
+  List<List<EventListing>> weeks = [];
+  int i = 0;
+  int j = 0;
+  int k = EventListing.getJulianDate(seasonStart);
+  print(k);
+
+  while(j < dataList.length){
+    if (EventListing.getJulianDate(dataList[j].dateStart) > k){
+      weeks.add([]);
+    }else{
+      while(j < dataList.length && EventListing.getJulianDate(dataList[j].dateStart) <= k){
+        j++;                  
+      }    
+      weeks.add(dataList.sublist(i, j));
+      print("${dataList.sublist(i, j).length}  $i  $j");
+      
+      i = j;
+    }
+    k += 7;
+
+  }
+  return weeks;
 }
 
 
-class Events extends StatefulWidget {
-  const Events({super.key});
-
-  @override
-  State<Events> createState() => _EventsState();
-}
 
 class _EventsState extends State<Events> {
   late Future<List<EventListing>> allEventListings;
@@ -134,27 +75,51 @@ class _EventsState extends State<Events> {
         builder: (context, data){
           if (data.hasData){
             List<EventListing> dataList = data.data!;
-            
+            EventListing.mergeSortDate(dataList);
+            List<List<EventListing>> weeks = splitWeeks("2023-09-09", dataList);
 
             return ListView.builder(
-              padding: const EdgeInsets.all(8),
-              itemCount: dataList.length,
+              physics: const BouncingScrollPhysics(),
+              itemCount: weeks.length,
               itemBuilder: (context, index){
-                final eventListing = dataList[index];
-                return ListTile(title: Text(eventListing.name));
+                final weekListings = weeks[index];
+
+                if(weekListings.isNotEmpty){
+                  ExpansionTile tile = ExpansionTile(
+                    title: Text("Week ${index+1}"),
+                    collapsedBackgroundColor: const Color.fromARGB(255, 197, 197, 197),
+                    backgroundColor:  const Color.fromARGB(255, 223, 223, 223),
+                    children:[],
+                  );
+                  int i = 0;
+                  while(i < weekListings.length){
+                    tile.children.add(ListTile(
+                      title: Text(weekListings[i].name),
+                      ));
+                    i++;
+                  }
+                  return Column(children: [tile, const Padding(padding: EdgeInsets.all(1))],);
+                }else{
+                  return const Padding(padding: EdgeInsets.all(0));
+                }
               },
             );
+
+            // return ListView.builder(
+            //   padding: const EdgeInsets.all(8),
+            //   itemCount: dataList.length,
+            //   itemBuilder: (context, index){
+            //     final eventListing = dataList[index];
+            //     return ListTile(title: Text(eventListing.name));
+            //   },
+            // );
+
           }else{
             return const Center(child: CircularProgressIndicator());
           }
         },
       ),
       
-      
-      // Container(
-      //   child: Text(allEvents[0].name),
-      //   alignment: Alignment.center,
-      // )
     );
   }
 }
