@@ -15,7 +15,6 @@ class Events extends StatefulWidget {
   State<Events> createState() => _EventsState();
 }
 
-
 Future<List<EventListing>> fetchEvents() async {
   String user = "jwong123";
   String token = "091C1981-05E0-48C6-A3FB-FA579BCFA261";
@@ -53,7 +52,6 @@ List<List<EventListing>> splitWeeks(String seasonStart, List<EventListing> dataL
   return weeks;
 }
 
-
 Text getDateRange(DateTime start, DateTime end, List<String> monthStrings){
   if(start.month == end.month && start.year == end.year){
     return Text("${monthStrings[start.month-1]} ${start.day} - ${end.day}, ${start.year}", style: const TextStyle(fontStyle: FontStyle.italic));
@@ -64,6 +62,28 @@ Text getDateRange(DateTime start, DateTime end, List<String> monthStrings){
   }
 }
 
+List<ListTile> generateListTiles(List<EventListing> weekListings){
+  List<ListTile> listings = [];
+  int i = 0;
+  while(i < weekListings.length){
+    listings.add(ListTile(
+      title: Text(weekListings[i].name, maxLines: 1, overflow: TextOverflow.ellipsis),
+      subtitle: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text("${weekListings[i].city}, ${weekListings[i].country}"),
+          Text(weekListings[i].dateStart)
+        ],
+      ),
+      shape: RoundedRectangleBorder(
+        side: const BorderSide(color: Colors.black,width: 1),
+        borderRadius: BorderRadius.circular(1),
+      )
+    ));
+    i++;
+  }
+  return listings;
+}
 
 
 class _EventsState extends State<Events> {
@@ -91,7 +111,7 @@ class _EventsState extends State<Events> {
               physics: const BouncingScrollPhysics(),
               itemCount: weeks.length,
               itemBuilder: (context, index){
-                final weekListings = weeks[index];
+                List<EventListing> weekListings = weeks[index];
                 int endDay = EventListing.getJulianDate("2023-09-09") + index*7;
                 int startDay = endDay - 6;
 
@@ -99,24 +119,17 @@ class _EventsState extends State<Events> {
                 DateTime start = DateTime.utc(0,0,startDay);
 
                 if(weekListings.isNotEmpty){
-                  ExpansionTile tile = ExpansionTile(
-                    title: Text("Week ${index+1}"),
-                    subtitle: getDateRange(start, end, monthStrings),
-                    collapsedBackgroundColor: const Color.fromARGB(255, 197, 197, 197),
-                    children:[],
+                  return Column(
+                    children: [
+                      ExpansionTile(
+                        title: Text("Week ${index+1}"),
+                        subtitle: getDateRange(start, end, monthStrings),
+                        collapsedBackgroundColor: const Color.fromARGB(255, 197, 197, 197),
+                        children:generateListTiles(weekListings),
+                      ), 
+                      const Padding(padding: EdgeInsets.all(1))
+                    ],
                   );
-                  int i = 0;
-                  while(i < weekListings.length){
-                    tile.children.add(ListTile(
-                      title: Text(weekListings[i].name),
-                      shape: RoundedRectangleBorder(
-                        side: const BorderSide(color: Colors.black,width: 1),
-                        borderRadius: BorderRadius.circular(1),
-                      )
-                    ));
-                    i++;
-                  }
-                  return Column(children: [tile, const Padding(padding: EdgeInsets.all(1))],);
                 }else{
                   return const Padding(padding: EdgeInsets.all(0));
                 }
