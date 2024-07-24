@@ -7,7 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:myapp/pages/events.dart';
 import 'package:myapp/pages/favorited.dart';
 import 'package:myapp/pages/teams.dart';
-
+import 'package:myapp/pages/eventListing.dart';
 
 
 void main(){
@@ -52,10 +52,7 @@ class _MyAppState extends State<MyApp> {
 
           bottomNavigationBar: BottomNavigationBar(
             items: const [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.calendar_month),
-                label: "Events",
-              ),
+              BottomNavigationBarItem(icon: Icon(Icons.calendar_month),label: "Events"),
               BottomNavigationBarItem(icon: Icon(Icons.group), label: "Teams"),
               BottomNavigationBarItem(icon: Icon(Icons.star), label: "Favorited"),
             ],

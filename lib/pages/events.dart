@@ -1,3 +1,4 @@
+// import 'dart:nativewrappers/_internal/vm/lib/internal_patch.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -5,6 +6,7 @@ import 'dart:convert';
 import 'dart:async';
 import 'dart:io';
 import 'eventListing.dart';
+import 'package:myapp/main.dart';
 
 class Events extends StatefulWidget {
   const Events({super.key});
@@ -35,8 +37,7 @@ List<List<EventListing>> splitWeeks(String seasonStart, List<EventListing> dataL
   int i = 0;
   int j = 0;
   int k = EventListing.getJulianDate(seasonStart);
-  print(k);
-
+  
   while(j < dataList.length){
     if (EventListing.getJulianDate(dataList[j].dateStart) > k){
       weeks.add([]);
@@ -45,20 +46,29 @@ List<List<EventListing>> splitWeeks(String seasonStart, List<EventListing> dataL
         j++;                  
       }    
       weeks.add(dataList.sublist(i, j));
-      print("${dataList.sublist(i, j).length}  $i  $j");
-      
       i = j;
     }
     k += 7;
-
   }
   return weeks;
+}
+
+
+Text getDateRange(DateTime start, DateTime end, List<String> monthStrings){
+  if(start.month == end.month && start.year == end.year){
+    return Text("${monthStrings[start.month-1]} ${start.day} - ${end.day}, ${start.year}", style: const TextStyle(fontStyle: FontStyle.italic));
+  }else if(start.month != end.month && start.year == end.year){
+    return Text("${monthStrings[start.month-1]} ${start.day} - ${monthStrings[end.month-1]} ${end.day}, ${start.year}", style: const TextStyle(fontStyle: FontStyle.italic));
+  }else{
+    return Text("${monthStrings[start.month-1]} ${start.day}, ${start.year} - ${monthStrings[end.month-1]} ${end.day}, ${end.year}", style: const TextStyle(fontStyle: FontStyle.italic));
+  }
 }
 
 
 
 class _EventsState extends State<Events> {
   late Future<List<EventListing>> allEventListings;
+  List<String> monthStrings = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
   @override
   void initState(){
@@ -69,7 +79,6 @@ class _EventsState extends State<Events> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       body: FutureBuilder<List<EventListing>>(
         future: allEventListings,
         builder: (context, data){
@@ -83,19 +92,28 @@ class _EventsState extends State<Events> {
               itemCount: weeks.length,
               itemBuilder: (context, index){
                 final weekListings = weeks[index];
+                int endDay = EventListing.getJulianDate("2023-09-09") + index*7;
+                int startDay = endDay - 6;
+
+                DateTime end = DateTime.utc(0,0,endDay);
+                DateTime start = DateTime.utc(0,0,startDay);
 
                 if(weekListings.isNotEmpty){
                   ExpansionTile tile = ExpansionTile(
                     title: Text("Week ${index+1}"),
+                    subtitle: getDateRange(start, end, monthStrings),
                     collapsedBackgroundColor: const Color.fromARGB(255, 197, 197, 197),
-                    backgroundColor:  const Color.fromARGB(255, 223, 223, 223),
                     children:[],
                   );
                   int i = 0;
                   while(i < weekListings.length){
                     tile.children.add(ListTile(
                       title: Text(weekListings[i].name),
-                      ));
+                      shape: RoundedRectangleBorder(
+                        side: const BorderSide(color: Colors.black,width: 1),
+                        borderRadius: BorderRadius.circular(1),
+                      )
+                    ));
                     i++;
                   }
                   return Column(children: [tile, const Padding(padding: EdgeInsets.all(1))],);
