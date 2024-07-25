@@ -9,15 +9,17 @@ import '../eventListing.dart';
 import '../main.dart';
 
 class Events extends StatefulWidget {
-  final Map<String, List<EventListing>> yearlyeventListings;
-
-  const Events({super.key, required this.yearlyeventListings});
+  const Events({super.key});
 
   @override
   State<Events> createState() => _EventsState();
 }
 
-Future<List<EventListing>> fetchEvents(String year) async {
+dynamic fetchEvents(String year) async {
+  if(MyApp.yearlyEventListings.containsKey(year)){
+    return MyApp.yearlyEventListings[year];
+  }
+
   String user = "jwong123";
   String token = "091C1981-05E0-48C6-A3FB-FA579BCFA261";
   String authorization = "$user:$token";
@@ -101,11 +103,7 @@ class _EventsState extends State<Events> {
 
   @override
   void initState(){
-    if (widget.yearlyeventListings.containsKey("2023")){
-      allEventListings = widget.yearlyeventListings["2023"];
-    }else{
-      allEventListings = fetchEvents("2023");
-    }
+    allEventListings = fetchEvents("2023");
     super.initState();
   }
 
@@ -149,7 +147,7 @@ class _EventsState extends State<Events> {
       );
     }else{
       return Scaffold(
-        body: FutureBuilder<List<EventListing>>(
+        body: FutureBuilder<dynamic>(
           future: allEventListings,
           builder: (context, data){
             if (data.hasData){

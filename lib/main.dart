@@ -76,7 +76,7 @@ class _MyAppState extends State<MyApp> {
           //     );
           // },
           // )
-          body: <Widget>[Events(yearlyeventListings: MyApp.yearlyEventListings,), Teams(), Favorited()][selectedIndex]
+          body: <Widget>[Events(), Teams(), Favorited()][selectedIndex]
          
            
       )

@@ -61,14 +61,25 @@ class EventListing {
       int k = 0;
     
       while(i < L.length && j < R.length){
-        if (getNumericValue(L[i].dateStart) < getNumericValue(R[j].dateStart)){
-          arr[k] = L[i];
-          i++;
+        if(getNumericValue(L[i].dateStart) == getNumericValue(R[j].dateStart)){
+          if (L[i].name.compareTo(R[j].name) > 0){
+            arr[k] = L[i];
+            i++;
+          }else{
+            arr[k] = R[j];
+            j++;
+          }
+          k++;
         }else{
-          arr[k] = R[j];
-          j++;
+          if (getNumericValue(L[i].dateStart) < getNumericValue(R[j].dateStart)){
+            arr[k] = L[i];
+            i++;
+          }else{
+            arr[k] = R[j];
+            j++;
+          }
+          k++;
         }
-        k++;
       }
       while(i < L.length){
         arr[k] = L[i];
