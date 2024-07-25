@@ -7,7 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:myapp/pages/events.dart';
 import 'package:myapp/pages/favorited.dart';
 import 'package:myapp/pages/teams.dart';
-import 'package:myapp/pages/eventListing.dart';
+import 'eventListing.dart';
 
 
 void main(){
@@ -16,6 +16,7 @@ void main(){
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
+  static Map<String, List<EventListing>> yearlyEventListings = {};
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -41,14 +42,6 @@ class _MyAppState extends State<MyApp> {
             backgroundColor: Colors.lightGreen,
             title: Text("${titles[selectedIndex]}")
           ),
-
-          // floatingActionButton: FloatingActionButton(
-          //   child:const Icon(Icons.add),
-          //   onPressed: (){
-              
-          //     print("Among Us");
-          //   },
-          // ),
 
           bottomNavigationBar: BottomNavigationBar(
             items: const [
@@ -83,7 +76,7 @@ class _MyAppState extends State<MyApp> {
           //     );
           // },
           // )
-          body: <Widget>[Events(), Teams(), Favorited()][selectedIndex]
+          body: <Widget>[Events(yearlyeventListings: MyApp.yearlyEventListings,), Teams(), Favorited()][selectedIndex]
          
            
       )

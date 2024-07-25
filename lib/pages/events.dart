@@ -5,31 +5,40 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:async';
 import 'dart:io';
-import 'eventListing.dart';
-import 'package:myapp/main.dart';
+import '../eventListing.dart';
+import '../main.dart';
 
 class Events extends StatefulWidget {
-  const Events({super.key});
+  final Map<String, List<EventListing>> yearlyeventListings;
+
+  const Events({super.key, required this.yearlyeventListings});
 
   @override
   State<Events> createState() => _EventsState();
 }
 
-Future<List<EventListing>> fetchEvents() async {
+Future<List<EventListing>> fetchEvents(String year) async {
   String user = "jwong123";
   String token = "091C1981-05E0-48C6-A3FB-FA579BCFA261";
   String authorization = "$user:$token";
   String encodedToken = base64.encode(utf8.encode(authorization));
 
-  final response = await http.get(Uri.parse('https://ftc-api.firstinspires.org/v2.0/2023/events'), headers: {"Authorization": "Basic $encodedToken"});
+  final response = await http.get(Uri.parse('https://ftc-api.firstinspires.org/v2.0/$year/events'), headers: {"Authorization": "Basic $encodedToken"});
 
   if(response.statusCode == 200){
     print("API CALL SUCCESS");
-    return EventListing.fromJson(json.decode(response.body) as Map<String,dynamic>);
+    List<EventListing> eventList = EventListing.fromJson(json.decode(response.body) as Map<String,dynamic>);
+    addKVPToYearlyListing(year, eventList);
+    return eventList;
   }else{
     throw Exception(response.statusCode);
   }
 }
+
+void addKVPToYearlyListing(String year, List<EventListing> eventList){
+  if(!MyApp.yearlyEventListings.containsKey(year)){
+      MyApp.yearlyEventListings[year] = eventList;
+  }} 
 
 List<List<EventListing>> splitWeeks(String seasonStart, List<EventListing> dataList){
   List<List<EventListing>> weeks = [];
@@ -78,7 +87,7 @@ List<ListTile> generateListTiles(List<EventListing> weekListings){
       shape: RoundedRectangleBorder(
         side: const BorderSide(color: Colors.black,width: 1),
         borderRadius: BorderRadius.circular(1),
-      )
+      ),
     ));
     i++;
   }
@@ -87,70 +96,111 @@ List<ListTile> generateListTiles(List<EventListing> weekListings){
 
 
 class _EventsState extends State<Events> {
-  late Future<List<EventListing>> allEventListings;
+  late dynamic allEventListings;
   List<String> monthStrings = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
   @override
   void initState(){
+    if (widget.yearlyeventListings.containsKey("2023")){
+      allEventListings = widget.yearlyeventListings["2023"];
+    }else{
+      allEventListings = fetchEvents("2023");
+    }
     super.initState();
-    allEventListings = fetchEvents();
+  }
+
+  void dispose(){
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: FutureBuilder<List<EventListing>>(
-        future: allEventListings,
-        builder: (context, data){
-          if (data.hasData){
-            List<EventListing> dataList = data.data!;
-            EventListing.mergeSortDate(dataList);
-            List<List<EventListing>> weeks = splitWeeks("2023-09-09", dataList);
+    if(allEventListings is List<EventListing>){
+      EventListing.mergeSortDate(allEventListings);
+      List<List<EventListing>> weeks = splitWeeks("2023-09-09", allEventListings);
 
-            return ListView.builder(
-              physics: const BouncingScrollPhysics(),
-              itemCount: weeks.length,
-              itemBuilder: (context, index){
-                List<EventListing> weekListings = weeks[index];
-                int endDay = EventListing.getJulianDate("2023-09-09") + index*7;
-                int startDay = endDay - 6;
+      return ListView.builder(
+        physics: const BouncingScrollPhysics(),
+        itemCount: weeks.length,
+        itemBuilder: (context, index){
+          List<EventListing> weekListings = weeks[index];
+          int endDay = EventListing.getJulianDate("2023-09-09") + index*7;
+          int startDay = endDay - 6;
 
-                DateTime end = DateTime.utc(0,0,endDay);
-                DateTime start = DateTime.utc(0,0,startDay);
+          DateTime end = DateTime.utc(0,0,endDay);
+          DateTime start = DateTime.utc(0,0,startDay);
 
-                if(weekListings.isNotEmpty){
-                  return Column(
-                    children: [
-                      ExpansionTile(
-                        title: Text("Week ${index+1}"),
-                        subtitle: getDateRange(start, end, monthStrings),
-                        collapsedBackgroundColor: const Color.fromARGB(255, 197, 197, 197),
-                        children:generateListTiles(weekListings),
-                      ), 
-                      const Padding(padding: EdgeInsets.all(1))
-                    ],
-                  );
-                }else{
-                  return const Padding(padding: EdgeInsets.all(0));
-                }
-              },
+          if(weekListings.isNotEmpty){
+            return Column(
+              children: [
+                ExpansionTile(
+                  title: Text("Week ${index+1}"),
+                  subtitle: getDateRange(start, end, monthStrings),
+                  collapsedBackgroundColor: const Color.fromARGB(255, 197, 197, 197),
+                  children:generateListTiles(weekListings),
+                ), 
+                const Padding(padding: EdgeInsets.all(1))
+              ],
             );
-
-            // return ListView.builder(
-            //   padding: const EdgeInsets.all(8),
-            //   itemCount: dataList.length,
-            //   itemBuilder: (context, index){
-            //     final eventListing = dataList[index];
-            //     return ListTile(title: Text(eventListing.name));
-            //   },
-            // );
-
           }else{
-            return const Center(child: CircularProgressIndicator());
+            return const Padding(padding: EdgeInsets.all(0));
           }
         },
-      ),
-      
-    );
+      );
+    }else{
+      return Scaffold(
+        body: FutureBuilder<List<EventListing>>(
+          future: allEventListings,
+          builder: (context, data){
+            if (data.hasData){
+              List<EventListing> dataList = data.data!;
+              EventListing.mergeSortDate(dataList);
+              List<List<EventListing>> weeks = splitWeeks("2023-09-09", dataList);
+
+              return ListView.builder(
+                physics: const BouncingScrollPhysics(),
+                itemCount: weeks.length,
+                itemBuilder: (context, index){
+                  List<EventListing> weekListings = weeks[index];
+                  int endDay = EventListing.getJulianDate("2023-09-09") + index*7;
+                  int startDay = endDay - 6;
+
+                  DateTime end = DateTime.utc(0,0,endDay);
+                  DateTime start = DateTime.utc(0,0,startDay);
+
+                  if(weekListings.isNotEmpty){
+                    return Column(
+                      children: [
+                        ExpansionTile(
+                          title: Text("Week ${index+1}"),
+                          subtitle: getDateRange(start, end, monthStrings),
+                          collapsedBackgroundColor: const Color.fromARGB(255, 197, 197, 197),
+                          children:generateListTiles(weekListings),
+                        ), 
+                        const Padding(padding: EdgeInsets.all(1))
+                      ],
+                    );
+                  }else{
+                    return const Padding(padding: EdgeInsets.all(0));
+                  }
+                },
+              );
+
+              // return ListView.builder(
+              //   padding: const EdgeInsets.all(8),
+              //   itemCount: dataList.length,
+              //   itemBuilder: (context, index){
+              //     final eventListing = dataList[index];
+              //     return ListTile(title: Text(eventListing.name));
+              //   },
+              // );
+
+            }else{
+              return const Center(child: CircularProgressIndicator());
+            }
+          },
+        ),
+      );
+    }
   }
 }
