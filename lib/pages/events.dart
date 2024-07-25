@@ -37,18 +37,11 @@ dynamic fetchEvents(String year) async {
   }
 }
 
-Future<String> fetchStartDate(String year) async{
-  String user = "jwong123";
-  String token = "091C1981-05E0-48C6-A3FB-FA579BCFA261";
-  String authorization = "$user:$token";
-  String encodedToken = base64.encode(utf8.encode(authorization));
-
-  final response = await http.get(Uri.parse('https://ftc-api.firstinspires.org/v2.0/$year'), headers: {"Authorization": "Basic $encodedToken"});
-
-  if(response.statusCode == 200){
-    return json.decode(response.body)['kickoff'].substring(0, 10);
+dynamic fetchStartDate(String year){
+  if(MyApp.yearlyStartDates.containsKey(year)){
+    return MyApp.yearlyStartDates[year];
   }else{
-    throw Exception(response.statusCode);
+    throw Exception("Yearly Start Dates does not contain $year");
   }
 }
 
@@ -116,13 +109,11 @@ class _EventsState extends State<Events> {
   late dynamic allEventListings;
   List<String> monthStrings = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
   String selectedYear = "2024";
-  late String seasonStart = "2024-09-07";
+  late String seasonStart;
 
   @override
   void initState(){
-    fetchStartDate(selectedYear).then((String result){
-      seasonStart = result;
-    });
+    seasonStart = fetchStartDate(selectedYear);
     allEventListings = fetchEvents(selectedYear);
     super.initState();
   }

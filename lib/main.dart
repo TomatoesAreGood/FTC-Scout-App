@@ -17,6 +17,15 @@ void main(){
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
   static Map<String, List<EventListing>> yearlyEventListings = {};
+  static Map<String, String> yearlyStartDates = {
+    "2019":"2019-09-07",
+    "2020":"2020-09-12",
+    "2021":"2021-09-18",
+    "2022":"2022-09-10",
+    "2023":"2023-09-09",
+    "2024":"2024-09-07"
+  };
+
 
   @override
   State<MyApp> createState() => _MyAppState();
