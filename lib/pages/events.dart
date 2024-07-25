@@ -37,6 +37,21 @@ dynamic fetchEvents(String year) async {
   }
 }
 
+Future<String> fetchStartDate(String year) async{
+  String user = "jwong123";
+  String token = "091C1981-05E0-48C6-A3FB-FA579BCFA261";
+  String authorization = "$user:$token";
+  String encodedToken = base64.encode(utf8.encode(authorization));
+
+  final response = await http.get(Uri.parse('https://ftc-api.firstinspires.org/v2.0/$year'), headers: {"Authorization": "Basic $encodedToken"});
+
+  if(response.statusCode == 200){
+    return json.decode(response.body)['kickoff'].substring(0, 10);
+  }else{
+    throw Exception(response.statusCode);
+  }
+}
+
 void addKVPToYearlyListing(String year, List<EventListing> eventList){
   if(!MyApp.yearlyEventListings.containsKey(year)){
       MyApp.yearlyEventListings[year] = eventList;
@@ -100,29 +115,30 @@ List<ListTile> generateListTiles(List<EventListing> weekListings){
 class _EventsState extends State<Events> {
   late dynamic allEventListings;
   List<String> monthStrings = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  String selectedYear = "2024";
+  late String seasonStart = "2024-09-07";
 
   @override
   void initState(){
-    allEventListings = fetchEvents("2023");
+    fetchStartDate(selectedYear).then((String result){
+      seasonStart = result;
+    });
+    allEventListings = fetchEvents(selectedYear);
     super.initState();
-  }
-
-  void dispose(){
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     if(allEventListings is List<EventListing>){
       EventListing.mergeSortDate(allEventListings);
-      List<List<EventListing>> weeks = splitWeeks("2023-09-09", allEventListings);
+      List<List<EventListing>> weeks = splitWeeks(seasonStart, allEventListings);
 
       return ListView.builder(
         physics: const BouncingScrollPhysics(),
         itemCount: weeks.length,
         itemBuilder: (context, index){
           List<EventListing> weekListings = weeks[index];
-          int endDay = EventListing.getJulianDate("2023-09-09") + index*7;
+          int endDay = EventListing.getJulianDate(seasonStart) + index*7;
           int startDay = endDay - 6;
 
           DateTime end = DateTime.utc(0,0,endDay);
@@ -153,14 +169,14 @@ class _EventsState extends State<Events> {
             if (data.hasData){
               List<EventListing> dataList = data.data!;
               EventListing.mergeSortDate(dataList);
-              List<List<EventListing>> weeks = splitWeeks("2023-09-09", dataList);
+              List<List<EventListing>> weeks = splitWeeks(seasonStart, dataList);
 
               return ListView.builder(
                 physics: const BouncingScrollPhysics(),
                 itemCount: weeks.length,
                 itemBuilder: (context, index){
                   List<EventListing> weekListings = weeks[index];
-                  int endDay = EventListing.getJulianDate("2023-09-09") + index*7;
+                  int endDay = EventListing.getJulianDate(seasonStart) + index*7;
                   int startDay = endDay - 6;
 
                   DateTime end = DateTime.utc(0,0,endDay);
@@ -183,16 +199,6 @@ class _EventsState extends State<Events> {
                   }
                 },
               );
-
-              // return ListView.builder(
-              //   padding: const EdgeInsets.all(8),
-              //   itemCount: dataList.length,
-              //   itemBuilder: (context, index){
-              //     final eventListing = dataList[index];
-              //     return ListTile(title: Text(eventListing.name));
-              //   },
-              // );
-
             }else{
               return const Center(child: CircularProgressIndicator());
             }
