@@ -15,27 +15,6 @@ class Events extends StatefulWidget {
   State<Events> createState() => _EventsState();
 }
 
-dynamic fetchEvents(String year) async {
-  if(MyApp.yearlyEventListings.containsKey(year)){
-    return MyApp.yearlyEventListings[year];
-  }
-
-  String user = "jwong123";
-  String token = "091C1981-05E0-48C6-A3FB-FA579BCFA261";
-  String authorization = "$user:$token";
-  String encodedToken = base64.encode(utf8.encode(authorization));
-
-  final response = await http.get(Uri.parse('https://ftc-api.firstinspires.org/v2.0/$year/events'), headers: {"Authorization": "Basic $encodedToken"});
-
-  if(response.statusCode == 200){
-    print("API CALL SUCCESS");
-    List<EventListing> eventList = EventListing.fromJson(json.decode(response.body) as Map<String,dynamic>);
-    addKVPToYearlyListing(year, eventList);
-    return eventList;
-  }else{
-    throw Exception(response.statusCode);
-  }
-}
 
 String fetchStartDate(String year){
   if(MyApp.yearlyStartDates.containsKey(year)){
@@ -83,7 +62,6 @@ Text getDateRange(DateTime start, DateTime end, List<String> monthStrings){
 }
 
 
-
 class _EventsState extends State<Events> {
   late dynamic allEventListings;
   List<String> monthStrings = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -91,24 +69,69 @@ class _EventsState extends State<Events> {
   late String seasonStart;
   List<EventListing> searchResults = [];
 
-  List<ListTile> generateListTiles(List<EventListing> weekListings){
-    List<ListTile> listings = [];
+dynamic fetchEvents(String year) async {
+  if(MyApp.yearlyEventListings.containsKey(year)){
+    seasonStart = fetchStartDate(selectedYear);
+    return MyApp.yearlyEventListings[year];
+  }
+
+  String user = "jwong123";
+  String token = "091C1981-05E0-48C6-A3FB-FA579BCFA261";
+  String authorization = "$user:$token";
+  String encodedToken = base64.encode(utf8.encode(authorization));
+
+  final response = await http.get(Uri.parse('https://ftc-api.firstinspires.org/v2.0/$year/events'), headers: {"Authorization": "Basic $encodedToken"});
+
+  if(response.statusCode == 200){
+    print("API CALL SUCCESS");
+    List<EventListing> eventList = EventListing.fromJson(json.decode(response.body) as Map<String,dynamic>);
+    addKVPToYearlyListing(year, eventList);
+    seasonStart = fetchStartDate(selectedYear);
+    return eventList;
+  }else{
+    throw Exception(response.statusCode);
+  }
+}
+
+List<Column> generateListTiles(List<EventListing> weekListings){
+    List<Column> listings = [];
     int i = 0;
     while(i < weekListings.length){
-      listings.add(ListTile(
-        title: Text(weekListings[i].name, maxLines: 1, overflow: TextOverflow.ellipsis),
-        subtitle: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text("${weekListings[i].city}, ${weekListings[i].country}"),
-            Text(weekListings[i].dateStart)
-          ],
-        ),
-        shape: RoundedRectangleBorder(
-          side: const BorderSide(color: Colors.black,width: 1),
-          borderRadius: BorderRadius.circular(1),
-        ),
-      ));
+      if(i == 0){
+        listings.add(
+          Column(
+            children: [
+              IntrinsicHeight(
+                child: Container(
+                  height: 1,
+                  color: Colors.black,
+                )
+              )
+            ],
+          )
+        );
+      }
+      listings.add(Column (children: [
+        ListTile(
+          title: Text(weekListings[i].name, maxLines: 1, overflow: TextOverflow.ellipsis),
+          subtitle: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("${weekListings[i].city}, ${weekListings[i].country}"),
+              Text(weekListings[i].dateStart)
+            ],
+          ),
+        ), 
+        IntrinsicHeight(
+          child: Container(
+            height: 1,
+            color: Colors.black,
+          )
+        )
+      ],
+      )
+      
+      );
       i++;
     }
     return listings;
@@ -146,9 +169,8 @@ class _EventsState extends State<Events> {
   }
 
   Scaffold generateScaffold(List<EventListing> eventListings){
-    print("GENERATE SCAFFOLD");
+    // print("GENERATE SCAFFOLD");
     EventListing.mergeSortDate(eventListings);
-    seasonStart = fetchStartDate(selectedYear);
     List<List<EventListing>> weeks = splitWeeks(seasonStart, eventListings);
     
     return Scaffold(
@@ -192,8 +214,10 @@ class _EventsState extends State<Events> {
                       ],
                       onChanged: (String? newValue){
                         setState((){
+                          print("Set State");
                           selectedYear = newValue!;
                         });
+                        allEventListings = fetchEvents(selectedYear);
                       }
                     )
                   ],
@@ -216,25 +240,26 @@ class _EventsState extends State<Events> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  void initState(){
     allEventListings = fetchEvents(selectedYear);
+    seasonStart = fetchStartDate(selectedYear);
+    super.initState();
+  }
 
+  @override
+  Widget build(BuildContext context){
     if(allEventListings is List<EventListing>){
       return generateScaffold(allEventListings);
-    }else{
-      return Scaffold(
-        body: FutureBuilder<dynamic>(
-          future: allEventListings,
-          builder: (context, data){
-            if (data.hasData){
-              List<EventListing> dataList = data.data!;
-              return generateScaffold(dataList);
-            }else{
-              return const Center(child: CircularProgressIndicator());
-            }
-          },
-        ),
-      );
     }
+    return FutureBuilder<dynamic>(
+        future: allEventListings,
+        builder: (context, data){
+          if (data.hasData){
+            List<EventListing> dataList = data.data!;
+            return generateScaffold(dataList);
+          }
+          return const Center(child: CircularProgressIndicator());
+        },
+    );
   }
 }
