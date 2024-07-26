@@ -101,34 +101,32 @@ List<Column> generateListTiles(List<EventListing> weekListings){
         listings.add(
           Column(
             children: [
-              IntrinsicHeight(
-                child: Container(
+                Container(
                   height: 1,
                   color: Colors.black,
                 )
-              )
-            ],
+            ]
           )
         );
       }
-      listings.add(Column (children: [
-        ListTile(
-          title: Text(weekListings[i].name, maxLines: 1, overflow: TextOverflow.ellipsis),
-          subtitle: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("${weekListings[i].city}, ${weekListings[i].country}"),
-              Text(weekListings[i].dateStart)
-            ],
-          ),
-        ), 
-        IntrinsicHeight(
-          child: Container(
+      listings.add(Column (
+        children: [
+          ListTile(
+            title: Text(weekListings[i].name, maxLines: 1, overflow: TextOverflow.ellipsis),
+            subtitle: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text("${weekListings[i].city}, ${weekListings[i].country}"),
+                Text(weekListings[i].dateStart)
+              ],
+            ),
+          ), 
+          Container(
             height: 1,
             color: Colors.black,
           )
-        )
-      ],
+        ],
+
       )
       
       );
@@ -242,7 +240,6 @@ List<Column> generateListTiles(List<EventListing> weekListings){
   @override
   void initState(){
     allEventListings = fetchEvents(selectedYear);
-    seasonStart = fetchStartDate(selectedYear);
     super.initState();
   }
 
