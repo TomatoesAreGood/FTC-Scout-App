@@ -8,7 +8,7 @@ class Favorited extends StatelessWidget{
     return Scaffold(
       
       body: Container(
-        child: Text("Favorited"),
+        child: Text("Favorited events and teams will show up here"),
         alignment: Alignment.center,
       )
     );

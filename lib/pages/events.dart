@@ -37,9 +37,10 @@ dynamic fetchEvents(String year) async {
   }
 }
 
-dynamic fetchStartDate(String year){
+String fetchStartDate(String year){
   if(MyApp.yearlyStartDates.containsKey(year)){
-    return MyApp.yearlyStartDates[year];
+    print("FETCH START DATE SUCCESS");
+    return MyApp.yearlyStartDates[year] as String;
   }else{
     throw Exception("Yearly Start Dates does not contain $year");
   }
@@ -81,28 +82,6 @@ Text getDateRange(DateTime start, DateTime end, List<String> monthStrings){
   }
 }
 
-List<ListTile> generateListTiles(List<EventListing> weekListings){
-  List<ListTile> listings = [];
-  int i = 0;
-  while(i < weekListings.length){
-    listings.add(ListTile(
-      title: Text(weekListings[i].name, maxLines: 1, overflow: TextOverflow.ellipsis),
-      subtitle: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text("${weekListings[i].city}, ${weekListings[i].country}"),
-          Text(weekListings[i].dateStart)
-        ],
-      ),
-      shape: RoundedRectangleBorder(
-        side: const BorderSide(color: Colors.black,width: 1),
-        borderRadius: BorderRadius.circular(1),
-      ),
-    ));
-    i++;
-  }
-  return listings;
-}
 
 
 class _EventsState extends State<Events> {
@@ -110,21 +89,33 @@ class _EventsState extends State<Events> {
   List<String> monthStrings = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
   String selectedYear = "2024";
   late String seasonStart;
+  List<EventListing> searchResults = [];
 
-  @override
-  void initState(){
-    seasonStart = fetchStartDate(selectedYear);
-    allEventListings = fetchEvents(selectedYear);
-    super.initState();
+  List<ListTile> generateListTiles(List<EventListing> weekListings){
+    List<ListTile> listings = [];
+    int i = 0;
+    while(i < weekListings.length){
+      listings.add(ListTile(
+        title: Text(weekListings[i].name, maxLines: 1, overflow: TextOverflow.ellipsis),
+        subtitle: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text("${weekListings[i].city}, ${weekListings[i].country}"),
+            Text(weekListings[i].dateStart)
+          ],
+        ),
+        shape: RoundedRectangleBorder(
+          side: const BorderSide(color: Colors.black,width: 1),
+          borderRadius: BorderRadius.circular(1),
+        ),
+      ));
+      i++;
+    }
+    return listings;
   }
 
-  @override
-  Widget build(BuildContext context) {
-    if(allEventListings is List<EventListing>){
-      EventListing.mergeSortDate(allEventListings);
-      List<List<EventListing>> weeks = splitWeeks(seasonStart, allEventListings);
-
-      return ListView.builder(
+  ListView generateListView(List<List<EventListing>> weeks){
+    return ListView.builder(
         physics: const BouncingScrollPhysics(),
         itemCount: weeks.length,
         itemBuilder: (context, index){
@@ -142,7 +133,7 @@ class _EventsState extends State<Events> {
                   title: Text("Week ${index+1}"),
                   subtitle: getDateRange(start, end, monthStrings),
                   collapsedBackgroundColor: const Color.fromARGB(255, 197, 197, 197),
-                  children:generateListTiles(weekListings),
+                  children: generateListTiles(weekListings),
                 ), 
                 const Padding(padding: EdgeInsets.all(1))
               ],
@@ -152,6 +143,84 @@ class _EventsState extends State<Events> {
           }
         },
       );
+  }
+
+  Scaffold generateScaffold(List<EventListing> eventListings){
+    print("GENERATE SCAFFOLD");
+    EventListing.mergeSortDate(eventListings);
+    seasonStart = fetchStartDate(selectedYear);
+    List<List<EventListing>> weeks = splitWeeks(seasonStart, eventListings);
+    
+    return Scaffold(
+        body: Column(
+          children: [
+            const SizedBox(
+              height: 20,
+            ),
+            Row(
+              children: [
+                Column(
+                  children: [
+                    const Text("Season"),
+                    DropdownButton<String>(
+                      value: selectedYear,
+                      items: const [
+                        DropdownMenuItem<String>(
+                          value: "2019",
+                          child: Text("2019")
+                        ),
+                        DropdownMenuItem<String>(
+                          value: "2020",
+                          child: Text("2020")
+                        ),
+                        DropdownMenuItem<String>(
+                          value: "2021",
+                          child: Text("2021")
+                        ), 
+                        DropdownMenuItem<String>(
+                          value: "2022",
+                          child: Text("2022")
+                        ), 
+                        DropdownMenuItem<String>(
+                          value: "2023",
+                          child: Text("2023")
+                        ),
+                        DropdownMenuItem<String>(
+                          value: "2024",
+                          child: Text("2024")
+                        ),
+                      ],
+                      onChanged: (String? newValue){
+                        setState((){
+                          selectedYear = newValue!;
+                        });
+                      }
+                    )
+                  ],
+                )
+              ],
+            ),
+            const TextField(
+              decoration: InputDecoration(
+                labelText: "Search",
+                suffixIcon: Icon(Icons.search)
+              ),
+            ),
+            const SizedBox(
+              height: 20
+            ),
+            Expanded(child: generateListView(weeks))
+          ]
+        )
+      );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    allEventListings = fetchEvents(selectedYear);
+
+    if(allEventListings is List<EventListing>){
+      return generateScaffold(allEventListings);
     }else{
       return Scaffold(
         body: FutureBuilder<dynamic>(
@@ -159,37 +228,7 @@ class _EventsState extends State<Events> {
           builder: (context, data){
             if (data.hasData){
               List<EventListing> dataList = data.data!;
-              EventListing.mergeSortDate(dataList);
-              List<List<EventListing>> weeks = splitWeeks(seasonStart, dataList);
-
-              return ListView.builder(
-                physics: const BouncingScrollPhysics(),
-                itemCount: weeks.length,
-                itemBuilder: (context, index){
-                  List<EventListing> weekListings = weeks[index];
-                  int endDay = EventListing.getJulianDate(seasonStart) + index*7;
-                  int startDay = endDay - 6;
-
-                  DateTime end = DateTime.utc(0,0,endDay);
-                  DateTime start = DateTime.utc(0,0,startDay);
-
-                  if(weekListings.isNotEmpty){
-                    return Column(
-                      children: [
-                        ExpansionTile(
-                          title: Text("Week ${index+1}"),
-                          subtitle: getDateRange(start, end, monthStrings),
-                          collapsedBackgroundColor: const Color.fromARGB(255, 197, 197, 197),
-                          children:generateListTiles(weekListings),
-                        ), 
-                        const Padding(padding: EdgeInsets.all(1))
-                      ],
-                    );
-                  }else{
-                    return const Padding(padding: EdgeInsets.all(0));
-                  }
-                },
-              );
+              return generateScaffold(dataList);
             }else{
               return const Center(child: CircularProgressIndicator());
             }
