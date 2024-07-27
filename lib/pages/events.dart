@@ -61,37 +61,11 @@ Text getDateRange(DateTime start, DateTime end, List<String> monthStrings){
   }
 }
 
-List<EventListing> filterEvents(List<EventListing> events, String countryFilter, int typeFilter){
-  if(countryFilter == "All" && typeFilter == -1){
-    return events;
-  }
-  bool isAllCountries = countryFilter == "All";
-  bool isAllTypes = typeFilter == -1;
-
-  List<EventListing> filteredList = [];
-
-  for (var i = 0; i < events.length; i++){
-    if(isAllCountries){
-      if(events[i].type == typeFilter){
-        filteredList.add(events[i]);
-      }
-    }else if(isAllTypes){
-      if(events[i].country == countryFilter){
-        filteredList.add(events[i]);
-      }
-    }else{
-      if(events[i].country == countryFilter && events[i].type == typeFilter){
-        filteredList.add(events[i]);
-      }
-    }
-  }
-
-  return filteredList;
-}
-
 
 class _EventsState extends State<Events> {
   List<String> monthStrings = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  List<String> countries = ["All"];
+  List<String> years = ["2019", "2020", "2021", "2022", "2023", "2024"];
 
   String selectedYear = "2024";
   late String seasonStart;
@@ -99,6 +73,43 @@ class _EventsState extends State<Events> {
 
   int filterType = -1;
   String filterCountry = "All";
+
+List<EventListing> filterEvents(List<EventListing> events){
+  if(filterCountry == "All" && filterType == -1){
+    for (var i = 0; i < events.length; i++){
+      if(!countries.contains(events[i].country)){
+        countries.add(events[i].country);
+      }
+    }
+    countries.sort();
+    return events;
+  }
+  bool isAllCountries = filterCountry == "All";
+  bool isAllTypes = filterType == -1;
+
+  List<EventListing> filteredList = [];
+
+  for (var i = 0; i < events.length; i++){
+    if(!countries.contains(events[i].country)){
+      countries.add(events[i].country);
+    }
+    if(isAllCountries){
+      if(events[i].type == filterType){
+        filteredList.add(events[i]);
+      }
+    }else if(isAllTypes){
+      if(events[i].country == filterCountry){
+        filteredList.add(events[i]);
+      }
+    }else{
+      if(events[i].country == filterCountry && events[i].type == filterType){
+        filteredList.add(events[i]);
+      }
+    }
+  }
+  countries.sort();
+  return filteredList;
+}
 
 dynamic fetchEvents(String year) async {
   if(MyApp.yearlyEventListings.containsKey(year)){
@@ -215,32 +226,12 @@ List<Column> generateListTiles(List<EventListing> weekListings){
                     const Text("Season"),
                     DropdownButton<String>(
                       value: selectedYear,
-                      items: const [
-                        DropdownMenuItem<String>(
-                          value: "2019",
-                          child: Text("2019")
-                        ),
-                        DropdownMenuItem<String>(
-                          value: "2020",
-                          child: Text("2020")
-                        ),
-                        DropdownMenuItem<String>(
-                          value: "2021",
-                          child: Text("2021")
-                        ), 
-                        DropdownMenuItem<String>(
-                          value: "2022",
-                          child: Text("2022")
-                        ), 
-                        DropdownMenuItem<String>(
-                          value: "2023",
-                          child: Text("2023")
-                        ),
-                        DropdownMenuItem<String>(
-                          value: "2024",
-                          child: Text("2024")
-                        ),
-                      ],
+                      items: years.map((String year){
+                        return DropdownMenuItem(
+                          value: year,
+                          child: Text(year)
+                        );
+                      }).toList(),
                       onChanged: (String? newValue){
                         setState((){
                           print("Set State");
@@ -255,22 +246,19 @@ List<Column> generateListTiles(List<EventListing> weekListings){
                   children: [
                     const Text("Region"),
                     DropdownButton<String>(
-                      value: "All",
-                      items: const [
-                        DropdownMenuItem(
-                          value: "All",
-                          child: Text("All")
-                        ),
-                        DropdownMenuItem(
-                          value: "International",
-                          child: Text("International")
-                        ),
-                      ],
+                      value: filterCountry,
+                      items: countries.map((String item){
+                        return DropdownMenuItem(
+                          value: item,
+                          child: Text(item),
+                        );
+                      }).toList(),
                       onChanged: (String? newValue){
                         setState((){
                           filterCountry = newValue!;
                         });
                       },
+                    
                     )
                   ],
                 ),
@@ -318,7 +306,7 @@ List<Column> generateListTiles(List<EventListing> weekListings){
   @override
   Widget build(BuildContext context){
     if(allEventListings is List<EventListing>){
-      allEventListings = filterEvents(allEventListings, filterCountry, filterType);
+      allEventListings = filterEvents(allEventListings);
       return generateScaffold(allEventListings);
     }
     return FutureBuilder<dynamic>(
@@ -326,7 +314,7 @@ List<Column> generateListTiles(List<EventListing> weekListings){
         builder: (context, data){
           if (data.hasData){
             List<EventListing> dataList = data.data!;
-            dataList = filterEvents(dataList, filterCountry, filterType);
+            dataList = filterEvents(dataList);
             return generateScaffold(dataList);
           }
           return const Center(child: CircularProgressIndicator());
