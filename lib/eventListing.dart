@@ -5,13 +5,15 @@ class EventListing {
   final String city;
   final String dateStart;
   final String code;
+  final int type;
 
   const EventListing({
     required this.name,
     required this.country,
     required this.city,
     required this.dateStart,
-    required this.code
+    required this.code,
+    required this.type
   });
 
   static fromJson(Map<String, dynamic> json){
@@ -25,7 +27,8 @@ class EventListing {
           country: eventList[i]['country'], 
           city: eventList[i]['city'], 
           dateStart: eventList[i]['dateStart'].substring(0, 10), 
-          code: eventList[i]['code']
+          code: eventList[i]['code'],
+          type: int.parse(eventList[i]['type'])
         ));
       }   
     }

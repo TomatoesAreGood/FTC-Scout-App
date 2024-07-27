@@ -61,13 +61,44 @@ Text getDateRange(DateTime start, DateTime end, List<String> monthStrings){
   }
 }
 
+List<EventListing> filterEvents(List<EventListing> events, String countryFilter, int typeFilter){
+  if(countryFilter == "All" && typeFilter == -1){
+    return events;
+  }
+  bool isAllCountries = countryFilter == "All";
+  bool isAllTypes = typeFilter == -1;
+
+  List<EventListing> filteredList = [];
+
+  for (var i = 0; i < events.length; i++){
+    if(isAllCountries){
+      if(events[i].type == typeFilter){
+        filteredList.add(events[i]);
+      }
+    }else if(isAllTypes){
+      if(events[i].country == countryFilter){
+        filteredList.add(events[i]);
+      }
+    }else{
+      if(events[i].country == countryFilter && events[i].type == typeFilter){
+        filteredList.add(events[i]);
+      }
+    }
+  }
+
+  return filteredList;
+}
+
 
 class _EventsState extends State<Events> {
-  late dynamic allEventListings;
   List<String> monthStrings = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
   String selectedYear = "2024";
   late String seasonStart;
-  List<EventListing> searchResults = [];
+  late dynamic allEventListings;
+
+  int filterType = -1;
+  String filterCountry = "All";
 
 dynamic fetchEvents(String year) async {
   if(MyApp.yearlyEventListings.containsKey(year)){
@@ -75,6 +106,7 @@ dynamic fetchEvents(String year) async {
     return MyApp.yearlyEventListings[year];
   }
 
+  //TODO: migrate to env
   String user = "jwong123";
   String token = "091C1981-05E0-48C6-A3FB-FA579BCFA261";
   String authorization = "$user:$token";
@@ -126,9 +158,7 @@ List<Column> generateListTiles(List<EventListing> weekListings){
             color: Colors.black,
           )
         ],
-
-      )
-      
+      ) 
       );
       i++;
     }
@@ -178,6 +208,7 @@ List<Column> generateListTiles(List<EventListing> weekListings){
               height: 20,
             ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Column(
                   children: [
@@ -219,7 +250,47 @@ List<Column> generateListTiles(List<EventListing> weekListings){
                       }
                     )
                   ],
-                )
+                ),
+                Column(
+                  children: [
+                    const Text("Region"),
+                    DropdownButton<String>(
+                      value: "All",
+                      items: const [
+                        DropdownMenuItem(
+                          value: "All",
+                          child: Text("All")
+                        ),
+                        DropdownMenuItem(
+                          value: "International",
+                          child: Text("International")
+                        ),
+                      ],
+                      onChanged: (String? newValue){
+                        setState((){
+                          filterCountry = newValue!;
+                        });
+                      },
+                    )
+                  ],
+                ),
+                Column(
+                  children: [
+                    const Text("Type"),
+                    DropdownButton<int>(
+                      value: -1,
+                      items: const [
+                        DropdownMenuItem(
+                          value: -1,
+                          child: Text("All")
+                        )
+                      ],
+                      onChanged: (int? newValue){
+
+                      },
+                    )
+                  ],
+                ),
               ],
             ),
             const TextField(
@@ -237,6 +308,7 @@ List<Column> generateListTiles(List<EventListing> weekListings){
       );
   }
 
+
   @override
   void initState(){
     allEventListings = fetchEvents(selectedYear);
@@ -246,6 +318,7 @@ List<Column> generateListTiles(List<EventListing> weekListings){
   @override
   Widget build(BuildContext context){
     if(allEventListings is List<EventListing>){
+      allEventListings = filterEvents(allEventListings, filterCountry, filterType);
       return generateScaffold(allEventListings);
     }
     return FutureBuilder<dynamic>(
@@ -253,6 +326,7 @@ List<Column> generateListTiles(List<EventListing> weekListings){
         builder: (context, data){
           if (data.hasData){
             List<EventListing> dataList = data.data!;
+            dataList = filterEvents(dataList, filterCountry, filterType);
             return generateScaffold(dataList);
           }
           return const Center(child: CircularProgressIndicator());
