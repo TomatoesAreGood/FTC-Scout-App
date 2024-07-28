@@ -61,6 +61,16 @@ Text getDateRange(DateTime start, DateTime end, List<String> monthStrings){
   }
 }
 
+List<String> getCountries(List<EventListing> eventList){
+  List<String> countries = ["All"];
+  for (var i = 0; i < eventList.length; i++){
+    if(!countries.contains(eventList[i].country)){
+      countries.add(eventList[i].country);
+    }
+  }
+  return countries;
+}
+
 
 class _EventsState extends State<Events> {
   List<String> monthStrings = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -74,40 +84,36 @@ class _EventsState extends State<Events> {
   int filterType = -1;
   String filterCountry = "All";
 
-List<EventListing> filterEvents(List<EventListing> events){
-  if(filterCountry == "All" && filterType == -1){
-    for (var i = 0; i < events.length; i++){
-      if(!countries.contains(events[i].country)){
-        countries.add(events[i].country);
-      }
-    }
-    countries.sort();
-    return events;
-  }
+List<EventListing> filterEvents(List<EventListing> eventList){
   bool isAllCountries = filterCountry == "All";
   bool isAllTypes = filterType == -1;
 
+  if(!countries.contains(filterCountry)){
+    filterCountry = "All";
+    isAllCountries = true;
+  }
+
+  if(isAllCountries && isAllTypes){
+    return eventList;
+  }
+
   List<EventListing> filteredList = [];
 
-  for (var i = 0; i < events.length; i++){
-    if(!countries.contains(events[i].country)){
-      countries.add(events[i].country);
-    }
+  for (var i = 0; i < eventList.length; i++){
     if(isAllCountries){
-      if(events[i].type == filterType){
-        filteredList.add(events[i]);
+      if(eventList[i].type == filterType){
+        filteredList.add(eventList[i]);
       }
     }else if(isAllTypes){
-      if(events[i].country == filterCountry){
-        filteredList.add(events[i]);
+      if(eventList[i].country == filterCountry){
+        filteredList.add(eventList[i]);
       }
     }else{
-      if(events[i].country == filterCountry && events[i].type == filterType){
-        filteredList.add(events[i]);
+      if(eventList[i].country == filterCountry && eventList[i].type == filterType){
+        filteredList.add(eventList[i]);
       }
     }
   }
-  countries.sort();
   return filteredList;
 }
 
@@ -306,6 +312,8 @@ List<Column> generateListTiles(List<EventListing> weekListings){
   @override
   Widget build(BuildContext context){
     if(allEventListings is List<EventListing>){
+      countries = getCountries(allEventListings);
+      countries.sort();
       allEventListings = filterEvents(allEventListings);
       return generateScaffold(allEventListings);
     }
@@ -314,6 +322,8 @@ List<Column> generateListTiles(List<EventListing> weekListings){
         builder: (context, data){
           if (data.hasData){
             List<EventListing> dataList = data.data!;
+            countries = getCountries(dataList);
+            countries.sort();
             dataList = filterEvents(dataList);
             return generateScaffold(dataList);
           }
