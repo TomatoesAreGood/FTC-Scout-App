@@ -68,6 +68,7 @@ List<String> getCountries(List<EventListing> eventList){
       countries.add(eventList[i].country);
     }
   }
+  countries.sort();
   return countries;
 }
 
@@ -313,7 +314,6 @@ List<Column> generateListTiles(List<EventListing> weekListings){
   Widget build(BuildContext context){
     if(allEventListings is List<EventListing>){
       countries = getCountries(allEventListings);
-      countries.sort();
       allEventListings = filterEvents(allEventListings);
       return generateScaffold(allEventListings);
     }
@@ -323,7 +323,6 @@ List<Column> generateListTiles(List<EventListing> weekListings){
           if (data.hasData){
             List<EventListing> dataList = data.data!;
             countries = getCountries(dataList);
-            countries.sort();
             dataList = filterEvents(dataList);
             return generateScaffold(dataList);
           }
