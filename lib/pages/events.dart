@@ -82,106 +82,111 @@ class _EventsState extends State<Events> {
   late String seasonStart;
   late dynamic allEventListings;
 
-  int filterType = -1;
-  String filterCountry = "All";
+  int typeFilter = -1;
+  String countryFilter = "All";
 
-List<EventListing> filterEvents(List<EventListing> eventList){
-  bool isAllCountries = filterCountry == "All";
-  bool isAllTypes = filterType == -1;
+  List<EventListing> filterEvents(List<EventListing> eventList){
+    bool isAllCountries = countryFilter == "All";
+    bool isAllTypes = typeFilter == -1;
 
-  if(!countries.contains(filterCountry)){
-    filterCountry = "All";
-    isAllCountries = true;
-  }
+    if(!countries.contains(countryFilter)){
+      countryFilter = "All";
+      isAllCountries = true;
+    }
 
-  if(isAllCountries && isAllTypes){
-    return eventList;
-  }
+    if(isAllCountries && isAllTypes){
+      return eventList;
+    }
 
-  List<EventListing> filteredList = [];
+    List<EventListing> filteredList = [];
 
-  for (var i = 0; i < eventList.length; i++){
     if(isAllCountries){
-      if(eventList[i].type == filterType){
-        filteredList.add(eventList[i]);
+      for(var i = 0; i < eventList.length; i++){
+        if(eventList[i].type == typeFilter){
+          filteredList.add(eventList[i]);
+        }
       }
     }else if(isAllTypes){
-      if(eventList[i].country == filterCountry){
-        filteredList.add(eventList[i]);
+      for(var i = 0; i < eventList.length; i++){
+        if(eventList[i].country == countryFilter){
+          filteredList.add(eventList[i]);
+        }
       }
     }else{
-      if(eventList[i].country == filterCountry && eventList[i].type == filterType){
-        filteredList.add(eventList[i]);
+      for(var i = 0; i < eventList.length; i++){
+        if(eventList[i].type == typeFilter && eventList[i].country == countryFilter){
+          filteredList.add(eventList[i]);
+        }
       }
     }
-  }
-  return filteredList;
-}
 
-dynamic fetchEvents(String year) async {
-  if(MyApp.yearlyEventListings.containsKey(year)){
-    seasonStart = fetchStartDate(selectedYear);
-    return MyApp.yearlyEventListings[year];
+    return filteredList;
   }
 
-  //TODO: migrate to env
-  String user = "jwong123";
-  String token = "091C1981-05E0-48C6-A3FB-FA579BCFA261";
-  String authorization = "$user:$token";
-  String encodedToken = base64.encode(utf8.encode(authorization));
+  dynamic fetchEvents(String year) async {
+    if(MyApp.yearlyEventListings.containsKey(year)){
+      seasonStart = fetchStartDate(selectedYear);
+      return MyApp.yearlyEventListings[year];
+    }
 
-  final response = await http.get(Uri.parse('https://ftc-api.firstinspires.org/v2.0/$year/events'), headers: {"Authorization": "Basic $encodedToken"});
+    //TODO: migrate to env
+    String user = "jwong123";
+    String token = "091C1981-05E0-48C6-A3FB-FA579BCFA261";
+    String authorization = "$user:$token";
+    String encodedToken = base64.encode(utf8.encode(authorization));
 
-  if(response.statusCode == 200){
-    print("API CALL SUCCESS");
-    List<EventListing> eventList = EventListing.fromJson(json.decode(response.body) as Map<String,dynamic>);
-    addKVPToYearlyListing(year, eventList);
-    seasonStart = fetchStartDate(selectedYear);
-    return eventList;
-  }else{
-    throw Exception(response.statusCode);
+    final response = await http.get(Uri.parse('https://ftc-api.firstinspires.org/v2.0/$year/events'), headers: {"Authorization": "Basic $encodedToken"});
+
+    if(response.statusCode == 200){
+      print("API CALL SUCCESS");
+      List<EventListing> eventList = EventListing.fromJson(json.decode(response.body) as Map<String,dynamic>);
+      addKVPToYearlyListing(year, eventList);
+      seasonStart = fetchStartDate(selectedYear);
+      return eventList;
+    }else{
+      throw Exception(response.statusCode);
+    }
   }
-}
 
-List<Column> generateListTiles(List<EventListing> weekListings){
-    List<Column> listings = [];
-    int i = 0;
-    while(i < weekListings.length){
-      if(i == 0){
-        listings.add(
-          Column(
-            children: [
-                Container(
-                  height: 1,
-                  color: Colors.black,
-                )
-            ]
-          )
-        );
-      }
-      listings.add(Column (
-        children: [
-          ListTile(
-            title: Text(weekListings[i].name, maxLines: 1, overflow: TextOverflow.ellipsis),
-            subtitle: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  List<Column> generateListTiles(List<EventListing> weekListings){
+      List<Column> listings = [];
+      int i = 0;
+      while(i < weekListings.length){
+        if(i == 0){
+          listings.add(
+            Column(
               children: [
-                Text("${weekListings[i].city}, ${weekListings[i].country}"),
-                Text(weekListings[i].dateStart)
-              ],
-            ),
-          ), 
-          Container(
-            height: 1,
-            color: Colors.black,
-          )
-        ],
-      ) 
-      );
-      i++;
+                  Container(
+                    height: 1,
+                    color: Colors.black,
+                  )
+              ]
+            )
+          );
+        }
+        listings.add(Column (
+          children: [
+            ListTile(
+              title: Text(weekListings[i].name, maxLines: 1, overflow: TextOverflow.ellipsis),
+              subtitle: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("${weekListings[i].city}, ${weekListings[i].country}"),
+                  Text(weekListings[i].dateStart)
+                ],
+              ),
+            ), 
+            Container(
+              height: 1,
+              color: Colors.black,
+            )
+          ],
+        ) 
+        );
+        i++;
+      }
+      return listings;
     }
-    return listings;
-  }
 
   ListView generateListView(List<List<EventListing>> weeks){
     return ListView.builder(
@@ -226,81 +231,113 @@ List<Column> generateListTiles(List<EventListing> weekListings){
               height: 20,
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Column(
-                  children: [
-                    const Text("Season"),
-                    DropdownButton<String>(
-                      value: selectedYear,
-                      items: years.map((String year){
-                        return DropdownMenuItem(
-                          value: year,
-                          child: Text(year)
-                        );
-                      }).toList(),
-                      onChanged: (String? newValue){
-                        setState((){
-                          print("Set State");
-                          selectedYear = newValue!;
-                        });
-                        allEventListings = fetchEvents(selectedYear);
-                      }
-                    )
-                  ],
+                Expanded(
+                  flex: 1,
+                  child: Column(
+                    children: [
+                      const Text("Season"),
+                      DropdownButton<String>(
+                        isExpanded: true,
+                        value: selectedYear,
+                        items: years.map((String year){
+                          return DropdownMenuItem(
+                            value: year,
+                            child: Text(year)
+                          );
+                        }).toList(),
+                        onChanged: (String? newValue){
+                          setState((){
+                            print("Set State");
+                            selectedYear = newValue!;
+                          });
+                          allEventListings = fetchEvents(selectedYear);
+                        }
+                      )
+                    ],
+                  ),
                 ),
-                Column(
-                  children: [
-                    const Text("Region"),
-                    DropdownButton<String>(
-                      value: filterCountry,
-                      items: countries.map((String item){
-                        return DropdownMenuItem(
-                          value: item,
-                          child: Text(item),
-                        );
-                      }).toList(),
-                      onChanged: (String? newValue){
-                        setState((){
-                          filterCountry = newValue!;
-                        });
-                      },
-                    
-                    )
-                  ],
+                Expanded(
+                  flex: 2,
+                  child: Column(
+                    children: [
+                      const Text("Region"),
+                      DropdownButton<String>(
+                        isExpanded: true,
+                        value: countryFilter,
+                        items: countries.map((String item){
+                          return DropdownMenuItem(
+                            value: item,
+                            child: Text(item),
+                          );
+                        }).toList(),
+                        onChanged: (String? newValue){
+                          setState((){
+                            countryFilter = newValue!;
+                          });
+                        },
+                      )
+                    ],
+                  ),
                 ),
-                Column(
-                  children: [
-                    const Text("Type"),
-                    DropdownButton<int>(
-                      value: -1,
-                      items: const [
-                        DropdownMenuItem(
-                          value: -1,
-                          child: Text("All")
-                        )
-                      ],
-                      onChanged: (int? newValue){
-
-                      },
-                    )
-                  ],
+                Expanded(
+                  flex: 2,
+                  child: Column(
+                    children: [
+                      const Text("Type"),
+                      DropdownButton<int>(
+                        isExpanded:  true,
+                        value: typeFilter,
+                        items: const [
+                          DropdownMenuItem(
+                            value: -1,
+                            child: Text("All")
+                          ),
+                          DropdownMenuItem(
+                            value: 1,
+                            child: Text("League Meet")
+                          ),
+                          DropdownMenuItem(
+                            value: 2,
+                            child: Text("Qualifier")
+                          ),
+                          DropdownMenuItem(
+                            value: 3,
+                            child: Text("League Tournament")
+                          ),
+                          DropdownMenuItem(
+                            value: 4,
+                            child: Text("Championship")
+                          ),
+                          DropdownMenuItem(
+                            value: 5,
+                            child: Text("Other")
+                          ),
+                        ],
+                        onChanged: (int? newValue){
+                          setState((){
+                            typeFilter = newValue!;
+                          });
+                        },
+                      )
+                    ],
+                  ),
                 ),
               ],
             ),
-            const TextField(
-              decoration: InputDecoration(
-                labelText: "Search",
-                suffixIcon: Icon(Icons.search)
-              ),
+          const TextField(
+            decoration: InputDecoration(
+              labelText: "Search",
+              suffixIcon: Icon(Icons.search)
             ),
-            const SizedBox(
-              height: 20
-            ),
-            Expanded(child: generateListView(weeks))
-          ]
+          ),
+          const SizedBox(
+            height: 20
+          ),   
+          Expanded(child: generateListView(weeks))
+        ]
         )
-      );
+    );
   }
 
 
