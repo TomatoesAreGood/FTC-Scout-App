@@ -313,6 +313,18 @@ class _EventsState extends State<Events> {
                             value: 5,
                             child: Text("Other")
                           ),
+                          DropdownMenuItem(
+                            value: 6,
+                            child: Text("FIRST Championship")
+                          ),
+                          DropdownMenuItem(
+                            value: 7,
+                            child: Text("Super Qualifier")
+                          ),
+                          DropdownMenuItem(
+                            value: 10,
+                            child: Text("Off-Season")
+                          ),
                         ],
                         onChanged: (int? newValue){
                           setState((){
