@@ -84,6 +84,7 @@ class _EventsState extends State<Events> {
 
   int typeFilter = -1;
   String countryFilter = "All";
+  bool isCallingAPI = false;
 
   List<EventListing> filterEvents(List<EventListing> eventList){
     bool isAllCountries = countryFilter == "All";
@@ -128,7 +129,7 @@ class _EventsState extends State<Events> {
       seasonStart = fetchStartDate(selectedYear);
       return MyApp.yearlyEventListings[year];
     }
-
+    isCallingAPI = true;
     //TODO: migrate to env
     String user = "jwong123";
     String token = "091C1981-05E0-48C6-A3FB-FA579BCFA261";
@@ -142,6 +143,7 @@ class _EventsState extends State<Events> {
       List<EventListing> eventList = EventListing.fromJson(json.decode(response.body) as Map<String,dynamic>);
       addKVPToYearlyListing(year, eventList);
       seasonStart = fetchStartDate(selectedYear);
+      isCallingAPI = false;
       return eventList;
     }else{
       throw Exception(response.statusCode);
@@ -369,7 +371,7 @@ class _EventsState extends State<Events> {
     return FutureBuilder<dynamic>(
         future: allEventListings,
         builder: (context, data){
-          if (data.hasData){
+          if (data.hasData && !isCallingAPI){
             List<EventListing> dataList = data.data!;
             countries = getCountries(dataList);
             dataList = filterEvents(dataList);
