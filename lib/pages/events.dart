@@ -126,7 +126,6 @@ class _EventsState extends State<Events> {
 
   dynamic fetchEvents(String year) async {
     if(MyApp.yearlyEventListings.containsKey(year)){
-      seasonStart = fetchStartDate(selectedYear);
       return MyApp.yearlyEventListings[year];
     }
     isCallingAPI = true;
@@ -142,7 +141,6 @@ class _EventsState extends State<Events> {
       print("API CALL SUCCESS");
       List<EventListing> eventList = EventListing.fromJson(json.decode(response.body) as Map<String,dynamic>);
       addKVPToYearlyListing(year, eventList);
-      seasonStart = fetchStartDate(selectedYear);
       isCallingAPI = false;
       return eventList;
     }else{
@@ -221,11 +219,7 @@ class _EventsState extends State<Events> {
       );
   }
 
-  Scaffold generateScaffold(List<EventListing> eventListings){
-    // print("GENERATE SCAFFOLD");
-    EventListing.mergeSortDate(eventListings);
-    List<List<EventListing>> weeks = splitWeeks(seasonStart, eventListings);
-    
+  Scaffold generateScaffold(Widget widget){
     return Scaffold(
         body: Column(
           children: [
@@ -252,8 +246,9 @@ class _EventsState extends State<Events> {
                           setState((){
                             print("Set State");
                             selectedYear = newValue!;
+                            allEventListings = fetchEvents(selectedYear);
+                            seasonStart = fetchStartDate(selectedYear);
                           });
-                          allEventListings = fetchEvents(selectedYear);
                         }
                       )
                     ],
@@ -348,16 +343,33 @@ class _EventsState extends State<Events> {
           const SizedBox(
             height: 20
           ),   
-          Expanded(child: generateListView(weeks))
+          widget
         ]
         )
     );
   }
 
+  Widget generateFutureScaffold(){
+     return FutureBuilder<dynamic>(
+        future: allEventListings,
+        builder: (context, data){
+          if (data.hasData && !isCallingAPI){
+            List<EventListing> dataList = data.data!;
+            countries = getCountries(dataList);
+            dataList = filterEvents(dataList);
+            EventListing.mergeSortDate(dataList);
+            List<List<EventListing>> weeks = splitWeeks(seasonStart, dataList);
+            return generateScaffold(Expanded(child:generateListView(weeks)));
+          }
+          return generateScaffold(const Expanded(child:Center(child: CircularProgressIndicator())));
+        },
+    );
+  }
 
   @override
   void initState(){
     allEventListings = fetchEvents(selectedYear);
+    seasonStart = fetchStartDate(selectedYear);
     super.initState();
   }
 
@@ -366,19 +378,11 @@ class _EventsState extends State<Events> {
     if(allEventListings is List<EventListing>){
       countries = getCountries(allEventListings);
       allEventListings = filterEvents(allEventListings);
-      return generateScaffold(allEventListings);
+      EventListing.mergeSortDate(allEventListings);
+      List<List<EventListing>> weeks = splitWeeks(seasonStart, allEventListings);
+      return generateScaffold(Expanded(child:generateListView(weeks)));
     }
-    return FutureBuilder<dynamic>(
-        future: allEventListings,
-        builder: (context, data){
-          if (data.hasData && !isCallingAPI){
-            List<EventListing> dataList = data.data!;
-            countries = getCountries(dataList);
-            dataList = filterEvents(dataList);
-            return generateScaffold(dataList);
-          }
-          return const Center(child: CircularProgressIndicator());
-        },
-    );
+
+    return generateFutureScaffold();
   }
 }
