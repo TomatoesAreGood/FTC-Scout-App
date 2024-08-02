@@ -8,7 +8,7 @@ import 'package:myapp/pages/events.dart';
 import 'package:myapp/pages/favorited.dart';
 import 'package:myapp/pages/teams.dart';
 import 'eventListing.dart';
-
+import 'sizeConfig.dart';
 
 void main(){
   runApp(const MyApp());
@@ -32,6 +32,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   int selectedIndex = 0;
+  var titles = ["Events", "Teams", "Favorited"];
 
   void onItemTapped(int index){
     setState((){
@@ -39,57 +40,56 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-  var titles = ["Events", "Teams", "Favorited"];
-
-
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-          appBar : AppBar(
-            backgroundColor: Colors.lightGreen,
-            title: Text("${titles[selectedIndex]}")
-          ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return OrientationBuilder(
+          builder: (context, orientation) {
+            SizeConfig.init(constraints, orientation);
+            var selectedNavBar;
 
-          bottomNavigationBar: BottomNavigationBar(
-            items: const [
-              BottomNavigationBarItem(icon: Icon(Icons.calendar_month),label: "Events"),
-              BottomNavigationBarItem(icon: Icon(Icons.group), label: "Teams"),
-              BottomNavigationBarItem(icon: Icon(Icons.star), label: "Favorited"),
-            ],
-            currentIndex: selectedIndex,
-            onTap: onItemTapped,
-          ),
+            BottomNavigationBar navBar = BottomNavigationBar(
+              items: const [
+                BottomNavigationBarItem(icon: Icon(Icons.calendar_month),label: "Events"),
+                BottomNavigationBarItem(icon: Icon(Icons.group), label: "Teams"),
+                BottomNavigationBarItem(icon: Icon(Icons.star), label: "Favorited"),
+              ],
+              currentIndex: selectedIndex,
+              onTap: onItemTapped,
+            );
+            SizedBox sizedNavBar =  SizedBox(
+              height: 12 * SizeConfig.heightMultiplier,
+              child: BottomNavigationBar(
+                iconSize: SizeConfig.heightMultiplier * 5,
+                unselectedFontSize: SizeConfig.heightMultiplier * 2.5,
+                selectedFontSize: SizeConfig.heightMultiplier * 2.5,
+                items: const [
+                  BottomNavigationBarItem(icon: Icon(Icons.calendar_month),label: "Events"),
+                  BottomNavigationBarItem(icon: Icon(Icons.group), label: "Teams"),
+                  BottomNavigationBarItem(icon: Icon(Icons.star), label: "Favorited"),
+                ],
+                currentIndex: selectedIndex,
+                onTap: onItemTapped,
+              ),
+            );
 
-          drawer: const Drawer(
-            child: Text("Yo"),
-            backgroundColor: Colors.blueGrey,
-          ),
-
-          // body: ListView(
-          //   scrollDirection: Axis.vertical,
-          //   addAutomaticKeepAlives: false,
-          //   children: [
-          //     Container(color: Colors.red, width: 100, height: 500),
-          //     Container(color: Colors.blue, width: 100, height: 500),
-          //     Container(color: Colors.yellow, width: 100, height: 500)
-          //   ],
-          // ) 
-          // body: ListView.builder(
-          //   itemBuilder: (_, index){
-          //     return Container(
-          //       color: Color.fromARGB(255, Random().nextInt(256), Random().nextInt(256), Random().nextInt(256)),
-          //       width: 100,
-          //       height: 100
-          //     );
-          // },
-          // )
-          body: <Widget>[Events(), Teams(), Favorited()][selectedIndex]
-         
-           
-      )
-
-
+            if(SizeConfig.isMobilePortrait){
+              selectedNavBar = navBar;
+            }else{
+              selectedNavBar = sizedNavBar;
+            }
+            return MaterialApp(
+              home: SafeArea(
+                child: Scaffold(
+                    bottomNavigationBar: selectedNavBar,
+                    body: <Widget>[Events(), Teams(), Favorited()][selectedIndex]
+                ),
+              )
+            );
+          }
+        );
+      }
     );
   }
 }
