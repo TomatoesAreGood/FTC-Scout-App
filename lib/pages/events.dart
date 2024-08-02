@@ -87,6 +87,7 @@ class _EventsState extends State<Events> {
   int typeFilter = -1;
   String countryFilter = "All";
   bool isCallingAPI = false;
+  bool isExpandedFilters = false;
 
   List<EventListing> filterEvents(List<EventListing> eventList){
     bool isAllCountries = countryFilter == "All";
@@ -229,155 +230,182 @@ class _EventsState extends State<Events> {
   }
 
   Scaffold generateVerticalScaffold(Widget widget){
-    return Scaffold(
-      appBar : AppBar(
-        backgroundColor: Colors.lightGreen,
-        title: Text("Events")
-      ),
-      body: Column(
-        children: [
-          Expanded(
+    List<Widget> scaffoldChildren = [];
+    if(isExpandedFilters){
+      scaffoldChildren = [
+        Expanded(
             flex:1,
             child: Column(
               children: [
-                const Expanded(
+                Expanded(
                   flex:1,
-                  child: SizedBox(
-                    height: 20,
-                  ),
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: Column(
+                  child: Column(
+                    children: [
+                      const Expanded(
+                        flex:1,
+                        child: SizedBox(
+                          height: 20,
+                        ),
+                      ),
+                      Row(
                         children: [
-                          const Text("Season"),
-                          DropdownButton<String>(
-                            isDense: true,
-                            // itemHeight: null,
-                            isExpanded: true,
-                            value: selectedYear,
-                            items: years.map((String year){
-                              return DropdownMenuItem(
-                                value: year,
-                                child: Text(year)
-                              );
-                            }).toList(),
-                            onChanged: (String? newValue){
-                              setState((){
-                                print("Set State");
-                                selectedYear = newValue!;
-                                allEventListings = fetchEvents(selectedYear);
-                                seasonStart = fetchStartDate(selectedYear);
-                              });
-                            }
-                          )
+                          Expanded(
+                            flex: 1,
+                            child: Column(
+                              children: [
+                                const Text("Season"),
+                                DropdownButton<String>(
+                                  isDense: true,
+                                  // itemHeight: null,
+                                  isExpanded: true,
+                                  value: selectedYear,
+                                  items: years.map((String year){
+                                    return DropdownMenuItem(
+                                      value: year,
+                                      child: Text(year)
+                                    );
+                                  }).toList(),
+                                  onChanged: (String? newValue){
+                                    setState((){
+                                      print("Set State");
+                                      selectedYear = newValue!;
+                                      allEventListings = fetchEvents(selectedYear);
+                                      seasonStart = fetchStartDate(selectedYear);
+                                    });
+                                  }
+                                )
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            flex: 2,
+                            child: Column(
+                              children: [
+                                const Text("Region"),
+                                DropdownButton<String>(
+                                  isDense: true,
+                                  isExpanded: true,
+                                  value: countryFilter,
+                                  items: countries.map((String item){
+                                    return DropdownMenuItem(
+                                      value: item,
+                                      child: Text(item),
+                                    );
+                                  }).toList(),
+                                  onChanged: (String? newValue){
+                                    setState((){
+                                      countryFilter = newValue!;
+                                    });
+                                  },
+                                )
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            flex: 2,
+                            child: Column(
+                              children: [
+                                const Text("Type"),
+                                DropdownButton<int>(
+                                  isDense: true,
+                                  isExpanded:  true,
+                                  value: typeFilter,
+                                  items: const [
+                                    DropdownMenuItem(
+                                      value: -1,
+                                      child: Text("All")
+                                    ),
+                                    DropdownMenuItem(
+                                      value: 1,
+                                      child: Text("League Meet")
+                                    ),
+                                    DropdownMenuItem(
+                                      value: 2,
+                                      child: Text("Qualifier")
+                                    ),
+                                    DropdownMenuItem(
+                                      value: 3,
+                                      child: Text("League Tournament")
+                                    ),
+                                    DropdownMenuItem(
+                                      value: 4,
+                                      child: Text("Championship")
+                                    ),
+                                    DropdownMenuItem(
+                                      value: 5,
+                                      child: Text("Other")
+                                    ),
+                                    DropdownMenuItem(
+                                      value: 6,
+                                      child: Text("FIRST Championship")
+                                    ),
+                                    DropdownMenuItem(
+                                      value: 7,
+                                      child: Text("Super Qualifier")
+                                    ),
+                                    DropdownMenuItem(
+                                      value: 10,
+                                      child: Text("Off-Season")
+                                    ),
+                                  ],
+                                  onChanged: (int? newValue){
+                                    setState((){
+                                      typeFilter = newValue!;
+                                    });
+                                  },
+                                )
+                              ],
+                            ),
+                          ),
                         ],
                       ),
-                    ),
-                    Expanded(
-                      flex: 2,
-                      child: Column(
-                        children: [
-                          const Text("Region"),
-                          DropdownButton<String>(
-                            isDense: true,
-                            isExpanded: true,
-                            value: countryFilter,
-                            items: countries.map((String item){
-                              return DropdownMenuItem(
-                                value: item,
-                                child: Text(item),
-                              );
-                            }).toList(),
-                            onChanged: (String? newValue){
-                              setState((){
-                                countryFilter = newValue!;
-                              });
-                            },
-                          )
-                        ],
+                      const Expanded(
+                        flex:3,
+                        child: TextField(
+                          decoration: InputDecoration(
+                            labelText: "Search",
+                            suffixIcon: Icon(Icons.search)
+                          ),
+                        ),
                       ),
-                    ),
-                    Expanded(
-                      flex: 2,
-                      child: Column(
-                        children: [
-                          const Text("Type"),
-                          DropdownButton<int>(
-                            isDense: true,
-                            isExpanded:  true,
-                            value: typeFilter,
-                            items: const [
-                              DropdownMenuItem(
-                                value: -1,
-                                child: Text("All")
-                              ),
-                              DropdownMenuItem(
-                                value: 1,
-                                child: Text("League Meet")
-                              ),
-                              DropdownMenuItem(
-                                value: 2,
-                                child: Text("Qualifier")
-                              ),
-                              DropdownMenuItem(
-                                value: 3,
-                                child: Text("League Tournament")
-                              ),
-                              DropdownMenuItem(
-                                value: 4,
-                                child: Text("Championship")
-                              ),
-                              DropdownMenuItem(
-                                value: 5,
-                                child: Text("Other")
-                              ),
-                              DropdownMenuItem(
-                                value: 6,
-                                child: Text("FIRST Championship")
-                              ),
-                              DropdownMenuItem(
-                                value: 7,
-                                child: Text("Super Qualifier")
-                              ),
-                              DropdownMenuItem(
-                                value: 10,
-                                child: Text("Off-Season")
-                              ),
-                            ],
-                            onChanged: (int? newValue){
-                              setState((){
-                                typeFilter = newValue!;
-                              });
-                            },
-                          )
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                const Expanded(
-                  flex:3,
-                  child: TextField(
-                    decoration: InputDecoration(
-                      labelText: "Search",
-                      suffixIcon: Icon(Icons.search)
-                    ),
+                      const Expanded(
+                        flex:1,
+                        child: SizedBox(
+                          height: 20
+                        ),
+                      ),   
+                    ],
                   ),
                 ),
-                const Expanded(
-                  flex:1,
-                  child: SizedBox(
-                    height: 20
-                  ),
-                ),   
-              ],
-            ),
+              widget
+            ],
+        ),
+      ),
+      ];
+    }else{
+      scaffoldChildren = [widget];
+    }
+
+
+    return Scaffold(
+      appBar : AppBar(
+        backgroundColor: Colors.lightGreen,
+        title: Text("Events"),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.filter_list_rounded),
+            tooltip: "Filter",
+            onPressed: (){
+              setState(() {
+                isExpandedFilters = !isExpandedFilters;
+              });
+            }
           ),
-        widget
-      ]
+        ],
+      ),
+      drawer: const Drawer(),
+      body: Column(
+        children: scaffoldChildren
     ) 
   );
 }
