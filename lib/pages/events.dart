@@ -229,163 +229,166 @@ class _EventsState extends State<Events> {
     return generateVerticalScaffold(widget);
   }
 
+  Widget generateFilters(){
+    return Row(
+      children: [
+        Expanded(
+          flex: 1,
+          child: Column(
+            children: [
+              const Text("Season"),
+              DropdownButton<String>(
+                isDense: true,
+                // itemHeight: null,
+                isExpanded: true,
+                value: selectedYear,
+                items: years.map((String year){
+                  return DropdownMenuItem(
+                    value: year,
+                    child: Text(year)
+                  );
+                }).toList(),
+                onChanged: (String? newValue){
+                  setState((){
+                    print("Set State");
+                    selectedYear = newValue!;
+                    allEventListings = fetchEvents(selectedYear);
+                    seasonStart = fetchStartDate(selectedYear);
+                  });
+                }
+              )
+            ],
+          ),
+        ),
+        Expanded(
+          flex: 2,
+          child: Column(
+            children: [
+              const Text("Region"),
+              DropdownButton<String>(
+                isDense: true,
+                isExpanded: true,
+                value: countryFilter,
+                items: countries.map((String item){
+                  return DropdownMenuItem(
+                    value: item,
+                    child: Text(item),
+                  );
+                }).toList(),
+                onChanged: (String? newValue){
+                  setState((){
+                    countryFilter = newValue!;
+                  });
+                },
+              )
+            ],
+          ),
+        ),
+        Expanded(
+          flex: 2,
+          child: Column(
+            children: [
+              const Text("Type"),
+              DropdownButton<int>(
+                isDense: true,
+                isExpanded:  true,
+                value: typeFilter,
+                items: const [
+                  DropdownMenuItem(
+                    value: -1,
+                    child: Text("All")
+                  ),
+                  DropdownMenuItem(
+                    value: 1,
+                    child: Text("League Meet")
+                  ),
+                  DropdownMenuItem(
+                    value: 2,
+                    child: Text("Qualifier")
+                  ),
+                  DropdownMenuItem(
+                    value: 3,
+                    child: Text("League Tournament")
+                  ),
+                  DropdownMenuItem(
+                    value: 4,
+                    child: Text("Championship")
+                  ),
+                  DropdownMenuItem(
+                    value: 5,
+                    child: Text("Other")
+                  ),
+                  DropdownMenuItem(
+                    value: 6,
+                    child: Text("FIRST Championship")
+                  ),
+                  DropdownMenuItem(
+                    value: 7,
+                    child: Text("Super Qualifier")
+                  ),
+                  DropdownMenuItem(
+                    value: 10,
+                    child: Text("Off-Season")
+                  ),
+                ],
+                onChanged: (int? newValue){
+                  setState((){
+                    typeFilter = newValue!;
+                  });
+                },
+              )
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
   Scaffold generateVerticalScaffold(Widget widget){
     List<Widget> scaffoldChildren = [];
     if(isExpandedFilters){
       scaffoldChildren = [
         Expanded(
-            flex:1,
-            child: Column(
-              children: [
-                Expanded(
-                  flex:1,
-                  child: Column(
-                    children: [
-                      const Expanded(
-                        flex:1,
-                        child: SizedBox(
-                          height: 20,
+          flex:1,
+          child: Column(
+            children: [
+              Expanded(
+                flex:1,
+                child: Column(
+                  children: [
+                    const Expanded(
+                      flex:1,
+                      child: SizedBox(
+                        height: 20,
+                      ),
+                    ),
+                    generateFilters(),
+                    const Expanded(
+                      flex:3,
+                      child: TextField(
+                        decoration: InputDecoration(
+                          labelText: "Search",
+                          suffixIcon: Icon(Icons.search)
                         ),
                       ),
-                      Row(
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Column(
-                              children: [
-                                const Text("Season"),
-                                DropdownButton<String>(
-                                  isDense: true,
-                                  // itemHeight: null,
-                                  isExpanded: true,
-                                  value: selectedYear,
-                                  items: years.map((String year){
-                                    return DropdownMenuItem(
-                                      value: year,
-                                      child: Text(year)
-                                    );
-                                  }).toList(),
-                                  onChanged: (String? newValue){
-                                    setState((){
-                                      print("Set State");
-                                      selectedYear = newValue!;
-                                      allEventListings = fetchEvents(selectedYear);
-                                      seasonStart = fetchStartDate(selectedYear);
-                                    });
-                                  }
-                                )
-                              ],
-                            ),
-                          ),
-                          Expanded(
-                            flex: 2,
-                            child: Column(
-                              children: [
-                                const Text("Region"),
-                                DropdownButton<String>(
-                                  isDense: true,
-                                  isExpanded: true,
-                                  value: countryFilter,
-                                  items: countries.map((String item){
-                                    return DropdownMenuItem(
-                                      value: item,
-                                      child: Text(item),
-                                    );
-                                  }).toList(),
-                                  onChanged: (String? newValue){
-                                    setState((){
-                                      countryFilter = newValue!;
-                                    });
-                                  },
-                                )
-                              ],
-                            ),
-                          ),
-                          Expanded(
-                            flex: 2,
-                            child: Column(
-                              children: [
-                                const Text("Type"),
-                                DropdownButton<int>(
-                                  isDense: true,
-                                  isExpanded:  true,
-                                  value: typeFilter,
-                                  items: const [
-                                    DropdownMenuItem(
-                                      value: -1,
-                                      child: Text("All")
-                                    ),
-                                    DropdownMenuItem(
-                                      value: 1,
-                                      child: Text("League Meet")
-                                    ),
-                                    DropdownMenuItem(
-                                      value: 2,
-                                      child: Text("Qualifier")
-                                    ),
-                                    DropdownMenuItem(
-                                      value: 3,
-                                      child: Text("League Tournament")
-                                    ),
-                                    DropdownMenuItem(
-                                      value: 4,
-                                      child: Text("Championship")
-                                    ),
-                                    DropdownMenuItem(
-                                      value: 5,
-                                      child: Text("Other")
-                                    ),
-                                    DropdownMenuItem(
-                                      value: 6,
-                                      child: Text("FIRST Championship")
-                                    ),
-                                    DropdownMenuItem(
-                                      value: 7,
-                                      child: Text("Super Qualifier")
-                                    ),
-                                    DropdownMenuItem(
-                                      value: 10,
-                                      child: Text("Off-Season")
-                                    ),
-                                  ],
-                                  onChanged: (int? newValue){
-                                    setState((){
-                                      typeFilter = newValue!;
-                                    });
-                                  },
-                                )
-                              ],
-                            ),
-                          ),
-                        ],
+                    ),
+                    const Expanded(
+                      flex:1,
+                      child: SizedBox(
+                        height: 20
                       ),
-                      const Expanded(
-                        flex:3,
-                        child: TextField(
-                          decoration: InputDecoration(
-                            labelText: "Search",
-                            suffixIcon: Icon(Icons.search)
-                          ),
-                        ),
-                      ),
-                      const Expanded(
-                        flex:1,
-                        child: SizedBox(
-                          height: 20
-                        ),
-                      ),   
-                    ],
-                  ),
+                    ),   
+                  ],
                 ),
-              widget
-            ],
+              )
+            ]
+          )
         ),
-      ),
+        widget
       ];
     }else{
       scaffoldChildren = [widget];
     }
-
 
     return Scaffold(
       appBar : AppBar(
@@ -406,156 +409,71 @@ class _EventsState extends State<Events> {
       drawer: const Drawer(),
       body: Column(
         children: scaffoldChildren
-    ) 
-  );
+      ) 
+    );
 }
 
   Scaffold generateHorizontalScaffold(Widget widget){
+    List<Widget> scaffoldChildren = [];
+    if(isExpandedFilters){
+      scaffoldChildren = [
+        Expanded(
+          flex:1,
+          child: Column(
+            children: [
+              Expanded(
+                flex:1,
+                child: Column(
+                  children: [
+                    const Expanded(
+                      flex:1,
+                      child: SizedBox(
+                        height: 20,
+                      ),
+                    ),
+                    generateFilters(),
+                    const Expanded(
+                      flex:1,
+                      child: SizedBox(
+                        height: 20
+                      ),
+                    ),   
+                  ],
+                ),
+              )
+            ]
+          )
+        ),
+        widget
+      ];
+    }else{
+      scaffoldChildren = [widget];
+    }
+
     return Scaffold(
       appBar : PreferredSize(
         preferredSize: Size.fromHeight(SizeConfig.heightMultiplier * 12),
         child: AppBar(
           backgroundColor: Colors.lightGreen,
-          title: Text("Events")
+          title: Text("Events"),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.filter_list_rounded),
+              tooltip: "Filter",
+              onPressed: (){
+                setState(() {
+                  isExpandedFilters = !isExpandedFilters;
+                });
+              }
+            ),
+          ],
         ),
       ),
+      drawer: const Drawer(),
       body: Column(
-        children: [
-          Expanded(
-            flex: 1,
-            child: Column(
-              children: [
-                const Expanded(
-                  flex:1,
-                  child: SizedBox(
-                    height: 20,
-                  ),
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: Column(
-                        children: [
-                          const Text("Season"),
-                          DropdownButton<String>(
-                            isDense: true,
-                            // itemHeight: null,
-                            isExpanded: true,
-                            value: selectedYear,
-                            items: years.map((String year){
-                              return DropdownMenuItem(
-                                value: year,
-                                child: Text(year)
-                              );
-                            }).toList(),
-                            onChanged: (String? newValue){
-                              setState((){
-                                print("Set State");
-                                selectedYear = newValue!;
-                                allEventListings = fetchEvents(selectedYear);
-                                seasonStart = fetchStartDate(selectedYear);
-                              });
-                            }
-                          )
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      flex: 2,
-                      child: Column(
-                        children: [
-                          const Text("Region"),
-                          DropdownButton<String>(
-                            isDense: true,
-                            isExpanded: true,
-                            value: countryFilter,
-                            items: countries.map((String item){
-                              return DropdownMenuItem(
-                                value: item,
-                                child: Text(item),
-                              );
-                            }).toList(),
-                            onChanged: (String? newValue){
-                              setState((){
-                                countryFilter = newValue!;
-                              });
-                            },
-                          )
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      flex: 2,
-                      child: Column(
-                        children: [
-                          const Text("Type"),
-                          DropdownButton<int>(
-                            isDense: true,
-                            isExpanded:  true,
-                            value: typeFilter,
-                            items: const [
-                              DropdownMenuItem(
-                                value: -1,
-                                child: Text("All")
-                              ),
-                              DropdownMenuItem(
-                                value: 1,
-                                child: Text("League Meet")
-                              ),
-                              DropdownMenuItem(
-                                value: 2,
-                                child: Text("Qualifier")
-                              ),
-                              DropdownMenuItem(
-                                value: 3,
-                                child: Text("League Tournament")
-                              ),
-                              DropdownMenuItem(
-                                value: 4,
-                                child: Text("Championship")
-                              ),
-                              DropdownMenuItem(
-                                value: 5,
-                                child: Text("Other")
-                              ),
-                              DropdownMenuItem(
-                                value: 6,
-                                child: Text("FIRST Championship")
-                              ),
-                              DropdownMenuItem(
-                                value: 7,
-                                child: Text("Super Qualifier")
-                              ),
-                              DropdownMenuItem(
-                                value: 10,
-                                child: Text("Off-Season")
-                              ),
-                            ],
-                            onChanged: (int? newValue){
-                              setState((){
-                                typeFilter = newValue!;
-                              });
-                            },
-                          )
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                const Expanded(
-                  flex:1,
-                  child: SizedBox(
-                    height: 20
-                  ),
-                ),
-              ],
-            ),
-          ),   
-          widget
-      ]
-    ) 
-  );
+        children: scaffoldChildren
+      ) 
+    );
   }
 
   Widget generateFutureScaffold(){
