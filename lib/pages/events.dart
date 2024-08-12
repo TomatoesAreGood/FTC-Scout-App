@@ -169,7 +169,28 @@ class _EventsState extends State<Events> {
       isCallingAPI = false;
       return eventList;
     }else{
-      throw Exception(response.statusCode);
+      throw Exception("API error ${response.statusCode}");
+    }
+  }
+
+  dynamic refreshEvents(String year) async {
+    isCallingAPI = true;
+    //TODO: migrate to env
+    String user = "jwong123";
+    String token = "091C1981-05E0-48C6-A3FB-FA579BCFA261";
+    String authorization = "$user:$token";
+    String encodedToken = base64.encode(utf8.encode(authorization));
+
+    final response = await http.get(Uri.parse('https://ftc-api.firstinspires.org/v2.0/$year/events'), headers: {"Authorization": "Basic $encodedToken"});
+
+    if(response.statusCode == 200){
+      print("API CALL SUCCESS");
+      List<EventListing> eventList = EventListing.fromJson(json.decode(response.body) as Map<String,dynamic>);
+      addKVPToYearlyListing(year, eventList);
+      isCallingAPI = false;
+      return eventList;
+    }else{
+      throw Exception("API error ${response.statusCode}");
     }
   }
 
@@ -325,18 +346,26 @@ class _EventsState extends State<Events> {
     return listings;
   }
 
-  ListView generateListView(List<List<EventListing>> weeks){
-    return ListView.builder(
+  Future refresh() async{
+    setState(() {
+      allEventListings = refreshEvents(selectedYear);
+    });
+  }
+
+  Widget generateListView(List<List<EventListing>> weeks){
+    return RefreshIndicator(
+      onRefresh: refresh,
+      child: ListView.builder(
         physics: const BouncingScrollPhysics(),
         itemCount: weeks.length,
         itemBuilder: (context, index){
           List<EventListing> weekListings = weeks[index];
           int endDay = EventListing.getJulianDate(seasonStart) + index*7;
           int startDay = endDay - 6;
-
+      
           DateTime end = DateTime.utc(0,0,endDay);
           DateTime start = DateTime.utc(0,0,startDay);
-
+      
           if(weekListings.isNotEmpty){
             return Column(
               children: [
@@ -353,8 +382,9 @@ class _EventsState extends State<Events> {
             return const Padding(padding: EdgeInsets.all(0));
           }
         },
-      );
-  }
+      ),
+    );
+  } 
 
   Scaffold generateScaffold(Widget widget){
     if(SizeConfig.screenHeight < 500){
@@ -501,6 +531,7 @@ class _EventsState extends State<Events> {
   }
 
   Widget generateFutureScaffold(){
+    print("GENERATE FUTURE SCAFFOLD");
      return FutureBuilder<dynamic>(
         future: allEventListings,
         builder: (context, data){
