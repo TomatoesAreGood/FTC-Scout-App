@@ -353,6 +353,10 @@ class _EventsState extends State<Events> {
   }
 
   Widget generateListView(List<List<EventListing>> weeks){
+    if(weeks.isEmpty){
+      return const Center(child: Text("No events shown"));
+    }
+
     return RefreshIndicator(
       onRefresh: refresh,
       child: ListView.builder(
