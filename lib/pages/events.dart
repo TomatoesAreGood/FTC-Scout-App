@@ -89,6 +89,28 @@ class _EventsState extends State<Events> {
   bool isCallingAPI = false;
   bool isExpandedFilters = false;
 
+  String? searchedWord;
+  String? searchLabelText = "Search";
+
+  void updateSearchedWord(String enteredWord){
+    setState(() {
+      if(enteredWord.isEmpty){
+        searchedWord = null;
+        searchLabelText = "Search";
+      }else{
+        searchedWord = enteredWord;
+        searchLabelText = null;
+      }
+    });
+  }
+
+  List<EventListing> filterSearches(List<EventListing> eventList){
+    if(searchedWord == null){
+      return eventList;
+    }
+    return eventList.where((eventListing) => eventListing.name.toLowerCase().contains(searchedWord!.toLowerCase())).toList();
+  }
+
   List<EventListing> filterEvents(List<EventListing> eventList){
     bool isAllCountries = countryFilter == "All";
     bool isAllTypes = typeFilter == -1;
@@ -149,84 +171,6 @@ class _EventsState extends State<Events> {
     }else{
       throw Exception(response.statusCode);
     }
-  }
-
-  List<Column> generateListTiles(List<EventListing> weekListings){
-      List<Column> listings = [];
-      int i = 0;
-      while(i < weekListings.length){
-        if(i == 0){
-          listings.add(
-            Column(
-              children: [
-                  Container(
-                    height: 1,
-                    color: Colors.black,
-                  )
-              ]
-            )
-          );
-        }
-        listings.add(Column (
-          children: [
-            ListTile(
-              title: Text(weekListings[i].name, maxLines: 1, overflow: TextOverflow.ellipsis),
-              subtitle: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text("${weekListings[i].city}, ${weekListings[i].country}"),
-                  Text(weekListings[i].dateStart)
-                ],
-              ),
-            ), 
-            Container(
-              height: 1,
-              color: Colors.black,
-            )
-          ],
-        ) 
-        );
-        i++;
-      }
-      return listings;
-    }
-
-  ListView generateListView(List<List<EventListing>> weeks){
-    return ListView.builder(
-        physics: const BouncingScrollPhysics(),
-        itemCount: weeks.length,
-        itemBuilder: (context, index){
-          List<EventListing> weekListings = weeks[index];
-          int endDay = EventListing.getJulianDate(seasonStart) + index*7;
-          int startDay = endDay - 6;
-
-          DateTime end = DateTime.utc(0,0,endDay);
-          DateTime start = DateTime.utc(0,0,startDay);
-
-          if(weekListings.isNotEmpty){
-            return Column(
-              children: [
-                ExpansionTile(
-                  title: Text("Week ${index+1}"),
-                  subtitle: getDateRange(start, end, monthStrings),
-                  collapsedBackgroundColor: const Color.fromARGB(255, 197, 197, 197),
-                  children: generateListTiles(weekListings),
-                ), 
-                const Padding(padding: EdgeInsets.all(1))
-              ],
-            );
-          }else{
-            return const Padding(padding: EdgeInsets.all(0));
-          }
-        },
-      );
-  }
-
-  Scaffold generateScaffold(Widget widget){
-    if(SizeConfig.screenHeight < 500){
-      return generateHorizontalScaffold(widget);
-    }
-    return generateVerticalScaffold(widget);
   }
 
   Widget generateFilters(){
@@ -344,6 +288,81 @@ class _EventsState extends State<Events> {
     );
   }
 
+  List<Column> generateListTiles(List<EventListing> weekListings){
+    List<Column> listings = [
+      Column(
+        children: [
+          Container(
+            height: 1,
+            color: Colors.black,
+          )
+        ]
+      )
+    ];
+    int i = 0;
+    while(i < weekListings.length){
+      listings.add(Column (
+        children: [
+          ListTile(
+            title: Text(weekListings[i].name, maxLines: 1, overflow: TextOverflow.ellipsis),
+            subtitle: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text("${weekListings[i].city}, ${weekListings[i].country}"),
+                Text(weekListings[i].dateStart)
+              ],
+            ),
+          ), 
+          Container(
+            height: 1,
+            color: Colors.black,
+          )
+        ],
+      ) 
+      );
+      i++;
+    }
+    return listings;
+  }
+
+  ListView generateListView(List<List<EventListing>> weeks){
+    return ListView.builder(
+        physics: const BouncingScrollPhysics(),
+        itemCount: weeks.length,
+        itemBuilder: (context, index){
+          List<EventListing> weekListings = weeks[index];
+          int endDay = EventListing.getJulianDate(seasonStart) + index*7;
+          int startDay = endDay - 6;
+
+          DateTime end = DateTime.utc(0,0,endDay);
+          DateTime start = DateTime.utc(0,0,startDay);
+
+          if(weekListings.isNotEmpty){
+            return Column(
+              children: [
+                ExpansionTile(
+                  title: Text("Week ${index+1}"),
+                  subtitle: getDateRange(start, end, monthStrings),
+                  collapsedBackgroundColor: const Color.fromARGB(255, 197, 197, 197),
+                  children: generateListTiles(weekListings),
+                ), 
+                const Padding(padding: EdgeInsets.all(1))
+              ],
+            );
+          }else{
+            return const Padding(padding: EdgeInsets.all(0));
+          }
+        },
+      );
+  }
+
+  Scaffold generateScaffold(Widget widget){
+    if(SizeConfig.screenHeight < 500){
+      return generateHorizontalScaffold(widget);
+    }
+    return generateVerticalScaffold(widget);
+  }
+
   Scaffold generateVerticalScaffold(Widget widget){
     List<Widget> scaffoldChildren = [];
     if(isExpandedFilters){
@@ -363,12 +382,13 @@ class _EventsState extends State<Events> {
                       ),
                     ),
                     generateFilters(),
-                    const Expanded(
+                    Expanded(
                       flex:3,
                       child: TextField(
+                        onChanged: (value) => updateSearchedWord(value),
                         decoration: InputDecoration(
-                          labelText: "Search",
-                          suffixIcon: Icon(Icons.search)
+                          labelText: searchLabelText ?? "",
+                          suffixIcon: const Icon(Icons.search)
                         ),
                       ),
                     ),
@@ -401,6 +421,8 @@ class _EventsState extends State<Events> {
             onPressed: (){
               setState(() {
                 isExpandedFilters = !isExpandedFilters;
+                searchLabelText = "Search";
+                searchedWord = null;
               });
             }
           ),
@@ -463,6 +485,8 @@ class _EventsState extends State<Events> {
               onPressed: (){
                 setState(() {
                   isExpandedFilters = !isExpandedFilters;
+                  searchLabelText = "Search";
+                  searchedWord = null;
                 });
               }
             ),
@@ -484,9 +508,13 @@ class _EventsState extends State<Events> {
             List<EventListing> dataList = data.data!;
             countries = getCountries(dataList);
             dataList = filterEvents(dataList);
+            dataList = filterSearches(dataList);
+            if(searchedWord != null){
+              return generateScaffold(Expanded(flex:3,child:ListView(children:generateListTiles(dataList))));  
+            }
             EventListing.mergeSortDate(dataList);
             List<List<EventListing>> weeks = splitWeeks(seasonStart, dataList);
-            return generateScaffold(Expanded(flex:3,child:generateListView(weeks)));
+            return generateScaffold(Expanded(flex:3,child:generateListView(weeks)));      
           }
           return generateScaffold(const Expanded(flex: 3, child:Center(child: CircularProgressIndicator())));
         },
@@ -505,11 +533,11 @@ class _EventsState extends State<Events> {
     if(allEventListings is List<EventListing>){
       countries = getCountries(allEventListings);
       allEventListings = filterEvents(allEventListings);
+      allEventListings = filterSearches(allEventListings);
       EventListing.mergeSortDate(allEventListings);
       List<List<EventListing>> weeks = splitWeeks(seasonStart, allEventListings);
       return generateScaffold(Expanded(flex: 3,child:generateListView(weeks)));
     }
-
     return generateFutureScaffold();
   }
 }
