@@ -4,13 +4,15 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:myapp/pages/events.dart';
 import 'package:myapp/pages/favorited.dart';
 import 'package:myapp/pages/teams.dart';
 import 'eventListing.dart';
 import 'sizeConfig.dart';
 
-void main(){
+void main() async{
+  await dotenv.load(fileName: "lib/.env");
   runApp(const MyApp());
 }
 

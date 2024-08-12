@@ -1,13 +1,11 @@
-// import 'dart:nativewrappers/_internal/vm/lib/internal_patch.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:myapp/sizeConfig.dart';
 import 'dart:convert';
 import 'dart:async';
-import 'dart:io';
 import '../eventListing.dart';
 import '../main.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 
 class Events extends StatefulWidget {
@@ -154,9 +152,8 @@ class _EventsState extends State<Events> {
       return MyApp.yearlyEventListings[year];
     }
     isCallingAPI = true;
-    //TODO: migrate to env
-    String user = "jwong123";
-    String token = "091C1981-05E0-48C6-A3FB-FA579BCFA261";
+    String? user = dotenv.env['USER'];
+    String? token = dotenv.env['TOKEN'];
     String authorization = "$user:$token";
     String encodedToken = base64.encode(utf8.encode(authorization));
 
@@ -175,9 +172,8 @@ class _EventsState extends State<Events> {
 
   dynamic refreshEvents(String year) async {
     isCallingAPI = true;
-    //TODO: migrate to env
-    String user = "jwong123";
-    String token = "091C1981-05E0-48C6-A3FB-FA579BCFA261";
+    String? user = dotenv.env['USER'];
+    String? token = dotenv.env['TOKEN'];
     String authorization = "$user:$token";
     String encodedToken = base64.encode(utf8.encode(authorization));
 
