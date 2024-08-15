@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'dart:async';
 import '../eventListing.dart';
 import '../main.dart';
+import '../expandedTile.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 
@@ -200,7 +201,6 @@ class _EventsState extends State<Events> {
               const Text("Season"),
               DropdownButton<String>(
                 isDense: true,
-                // itemHeight: null,
                 isExpanded: true,
                 value: selectedYear,
                 items: years.map((String year){
@@ -350,7 +350,7 @@ class _EventsState extends State<Events> {
 
   Widget generateListView(List<List<EventListing>> weeks){
     if(weeks.isEmpty){
-      return const Center(child: Text("No events shown"));
+      return const Center(child: Text("No events found"));
     }
 
     return RefreshIndicator(
@@ -369,12 +369,7 @@ class _EventsState extends State<Events> {
           if(weekListings.isNotEmpty){
             return Column(
               children: [
-                ExpansionTile(
-                  title: Text("Week ${index+1}"),
-                  subtitle: getDateRange(start, end, monthStrings),
-                  collapsedBackgroundColor: const Color.fromARGB(255, 197, 197, 197),
-                  children: generateListTiles(weekListings),
-                ), 
+                Expandedtile(subtitle: getDateRange(start, end, monthStrings), weekNum: index+1, children: generateListTiles(weekListings)),
                 const Padding(padding: EdgeInsets.all(1))
               ],
             );
@@ -393,47 +388,51 @@ class _EventsState extends State<Events> {
     return generateVerticalScaffold(widget);
   }
 
+  Widget generateFilterMenu(){
+    return Expanded(
+      flex:1,
+      child: Column(
+        children: [
+          Expanded(
+            flex:1,
+            child: Column(
+              children: [
+                const Expanded(
+                  flex:1,
+                  child: SizedBox(
+                    height: 20,
+                  ),
+                ),
+                generateFilters(),
+                Expanded(
+                  flex:3,
+                  child: TextField(
+                    onChanged: (value) => updateSearchedWord(value),
+                    decoration: InputDecoration(
+                      labelText: searchLabelText ?? "",
+                      suffixIcon: const Icon(Icons.search)
+                    ),
+                  ),
+                ),
+                const Expanded(
+                  flex:1,
+                  child: SizedBox(
+                    height: 20
+                  ),
+                ),   
+              ],
+            ),
+          )
+        ]
+      )
+    );
+  }
+
   Scaffold generateVerticalScaffold(Widget widget){
     List<Widget> scaffoldChildren = [];
     if(isExpandedFilters){
       scaffoldChildren = [
-        Expanded(
-          flex:1,
-          child: Column(
-            children: [
-              Expanded(
-                flex:1,
-                child: Column(
-                  children: [
-                    const Expanded(
-                      flex:1,
-                      child: SizedBox(
-                        height: 20,
-                      ),
-                    ),
-                    generateFilters(),
-                    Expanded(
-                      flex:3,
-                      child: TextField(
-                        onChanged: (value) => updateSearchedWord(value),
-                        decoration: InputDecoration(
-                          labelText: searchLabelText ?? "",
-                          suffixIcon: const Icon(Icons.search)
-                        ),
-                      ),
-                    ),
-                    const Expanded(
-                      flex:1,
-                      child: SizedBox(
-                        height: 20
-                      ),
-                    ),   
-                  ],
-                ),
-              )
-            ]
-          )
-        ),
+        generateFilterMenu(),
         widget
       ];
     }else{
@@ -443,7 +442,7 @@ class _EventsState extends State<Events> {
     return Scaffold(
       appBar : AppBar(
         backgroundColor: Colors.lightGreen,
-        title: Text("Events"),
+        title: const Text("Events"),
         actions: [
           IconButton(
             icon: const Icon(Icons.filter_list_rounded),
