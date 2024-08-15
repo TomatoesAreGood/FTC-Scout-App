@@ -319,6 +319,7 @@ class _EventsState extends State<Events> {
     ];
     int i = 0;
     while(i < weekListings.length){
+      String code = weekListings[i].code;
       listings.add(
         Column (
           children: [
@@ -332,13 +333,12 @@ class _EventsState extends State<Events> {
                 ],
               ),
               onTap: (){
-                print(i);
-                // Navigator.of(context).push(
-                //   MaterialPageRoute(
-                //     builder: (context) => 
-                //       EventSubpage(code: i)
-                //   )
-                // );
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => 
+                      EventSubpage(code: code)
+                  )
+                );
               },
             ), 
             Container(

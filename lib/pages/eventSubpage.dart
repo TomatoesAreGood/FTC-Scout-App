@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 
 class EventSubpage extends StatefulWidget {
-  final int code;
+  final String code;
 
   const EventSubpage({super.key, required this.code});
 
