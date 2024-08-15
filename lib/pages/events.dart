@@ -320,26 +320,30 @@ class _EventsState extends State<Events> {
     int i = 0;
     while(i < weekListings.length){
       String code = weekListings[i].code;
+      String name = weekListings[i].name;
       listings.add(
         Column (
           children: [
-            ListTile(
-              title: Text(weekListings[i].name, maxLines: 1, overflow: TextOverflow.ellipsis),
-              subtitle: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text("${weekListings[i].city}, ${weekListings[i].country}"),
-                  Text(weekListings[i].dateStart)
-                ],
+            Tooltip(
+              message: name,
+              child: ListTile(
+                title: Text(weekListings[i].name, maxLines: 1, overflow: TextOverflow.ellipsis),
+                subtitle: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("${weekListings[i].city}, ${weekListings[i].country}"),
+                    Text(weekListings[i].dateStart)
+                  ],
+                ),
+                onTap: (){
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => 
+                        EventSubpage(name: name, code: code)
+                    )
+                  );
+                },
               ),
-              onTap: (){
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => 
-                      EventSubpage(code: code)
-                  )
-                );
-              },
             ), 
             Container(
               height: 1,
@@ -513,25 +517,23 @@ class _EventsState extends State<Events> {
     }
 
     return Scaffold(
-      appBar : PreferredSize(
-        preferredSize: Size.fromHeight(SizeConfig.heightMultiplier * 12),
-        child: AppBar(
-          backgroundColor: Colors.lightGreen,
-          title: Text("Events"),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.filter_list_rounded),
-              tooltip: "Filter",
-              onPressed: (){
-                setState(() {
-                  isExpandedFilters = !isExpandedFilters;
-                  searchLabelText = "Search";
-                  searchedWord = null;
-                });
-              }
-            ),
-          ],
-        ),
+      appBar : AppBar(
+        toolbarHeight: SizeConfig.heightMultiplier * 12,
+        backgroundColor: Colors.lightGreen,
+        title: Text("Events"),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.filter_list_rounded),
+            tooltip: "Filter",
+            onPressed: (){
+              setState(() {
+                isExpandedFilters = !isExpandedFilters;
+                searchLabelText = "Search";
+                searchedWord = null;
+              });
+            }
+          ),
+        ],
       ),
       drawer: const Drawer(),
       body: Column(
