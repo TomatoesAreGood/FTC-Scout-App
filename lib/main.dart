@@ -34,7 +34,6 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   int selectedIndex = 0;
-  var titles = ["Events", "Teams", "Favorited"];
 
   void onItemTapped(int index){
     setState((){

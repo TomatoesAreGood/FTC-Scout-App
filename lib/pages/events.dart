@@ -6,6 +6,7 @@ import 'dart:async';
 import '../eventListing.dart';
 import '../main.dart';
 import '../expandedTile.dart';
+import 'eventSubpage.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 
@@ -318,24 +319,34 @@ class _EventsState extends State<Events> {
     ];
     int i = 0;
     while(i < weekListings.length){
-      listings.add(Column (
-        children: [
-          ListTile(
-            title: Text(weekListings[i].name, maxLines: 1, overflow: TextOverflow.ellipsis),
-            subtitle: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("${weekListings[i].city}, ${weekListings[i].country}"),
-                Text(weekListings[i].dateStart)
-              ],
-            ),
-          ), 
-          Container(
-            height: 1,
-            color: Colors.black,
-          )
-        ],
-      ) 
+      listings.add(
+        Column (
+          children: [
+            ListTile(
+              title: Text(weekListings[i].name, maxLines: 1, overflow: TextOverflow.ellipsis),
+              subtitle: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("${weekListings[i].city}, ${weekListings[i].country}"),
+                  Text(weekListings[i].dateStart)
+                ],
+              ),
+              onTap: (){
+                print(i);
+                // Navigator.of(context).push(
+                //   MaterialPageRoute(
+                //     builder: (context) => 
+                //       EventSubpage(code: i)
+                //   )
+                // );
+              },
+            ), 
+            Container(
+              height: 1,
+              color: Colors.black,
+            )
+          ],
+        ) 
       );
       i++;
     }
@@ -369,7 +380,7 @@ class _EventsState extends State<Events> {
           if(weekListings.isNotEmpty){
             return Column(
               children: [
-                Expandedtile(subtitle: getDateRange(start, end, monthStrings), weekNum: index+1, children: generateListTiles(weekListings)),
+                ExpandedTile(subtitle: getDateRange(start, end, monthStrings), weekNum: index+1, children: generateListTiles(weekListings)),
                 const Padding(padding: EdgeInsets.all(1))
               ],
             );
