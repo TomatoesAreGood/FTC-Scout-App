@@ -15,6 +15,102 @@ class EventSubpage extends StatefulWidget {
 }
 
 class _EventSubpageState extends State<EventSubpage> {
+  int selectedIndex = 0;
+  Color? selectedColor = Colors.grey[300];
+
+  Widget horizontalScrollable(){
+    List<Color?> buttonColors = [null, null, null, null];
+    buttonColors[selectedIndex] = selectedColor;
+
+    return Container(
+      height: 40,
+      child: Row(
+        children: [
+          Expanded(
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: [
+                TextButton(
+                  onPressed: (){
+                    setState(() {
+                      if(selectedIndex != 0){
+                        selectedIndex = 0;
+                      }
+                    });
+                  }, 
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.black,
+                    backgroundColor: buttonColors[0]
+                  ),
+                  child: Text("Teams")
+                ),
+                TextButton(
+                  onPressed: (){
+                    setState(() {
+                      if(selectedIndex != 1){
+                        selectedIndex = 1;
+                      }
+                    });
+                  }, 
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.black,
+                    backgroundColor: buttonColors[1]
+                  ),
+                  child: Text("Rankings")
+                ),
+                TextButton(
+                  onPressed: (){
+                    setState(() {
+                      if(selectedIndex != 2){
+                        selectedIndex = 2;
+                      }
+                    });
+                  }, 
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.black,
+                    backgroundColor: buttonColors[2]
+                  ),
+                  child: Text("Schedule")
+                ),
+                TextButton(
+                  onPressed: (){
+                    setState(() {
+                      if(selectedIndex != 3){
+                        selectedIndex = 3;
+                      }
+                    });
+                  }, 
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.black,
+                    backgroundColor: buttonColors[3]
+                  ),
+                  child: Text("Awards")
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget Teams(){
+    
+
+    return Center(
+      child: Text("Teams")
+    );
+  }
+  Widget Rankings(){
+    return Center(child: Text("Rankings"));
+  }
+  Widget Schedule(){
+    return Center(child: Text("Schedule"));
+  }
+  Widget Awards(){
+    return Center(child: Text("Awards"));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,7 +130,13 @@ class _EventSubpageState extends State<EventSubpage> {
           IconButton(onPressed: (){print("favouited");}, icon: Icon(Icons.star_border))
         ],
       ),
-      body: Center(child: Text("event code: ${widget.code}")),
+      body: Column(
+        children: [
+          horizontalScrollable(),
+          Center(child: Text("event code: ${widget.code}")),
+          [Teams(),Rankings(),Schedule(), Awards() ][selectedIndex]
+        ],
+      ),
     );
   }
 }
