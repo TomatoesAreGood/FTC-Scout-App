@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
@@ -23,9 +24,6 @@ class _EventSubpageState extends State<EventSubpage> {
   Color? selectedColor = Colors.grey[300];
 
   Map<String, dynamic> storedResults = {};
-  bool isCallingAPI = false;
-
-  late dynamic rankings = null; 
 
   Widget horizontalScrollable(){
     List<Color?> buttonColors = [null, null, null, null];
@@ -147,6 +145,21 @@ class _EventSubpageState extends State<EventSubpage> {
   }
 }
 
+// class Teams extends StatefulWidget {
+//   const Teams({super.key});
+
+//   @override
+//   State<Teams> createState() => _TeamsState();
+// }
+
+// class _TeamsState extends State<Teams> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return const Placeholder();
+//   }
+// }
+
+
 class Rankings extends StatefulWidget {
   final String code; 
   final int year;
@@ -162,7 +175,7 @@ class _RankingsState extends State<Rankings> {
   bool isCallingAPI = false;
 
   dynamic getRankings() async{
-    if(EventSubpage.storedResults.containsKey("rankings")){
+    if(EventSubpage.storedResults.containsKey("rankings") && EventSubpage.storedResults["rankings"].isNotEmpty){
       return EventSubpage.storedResults["rankings"];
     }
     isCallingAPI = true;
@@ -221,6 +234,21 @@ class _RankingsState extends State<Rankings> {
   }
 
   Widget generateListTiles(List<TeamEventData> teamList){
+    if(teamList.isEmpty){
+      return Expanded(
+        child: RefreshIndicator(
+          onRefresh: refresh,
+          child: const Center(
+            child: AutoSizeText(
+              "No information has been published about this event. Please check back later.", 
+              maxLines: 2, 
+              textAlign: TextAlign.center,
+            ),
+          ),
+        )
+      );
+    }
+
     return Expanded(
       child: RefreshIndicator(
         onRefresh: refresh,
