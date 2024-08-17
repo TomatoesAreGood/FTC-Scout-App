@@ -186,53 +186,85 @@ class _RankingsState extends State<Rankings> {
     }
   }
 
+  dynamic refreshRankings() async{
+    isCallingAPI = true;
+    String? user = dotenv.env['USER'];
+    String? token = dotenv.env['TOKEN'];
+    String authorization = "$user:$token";
+    String encodedToken = base64.encode(utf8.encode(authorization));
+
+    final response = await http.get(Uri.parse('https://ftc-api.firstinspires.org/v2.0/${widget.year}/rankings/${widget.code}'), headers: {"Authorization": "Basic $encodedToken"});
+
+    if(response.statusCode == 200){
+      print("API CALL SUCCESS");
+      List<TeamEventData> teamList = TeamEventData.fromJson(json.decode(response.body) as Map<String,dynamic>);
+      if(!EventSubpage.storedResults.containsKey("rankings")){
+        EventSubpage.storedResults["rankings"] = teamList;
+      }
+      isCallingAPI = false;
+      return teamList;
+    }else{
+      throw Exception("API error ${response.statusCode}");
+    }
+  }
+
   @override
   void initState(){
     data = getRankings(); 
     super.initState();
   }
 
+  Future refresh() async{
+    setState(() {
+      data = refreshRankings();
+    });
+  }
+
+  Widget generateListTiles(List<TeamEventData> teamList){
+    return Expanded(
+      child: RefreshIndicator(
+        onRefresh: refresh,
+        child: ListView.builder(
+          physics: const BouncingScrollPhysics(),
+          itemCount: teamList.length,
+          itemBuilder: (context, index){
+            TeamEventData team = teamList[index];
+            return Column(
+              children: [
+                ListTile(
+                  leading: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Expanded(flex: 2, child: Text("${team.teamNumber}", style: TextStyle(height: 1.7, fontSize: 20))),
+                      Expanded(child: Text("${team.rank} (${team.wins}-${team.ties}-${team.losses})", style: TextStyle(height: 0.5, fontSize: 13)))
+                    ],
+                  ),
+                  title: Text(team.teamName, overflow: TextOverflow.ellipsis),
+                  subtitle: Text("${team.rankingPoints} RP   ${team.tieBreakerPoints} TBP", overflow: TextOverflow.ellipsis),
+                ),
+                Container(
+                  height: 1,
+                  color: Colors.black,
+                )
+              ]
+            );
+          }
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<dynamic>(
       future: data,
       builder: (context, data){
-        if(data.hasData){
+        if(data.hasData && !isCallingAPI){
           List<TeamEventData> teamList = data.data!;
-          return Expanded(
-            child: ListView.builder(
-              physics: const BouncingScrollPhysics(),
-              itemCount: teamList.length,
-              itemBuilder: (context, index){
-                TeamEventData team = teamList[index];
-                return Column(
-                  children: [
-                    ListTile(
-                      leading: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Expanded(flex: 2, child: Text("${team.teamNumber}", style: TextStyle(height: 1.7, fontSize: 20))),
-                          Expanded(child: Text("${team.rank} (${team.wins}-${team.ties}-${team.losses})", style: TextStyle(height: 0.5, fontSize: 13)))
-                        ],
-                      ),
-                      title: Text(team.teamName, overflow: TextOverflow.ellipsis),
-                      subtitle: Text("${team.rankingPoints} RP   ${team.tieBreakerPoints} TBP", overflow: TextOverflow.ellipsis),
-                    ),
-                    Container(
-                      height: 1,
-                      color: Colors.black,
-                    )
-                  ]
-                );
-              }
-            ),
-          );
+          return generateListTiles(teamList); 
         }
-        return CircularProgressIndicator();
+        return Expanded(child: Center(child: CircularProgressIndicator()));
       },
     );
   }
-
-
 }
