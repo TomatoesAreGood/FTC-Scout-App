@@ -50,49 +50,49 @@ class EventListing {
   }
 
   static void mergeSortDate(List<EventListing> arr){
-      if (arr.length <= 1){
-        return;
-      }
-      int mid = (arr.length / 2).floor() ;
-      List<EventListing> L = arr.sublist(0, mid);
-      List<EventListing> R = arr.sublist(mid, arr.length);
-    
-      mergeSortDate(L);
-      mergeSortDate(R);
-      int i = 0;
-      int j = 0;
-      int k = 0;
-    
-      while(i < L.length && j < R.length){
-        if(getNumericValue(L[i].dateStart) == getNumericValue(R[j].dateStart)){
-          if (L[i].name.compareTo(R[j].name) > 0){
-            arr[k] = L[i];
-            i++;
-          }else{
-            arr[k] = R[j];
-            j++;
-          }
-          k++;
+    if (arr.length <= 1){
+      return;
+    }
+    int mid = (arr.length / 2).floor() ;
+    List<EventListing> L = arr.sublist(0, mid);
+    List<EventListing> R = arr.sublist(mid, arr.length);
+  
+    mergeSortDate(L);
+    mergeSortDate(R);
+    int i = 0;
+    int j = 0;
+    int k = 0;
+  
+    while(i < L.length && j < R.length){
+      if(getNumericValue(L[i].dateStart) == getNumericValue(R[j].dateStart)){
+        if (L[i].name.compareTo(R[j].name) > 0){
+          arr[k] = L[i];
+          i++;
         }else{
-          if (getNumericValue(L[i].dateStart) < getNumericValue(R[j].dateStart)){
-            arr[k] = L[i];
-            i++;
-          }else{
-            arr[k] = R[j];
-            j++;
-          }
-          k++;
+          arr[k] = R[j];
+          j++;
         }
-      }
-      while(i < L.length){
-        arr[k] = L[i];
-        i++;
+        k++;
+      }else{
+        if (getNumericValue(L[i].dateStart) < getNumericValue(R[j].dateStart)){
+          arr[k] = L[i];
+          i++;
+        }else{
+          arr[k] = R[j];
+          j++;
+        }
         k++;
       }
-      while(j < R.length){
-        arr[k] = R[j];
-        j++;
-        k++;
-      }
+    }
+    while(i < L.length){
+      arr[k] = L[i];
+      i++;
+      k++;
+    }
+    while(j < R.length){
+      arr[k] = R[j];
+      j++;
+      k++;
+    }
   } 
 }
