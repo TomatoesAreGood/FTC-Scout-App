@@ -1,22 +1,31 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:myapp/sizeConfig.dart';
-
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:http/http.dart' as http;
+import 'package:myapp/teamEventData.dart';
+import 'dart:convert';
+import '../eventListing.dart';
 
 class EventSubpage extends StatefulWidget {
   final String code;
   final String name;
+  final int year;
+  static final Map<String, dynamic> storedResults = {};
 
-  const EventSubpage({super.key, required this.name, required this.code});
+  const EventSubpage({super.key, required this.name, required this.code, required this.year});
 
   @override
   State<EventSubpage> createState() => _EventSubpageState();
 }
 
+
 class _EventSubpageState extends State<EventSubpage> {
   int selectedIndex = 0;
   Color? selectedColor = Colors.grey[300];
+
+  Map<String, dynamic> storedResults = {};
+  bool isCallingAPI = false;
+
+  late dynamic rankings = null; 
 
   Widget horizontalScrollable(){
     List<Color?> buttonColors = [null, null, null, null];
@@ -93,17 +102,15 @@ class _EventSubpageState extends State<EventSubpage> {
       ),
     );
   }
+  
+
 
   Widget Teams(){
-    
-
     return Center(
       child: Text("Teams")
     );
   }
-  Widget Rankings(){
-    return Center(child: Text("Rankings"));
-  }
+
   Widget Schedule(){
     return Center(child: Text("Schedule"));
   }
@@ -133,10 +140,99 @@ class _EventSubpageState extends State<EventSubpage> {
       body: Column(
         children: [
           horizontalScrollable(),
-          Center(child: Text("event code: ${widget.code}")),
-          [Teams(),Rankings(),Schedule(), Awards() ][selectedIndex]
+          [Teams(),Rankings(code: widget.code, year: widget.year),Schedule(), Awards()][selectedIndex]
         ],
       ),
     );
   }
+}
+
+class Rankings extends StatefulWidget {
+  final String code; 
+  final int year;
+
+  const Rankings({super.key, required this.code, required this.year});
+
+  @override
+  State<Rankings> createState() => _RankingsState();
+}
+
+class _RankingsState extends State<Rankings> {
+  late dynamic data;
+  bool isCallingAPI = false;
+
+  dynamic getRankings() async{
+    if(EventSubpage.storedResults.containsKey("rankings")){
+      return EventSubpage.storedResults["rankings"];
+    }
+    isCallingAPI = true;
+    String? user = dotenv.env['USER'];
+    String? token = dotenv.env['TOKEN'];
+    String authorization = "$user:$token";
+    String encodedToken = base64.encode(utf8.encode(authorization));
+
+    final response = await http.get(Uri.parse('https://ftc-api.firstinspires.org/v2.0/${widget.year}/rankings/${widget.code}'), headers: {"Authorization": "Basic $encodedToken"});
+
+    if(response.statusCode == 200){
+      print("API CALL SUCCESS");
+      List<TeamEventData> teamList = TeamEventData.fromJson(json.decode(response.body) as Map<String,dynamic>);
+      if(!EventSubpage.storedResults.containsKey("rankings")){
+        EventSubpage.storedResults["rankings"] = teamList;
+      }
+      isCallingAPI = false;
+      return teamList;
+    }else{
+      throw Exception("API error ${response.statusCode}");
+    }
+  }
+
+  @override
+  void initState(){
+    data = getRankings(); 
+    super.initState();
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<dynamic>(
+      future: data,
+      builder: (context, data){
+        if(data.hasData){
+          List<TeamEventData> teamList = data.data!;
+          return Expanded(
+            child: ListView.builder(
+              physics: const BouncingScrollPhysics(),
+              itemCount: teamList.length,
+              itemBuilder: (context, index){
+                TeamEventData team = teamList[index];
+                return Column(
+                  children: [
+                    ListTile(
+                      leading: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Expanded(flex: 2, child: Text("${team.teamNumber}", style: TextStyle(height: 1.7, fontSize: 20))),
+                          Expanded(child: Text("${team.rank} (${team.wins}-${team.ties}-${team.losses})", style: TextStyle(height: 0.5, fontSize: 13)))
+                        ],
+                      ),
+                      title: Text(team.teamName, overflow: TextOverflow.ellipsis),
+                      subtitle: Text("${team.rankingPoints} RP   ${team.tieBreakerPoints} TBP", overflow: TextOverflow.ellipsis),
+                    ),
+                    Container(
+                      height: 1,
+                      color: Colors.black,
+                    )
+                  ]
+                );
+              }
+            ),
+          );
+        }
+        return CircularProgressIndicator();
+      },
+    );
+  }
+
+
 }

@@ -16,7 +16,7 @@ class EventListing {
     required this.type
   });
 
-  static fromJson(Map<String, dynamic> json){
+  static List<EventListing> fromJson(Map<String, dynamic> json){
     List<EventListing> allEvents = [];
     List eventList = json['events'];
     

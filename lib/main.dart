@@ -85,7 +85,7 @@ class _MyAppState extends State<MyApp> {
               home: SafeArea(
                 child: Scaffold(
                     bottomNavigationBar: selectedNavBar,
-                    body: <Widget>[EventSubpage(name: "ONADoDEA - Europe Invitational Tournament", code: "ONADODCMP"), Teams(), Favorited()][selectedIndex]
+                    body: <Widget>[EventSubpage(name: "ONADoDEA - Europe Invitational Tournament", code: "ONADODCMP", year: 2023), Teams(), Favorited()][selectedIndex]
                 ),
               )
             );

@@ -321,6 +321,7 @@ class _EventsState extends State<Events> {
     while(i < weekListings.length){
       String code = weekListings[i].code;
       String name = weekListings[i].name;
+      String date = weekListings[i].dateStart;
       listings.add(
         Column (
           children: [
@@ -339,7 +340,7 @@ class _EventsState extends State<Events> {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => 
-                        EventSubpage(name: name, code: code)
+                        EventSubpage(name: name, code: code, year: int.parse(date.substring(0,4)))
                     )
                   );
                 },
