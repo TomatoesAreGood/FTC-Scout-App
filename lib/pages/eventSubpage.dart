@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/event%20sub%20pages/eventAwards.dart';
 import 'package:myapp/event%20sub%20pages/eventRankings.dart';
 import 'package:myapp/event%20sub%20pages/eventSchedule.dart';
 import 'package:myapp/event%20sub%20pages/eventTeams.dart';
@@ -98,10 +99,6 @@ class _EventSubpageState extends State<EventSubpage> {
     );
   }
 
-  Widget Awards(){
-    return Center(child: Text("Awards"));
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -124,7 +121,7 @@ class _EventSubpageState extends State<EventSubpage> {
       body: Column(
         children: [
           horizontalScrollable(),
-          [EventTeams(code: widget.code, year: widget.year),EventRankings(code: widget.code, year: widget.year),EventSchedule(code: widget.code, year: widget.year), Awards()][selectedIndex]
+          [EventTeams(code: widget.code, year: widget.year),EventRankings(code: widget.code, year: widget.year), EventSchedule(code: widget.code, year: widget.year), EventAwards(code: widget.code, year: widget.year)][selectedIndex]
         ],
       ),
     );
