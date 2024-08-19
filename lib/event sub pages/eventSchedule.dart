@@ -278,37 +278,3 @@ class _EventScheduleState extends State<EventSchedule> {
     );
   }
 }
-
-class CustomExpansionTile extends StatefulWidget {
-  @override
-  State createState() => CustomExpansionTileState();
-}
-
-class CustomExpansionTileState extends State<CustomExpansionTile> {
-  bool isExpanded = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return ExpansionTile(
-      title: Container(
-        child: Text(
-          "HEADER HERE",
-          style: TextStyle(
-            color: isExpanded ? Colors.pink : Colors.teal,
-          ),
-        ),
-        // Change header (which is a Container widget in this case) background colour here.
-        color: isExpanded ? Colors.orange : Colors.green,
-      ),
-      leading: Icon(
-        Icons.face,
-        size: 36.0,
-      ),
-      children: <Widget>[
-        Text("Child Widget One"),
-        Text("Child Widget Two"),
-      ],
-      onExpansionChanged: (bool expanding) => setState(() => this.isExpanded = expanding),
-    );
-  }
-}
