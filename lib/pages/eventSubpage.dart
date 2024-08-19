@@ -1,12 +1,7 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:http/http.dart' as http;
 import 'package:myapp/event%20sub%20pages/eventRankings.dart';
 import 'package:myapp/event%20sub%20pages/eventSchedule.dart';
 import 'package:myapp/event%20sub%20pages/eventTeams.dart';
-import 'package:myapp/teamEventData.dart';
-import 'dart:convert';
 
 class EventSubpage extends StatefulWidget {
   final String code;
