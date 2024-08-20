@@ -1,7 +1,7 @@
 class TeamEventData{
   final int rank;
   final int teamNumber;
-  final String teamName;
+  final String? teamName;
   final int wins;
   final int ties;
   final int losses;

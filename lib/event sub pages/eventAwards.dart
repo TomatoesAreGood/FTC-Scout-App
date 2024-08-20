@@ -60,9 +60,7 @@ class _EventAwardsState extends State<EventAwards> {
     if(response.statusCode == 200){
       print("API CALL SUCCESS");
       List<Award> awards = Award.fromJson(json.decode(response.body) as Map<String,dynamic>);
-      if(!EventSubpage.storedResults.containsKey("awards")){
-        EventSubpage.storedResults["awards"] = awards;
-      }
+      EventSubpage.storedResults["awards"] = awards;
       isCallingAPI = false;
       return awards;
     }else{
@@ -82,9 +80,7 @@ class _EventAwardsState extends State<EventAwards> {
     if(response.statusCode == 200){
       print("API CALL SUCCESS");
       List<Award> awards = Award.fromJson(json.decode(response.body) as Map<String,dynamic>);
-      if(!EventSubpage.storedResults.containsKey("awards")){
-        EventSubpage.storedResults["awards"] = awards;
-      }
+      EventSubpage.storedResults["awards"] = awards;
       isCallingAPI = false;
       return awards;
     }else{
@@ -157,7 +153,7 @@ class _EventAwardsState extends State<EventAwards> {
     Map<int, String> teamDisplayNames = {};
     List<TeamEventData> teamData = EventSubpage.storedResults["rankings"];
     for(var i = 0; i < teamData.length; i++){
-      teamDisplayNames[teamData[i].teamNumber] = teamData[i].teamName;
+      teamDisplayNames[teamData[i].teamNumber] = teamData[i].teamName ?? "Unknown";
     }
     return teamDisplayNames;
   }

@@ -72,9 +72,7 @@ class _EventRankingsState extends State<EventRankings> {
     if(response.statusCode == 200){
       print("API CALL SUCCESS");
       List<TeamEventData> teamList = TeamEventData.fromJson(json.decode(response.body) as Map<String,dynamic>);
-      if(!EventSubpage.storedResults.containsKey("rankings")){
-        EventSubpage.storedResults["rankings"] = teamList;
-      }
+      EventSubpage.storedResults["rankings"] = teamList;
       isCallingAPI = false;
       return teamList;
     }else{
@@ -94,9 +92,7 @@ class _EventRankingsState extends State<EventRankings> {
     if(response.statusCode == 200){
       print("API CALL SUCCESS");
       List<TeamEventData> teamList = TeamEventData.fromJson(json.decode(response.body) as Map<String,dynamic>);
-      if(!EventSubpage.storedResults.containsKey("rankings")){
-        EventSubpage.storedResults["rankings"] = teamList;
-      }
+      EventSubpage.storedResults["rankings"] = teamList;
       isCallingAPI = false;
       return teamList;
     }else{
@@ -150,7 +146,7 @@ class _EventRankingsState extends State<EventRankings> {
                       Expanded(child: Text("${team.rank} (${team.wins}-${team.ties}-${team.losses})", style: TextStyle(height: 0.5, fontSize: 13)))
                     ],
                   ),
-                  title: Text(team.teamName, overflow: TextOverflow.ellipsis),
+                  title: Text(team.teamName ?? "Unknown", overflow: TextOverflow.ellipsis),
                   subtitle: Text("${team.rankingPoints} RP   ${team.tieBreakerPoints} TBP", overflow: TextOverflow.ellipsis),
                 ),
                 Container(

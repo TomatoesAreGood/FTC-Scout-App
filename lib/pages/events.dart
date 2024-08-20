@@ -337,6 +337,10 @@ class _EventsState extends State<Events> {
                   ],
                 ),
                 onTap: (){
+                  print(name);
+                  print(int.parse(date.substring(0,4)));
+                  print(code);
+
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => 

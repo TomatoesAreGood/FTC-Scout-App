@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:myapp/pages/eventSubpage.dart';
+import 'package:myapp/pages/events.dart';
 import 'package:myapp/pages/favorited.dart';
 import 'package:myapp/pages/teams.dart';
 import 'eventListing.dart';
@@ -79,7 +80,7 @@ class _MyAppState extends State<MyApp> {
               home: SafeArea(
                 child: Scaffold(
                     bottomNavigationBar: selectedNavBar,
-                    body: <Widget>[EventSubpage(name: "ONADoDEA - Europe Invitational Tournament", code: "ONADODCMP", year: 2023), Teams(), Favorited()][selectedIndex]
+                    body: <Widget>[Events(), Teams(), Favorited()][selectedIndex]
                 ),
               )
             );

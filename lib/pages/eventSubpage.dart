@@ -8,7 +8,7 @@ class EventSubpage extends StatefulWidget {
   final String code;
   final String name;
   final int year;
-  static final Map<String, dynamic> storedResults = {};
+  static Map<String, dynamic> storedResults = {};
 
   const EventSubpage({super.key, required this.name, required this.code, required this.year});
 
@@ -20,8 +20,6 @@ class EventSubpage extends StatefulWidget {
 class _EventSubpageState extends State<EventSubpage> {
   int selectedIndex = 0;
   Color? selectedColor = Colors.grey[300];
-
-  Map<String, dynamic> storedResults = {};
 
   Widget horizontalScrollable(){
     List<Color?> buttonColors = [null, null, null, null];
@@ -97,6 +95,12 @@ class _EventSubpageState extends State<EventSubpage> {
         ],
       ),
     );
+  }
+
+  @override
+  void initState(){
+    EventSubpage.storedResults = {};
+    super.initState();
   }
 
   @override

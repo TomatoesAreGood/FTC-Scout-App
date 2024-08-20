@@ -39,10 +39,7 @@ class _EventScheduleState extends State<EventSchedule> {
       List<HybridMatchData> qualSchedule = HybridMatchData.fromJson(json.decode(qualResponse.body) as Map<String,dynamic>);
       List<HybridMatchData> playoffSchedule = HybridMatchData.fromJson(json.decode(playoffResponse.body) as Map<String,dynamic>);
       List<List<HybridMatchData>> scheduleData = [qualSchedule, playoffSchedule];
-
-      if(!EventSubpage.storedResults.containsKey("schedule")){
-        EventSubpage.storedResults["schedule"] = scheduleData;
-      }
+      EventSubpage.storedResults["schedule"] = scheduleData;
       isCallingAPI = false;
       return scheduleData;
     }else{
@@ -65,10 +62,7 @@ class _EventScheduleState extends State<EventSchedule> {
       List<HybridMatchData> qualSchedule = HybridMatchData.fromJson(json.decode(qualResponse.body) as Map<String,dynamic>);
       List<HybridMatchData> playoffSchedule = HybridMatchData.fromJson(json.decode(playoffResponse.body) as Map<String,dynamic>);
       List<List<HybridMatchData>> scheduleData = [qualSchedule, playoffSchedule];
-
-      if(!EventSubpage.storedResults.containsKey("schedule")){
-        EventSubpage.storedResults["schedule"] = scheduleData;
-      }
+      EventSubpage.storedResults["schedule"] = scheduleData;
       isCallingAPI = false;
       return scheduleData;
     }else{
