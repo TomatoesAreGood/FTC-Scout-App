@@ -344,7 +344,7 @@ class _EventsState extends State<Events> {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => 
-                        EventSubpage(name: name, code: code, year: int.parse(date.substring(0,4)))
+                        EventSubpage(name: name, code: code, year: int.parse(selectedYear))
                     )
                   );
                 },
