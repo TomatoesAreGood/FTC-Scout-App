@@ -10,6 +10,13 @@ class TeamEventData{
 
   const TeamEventData({required this.rank, required this.teamNumber, required this.teamName, required this.wins, required this.ties, required this.losses, required this.rankingPoints, required this.tieBreakerPoints});
   
+  static double round(double num){
+    if("$num".length > 5){
+      return double.parse(num.toStringAsFixed(2));
+    }
+    return num;
+  }
+
   static List<TeamEventData> fromJson(Map<String, dynamic> json){
     List rankings = json['rankings'];
     List<TeamEventData> teamPlacements = [];
@@ -23,8 +30,8 @@ class TeamEventData{
           wins: rankings[i]['wins'], 
           ties: rankings[i]['ties'], 
           losses: rankings[i]['losses'], 
-          rankingPoints: rankings[i]['sortOrder1'], 
-          tieBreakerPoints: rankings[i]['sortOrder2']
+          rankingPoints: round(rankings[i]['sortOrder1']), 
+          tieBreakerPoints: round(rankings[i]['sortOrder2'])
         )
       );
     }

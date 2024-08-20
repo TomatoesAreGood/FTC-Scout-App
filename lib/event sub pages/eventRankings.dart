@@ -143,7 +143,19 @@ class _EventRankingsState extends State<EventRankings> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Expanded(flex: 2, child: Text("${team.teamNumber}", style: TextStyle(height: 1.7, fontSize: 20))),
-                      Expanded(child: Text("${team.rank} (${team.wins}-${team.ties}-${team.losses})", style: TextStyle(height: 0.5, fontSize: 13)))
+                      SizedBox(height: 1),
+                      Expanded(
+                        child: RichText(
+                          text: TextSpan(
+                            children: [
+                              TextSpan(text: "${team.rank} ", style: TextStyle(fontWeight: FontWeight.bold,height: 0.5, fontSize: 17, color: Colors.red[700])),
+                              TextSpan(text: "(${team.wins}-${team.ties}-${team.losses})", style: TextStyle(height: 0.5, fontSize: 15, color: Colors.red[700]))
+                            ],
+                          ),
+                        )
+                      )
+                        
+                        // child: Text("${team.rank} (${team.wins}-${team.ties}-${team.losses})", style: TextStyle(height: 0.5, fontSize: 13, color: Colors.red)))
                     ],
                   ),
                   title: Text(team.teamName ?? "Unknown", overflow: TextOverflow.ellipsis),
