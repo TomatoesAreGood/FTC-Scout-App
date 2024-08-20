@@ -94,12 +94,26 @@ class _EventAwardsState extends State<EventAwards> {
   
   Future refresh() async{
     setState(() {
-      data = getAwards();
+      data = refreshAwards();
     });
   }
 
-  Widget generateListTiles(List<TeamEventData> awardList){
-    if(awardList.isEmpty){
+  List<Widget> generateListTiles(List<String?> teams){
+    List<Widget> children = [
+      Container(height: 5, color: Colors.blue,)
+    ];
+    for (var i = 0; i < teams.length; i++){
+      children.add(
+        ListTile(
+          title: Text("${i+1}.   ${teams[i]!}", overflow: TextOverflow.ellipsis,),
+        )
+      );
+    }
+    return children;
+  }
+
+  Widget generateListView(Map<String?, List<String?>> awards){
+    if(awards.isEmpty){
       return Expanded(
         child: RefreshIndicator(
           onRefresh: refresh,
@@ -119,27 +133,19 @@ class _EventAwardsState extends State<EventAwards> {
         onRefresh: refresh,
         child: ListView.builder(
           physics: const BouncingScrollPhysics(),
-          itemCount: awardList.length,
+          itemCount: awards.length,
           itemBuilder: (context, index){
-            TeamEventData team = awardList[index];
+            var teams = awards.values.elementAt(index);
+            var awardName = awards.keys.elementAt(index);
+
             return Column(
               children: [
-                ListTile(
-                  leading: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Expanded(flex: 2, child: Text("${team.teamNumber}", style: TextStyle(height: 1.7, fontSize: 20))),
-                      Expanded(child: Text("${team.rank} (${team.wins}-${team.ties}-${team.losses})", style: TextStyle(height: 0.5, fontSize: 13)))
-                    ],
-                  ),
-                  title: Text(team.teamName, overflow: TextOverflow.ellipsis),
-                  subtitle: Text("${team.rankingPoints} RP   ${team.tieBreakerPoints} TBP", overflow: TextOverflow.ellipsis),
+                ExpansionTile(
+                  title: Text(awardName!),
+                  children: generateListTiles(teams)
                 ),
-                Container(
-                  height: 1,
-                  color: Colors.black,
-                )
-              ]
+                const Padding(padding: EdgeInsets.all(1))
+              ],
             );
           }
         ),
@@ -173,7 +179,6 @@ class _EventAwardsState extends State<EventAwards> {
     return awardList;
   }
 
-
   @override
   void initState(){
     data = getAwards();
@@ -187,10 +192,8 @@ class _EventAwardsState extends State<EventAwards> {
       builder: (context, data){
         if(data.hasData && !isCallingAPI){
           List<Award> awards = data.data!;
-          Map<String?, List<String?>> awardsList = splitAwards(awards);
-                  
-
-          return Container();
+          Map<String?, List<String?>> awardList = splitAwards(awards);
+          return generateListView(awardList);
         }
         return const Expanded(child: Center(child: CircularProgressIndicator()));
       },

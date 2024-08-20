@@ -138,7 +138,7 @@ class _EventScheduleState extends State<EventSchedule> {
   }
 
   List<Widget> generateListTiles(List<HybridMatchData> matches){
-    List<Widget> listTiles = [Container(height: 1,color: Colors.black,)];
+    List<Widget> listTiles = [Container(height: 5,color: Colors.blue,)];
     for(var i = 0; i < matches.length; i++){
       HybridMatchData match = matches[i];
       String leadingStr = "";
@@ -235,7 +235,6 @@ class _EventScheduleState extends State<EventSchedule> {
             return Column(
               children: [
                 ExpansionTile(
-                  collapsedBackgroundColor: const Color.fromARGB(255, 197, 197, 197),
                   title: Text(title),
                   children: generateListTiles(schedules[index])
                 ),
