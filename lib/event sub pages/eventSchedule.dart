@@ -178,16 +178,25 @@ class _EventScheduleState extends State<EventSchedule> {
           title: Row(
             children: [
               SizedBox(width:70, child: Text(leadingStr, style: const TextStyle(height: 0.7, fontSize: 21))),
-              Column(
-                children: intToWidget(sortArr(match.redTeam), true),
+              SizedBox(
+                width: 48,
+                child: Column(
+                  children: intToWidget(sortArr(match.redTeam), true),
+                ),
               ),
               Padding(
-                padding: const EdgeInsets.only(left:17, right: 9),
+                padding: const EdgeInsets.only(left:15, right: 9),
                 child: redScore
               ),
-              blueScore,
-              Column(
-                children: intToWidget(sortArr(match.blueTeam), false)
+              Padding(
+                padding: const EdgeInsets.only(right: 9),
+                child: blueScore
+              ),
+              SizedBox(
+                width: 48,
+                child: Column(
+                  children: intToWidget(sortArr(match.blueTeam), false)
+                ),
               ),
             ],
           ),
