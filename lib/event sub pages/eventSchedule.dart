@@ -133,6 +133,13 @@ class _EventScheduleState extends State<EventSchedule> {
 
   List<Widget> generateListTiles(List<HybridMatchData> matches){
     List<Widget> listTiles = [Container(height: 5,color: Colors.blue,)];
+    if(matches.isEmpty){
+      listTiles.add(Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Center(child: Text("No recorded matches", textScaler: TextScaler.linear(1.2),)),
+      ));
+      return listTiles;
+    }
     for(var i = 0; i < matches.length; i++){
       HybridMatchData match = matches[i];
       String leadingStr = "";
@@ -208,7 +215,7 @@ class _EventScheduleState extends State<EventSchedule> {
   }
 
   Widget generateListView(List<List<HybridMatchData>> schedules){
-    if(schedules.isEmpty){
+    if(schedules.isEmpty || schedules[0].isEmpty){
       return const Expanded(
         child: Center(
             child: AutoSizeText(
@@ -224,7 +231,7 @@ class _EventScheduleState extends State<EventSchedule> {
       child: RefreshIndicator(
         onRefresh: refresh,
         child: ListView.builder(
-          physics: const BouncingScrollPhysics(),
+          physics: const AlwaysScrollableScrollPhysics(),
           itemCount: schedules.length,
           itemBuilder: (context, index){
             String title;

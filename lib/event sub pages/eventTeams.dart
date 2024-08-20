@@ -133,7 +133,7 @@ class _EventTeamsState extends State<EventTeams> {
       child: RefreshIndicator(
         onRefresh: refresh,
         child: ListView.builder(
-          physics: const BouncingScrollPhysics(),
+          physics: const AlwaysScrollableScrollPhysics(),
           itemCount: teamList.length,
           itemBuilder: (context, index){
             TeamEventData team = teamList[index];

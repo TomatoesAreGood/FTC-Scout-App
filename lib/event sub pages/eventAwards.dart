@@ -128,7 +128,7 @@ class _EventAwardsState extends State<EventAwards> {
       child: RefreshIndicator(
         onRefresh: refresh,
         child: ListView.builder(
-          physics: const BouncingScrollPhysics(),
+          physics: const AlwaysScrollableScrollPhysics(),
           itemCount: awards.length,
           itemBuilder: (context, index){
             var teams = awards.values.elementAt(index);

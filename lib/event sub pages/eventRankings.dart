@@ -132,7 +132,7 @@ class _EventRankingsState extends State<EventRankings> {
       child: RefreshIndicator(
         onRefresh: refresh,
         child: ListView.builder(
-          physics: const BouncingScrollPhysics(),
+          physics: const AlwaysScrollableScrollPhysics(),
           itemCount: teamList.length,
           itemBuilder: (context, index){
             TeamEventData team = teamList[index];
@@ -142,8 +142,8 @@ class _EventRankingsState extends State<EventRankings> {
                   leading: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Expanded(flex: 2, child: Text("${team.teamNumber}", style: TextStyle(height: 1.7, fontSize: 20))),
-                      SizedBox(height: 1),
+                      Expanded(flex: 2, child: Text("${team.teamNumber}", style: const TextStyle(height: 1.7, fontSize: 20))),
+                      const SizedBox(height: 1),
                       Expanded(
                         child: RichText(
                           text: TextSpan(
