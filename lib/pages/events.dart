@@ -574,7 +574,22 @@ class _EventsState extends State<Events> {
           List<List<EventListing>> weeks = splitWeeks(seasonStart, dataList);
           return generateScaffold(Expanded(flex:3,child:generateListView(weeks)));      
         }
-        return generateScaffold(const Expanded(flex: 3, child:Center(child: CircularProgressIndicator())));
+        return generateScaffold(
+          const Expanded(
+            flex: 3, 
+            child: Center(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(),
+                  Padding(padding: EdgeInsets.all(8)),
+                  Text("If loading persists, exit and reload the page")
+                ],
+              ),
+            )
+          )
+        );
       },
     );
   }
