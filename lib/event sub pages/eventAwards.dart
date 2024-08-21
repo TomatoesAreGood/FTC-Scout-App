@@ -4,7 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:myapp/pages/eventSubpage.dart';
 import 'dart:convert';
-import 'package:myapp/teamEventData.dart';
+import 'package:myapp/data/teamPerformanceData.dart';
 
 class EventAwards extends StatefulWidget {
   final String code;
@@ -34,7 +34,7 @@ class _EventAwardsState extends State<EventAwards> {
 
     if(response.statusCode == 200){
       print("API CALL SUCCESS");
-      List<TeamEventData> teamList = TeamEventData.fromJson(json.decode(response.body) as Map<String,dynamic>);
+      List<TeamPerfomanceData> teamList = TeamPerfomanceData.fromJson(json.decode(response.body) as Map<String,dynamic>);
       if(!EventSubpage.storedResults.containsKey("rankings")){
         EventSubpage.storedResults["rankings"] = teamList;
       }
@@ -151,7 +151,7 @@ class _EventAwardsState extends State<EventAwards> {
 
   Map<int, String> getTeamDisplayNames(){
     Map<int, String> teamDisplayNames = {};
-    List<TeamEventData> teamData = EventSubpage.storedResults["rankings"];
+    List<TeamPerfomanceData> teamData = EventSubpage.storedResults["rankings"];
     for(var i = 0; i < teamData.length; i++){
       teamDisplayNames[teamData[i].teamNumber] = teamData[i].teamName ?? "Unknown";
     }
@@ -163,13 +163,13 @@ class _EventAwardsState extends State<EventAwards> {
     Map<String?, List<String?>> awardList = {};
     for (var i = 0; i < awards.length; i++){
       if(awardList.containsKey(awards[i].name) && awards[i].awardId == 10){
-        awardList[awards[i].name]!.add("${awards[i].person} (${awards[i].teamNumber} - ${displayNames[awards[i].teamNumber]})");
+        awardList[awards[i].name]!.add("${awards[i].person} (${awards[i].teamNumber} - ${displayNames[awards[i].teamNumber] ?? "Unkown"})");
       }else if(awards[i].awardId == 10){
-        awardList[awards[i].name] = ["${awards[i].person} (${awards[i].teamNumber} - ${displayNames[awards[i].teamNumber]})"];
+        awardList[awards[i].name] = ["${awards[i].person} (${awards[i].teamNumber} - ${displayNames[awards[i].teamNumber] ?? "Unkown"})"];
       }else if(awardList.containsKey(awards[i].name)){
-        awardList[awards[i].name]!.add("${awards[i].teamNumber} - ${displayNames[awards[i].teamNumber]}");
+        awardList[awards[i].name]!.add("${awards[i].teamNumber} - ${displayNames[awards[i].teamNumber] ?? "Unkown"}");
       }else{
-        awardList[awards[i].name] = ["${awards[i].teamNumber} - ${displayNames[awards[i].teamNumber]}"];
+        awardList[awards[i].name] = ["${awards[i].teamNumber} - ${displayNames[awards[i].teamNumber] ?? "Unkown"}"];
       }
     }
     return awardList;

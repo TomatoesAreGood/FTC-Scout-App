@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:myapp/sizeConfig.dart';
+import 'package:myapp/data/sizeConfig.dart';
 import 'dart:convert';
 import 'dart:async';
-import '../eventListing.dart';
+import '../data/eventListing.dart';
 import '../main.dart';
 import '../expandedTile.dart';
 import 'eventSubpage.dart';
@@ -76,9 +76,9 @@ List<String> getCountries(List<EventListing> eventList){
 
 
 class _EventsState extends State<Events> {
-  List<String> monthStrings = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  final List<String> monthStrings = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  final List<String> years = ["2019", "2020", "2021", "2022", "2023", "2024"];
   List<String> countries = ["All"];
-  List<String> years = ["2019", "2020", "2021", "2022", "2023", "2024"];
 
   String selectedYear = "2024";
   late String seasonStart;

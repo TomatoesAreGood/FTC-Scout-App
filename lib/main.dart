@@ -4,8 +4,8 @@ import 'package:myapp/pages/eventSubpage.dart';
 import 'package:myapp/pages/events.dart';
 import 'package:myapp/pages/favorited.dart';
 import 'package:myapp/pages/teams.dart';
-import 'eventListing.dart';
-import 'sizeConfig.dart';
+import 'data/eventListing.dart';
+import 'data/sizeConfig.dart';
 
 void main() async{
   await dotenv.load(fileName: "lib/.env");
@@ -15,7 +15,9 @@ void main() async{
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
   static Map<String, List<EventListing>> yearlyEventListings = {};
-  static Map<String, String> yearlyStartDates = {
+  static Map<String, List<EventListing>> yearlyTeamListings = {};
+
+  static final Map<String, String> yearlyStartDates = {
     "2019":"2019-09-07",
     "2020":"2020-09-12",
     "2021":"2021-09-18",

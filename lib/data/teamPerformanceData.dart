@@ -1,4 +1,4 @@
-class TeamEventData{
+class TeamPerfomanceData{
   final int rank;
   final int teamNumber;
   final String? teamName;
@@ -8,7 +8,7 @@ class TeamEventData{
   final double rankingPoints;
   final double tieBreakerPoints;
 
-  const TeamEventData({required this.rank, required this.teamNumber, required this.teamName, required this.wins, required this.ties, required this.losses, required this.rankingPoints, required this.tieBreakerPoints});
+  const TeamPerfomanceData({required this.rank, required this.teamNumber, required this.teamName, required this.wins, required this.ties, required this.losses, required this.rankingPoints, required this.tieBreakerPoints});
   
   static double round(double num){
     if("$num".length > 5){
@@ -17,13 +17,13 @@ class TeamEventData{
     return num;
   }
 
-  static List<TeamEventData> fromJson(Map<String, dynamic> json){
+  static List<TeamPerfomanceData> fromJson(Map<String, dynamic> json){
     List rankings = json['rankings'];
-    List<TeamEventData> teamPlacements = [];
+    List<TeamPerfomanceData> teamPlacements = [];
 
     for(var i = 0; i < rankings.length; i++){
       teamPlacements.add(
-        TeamEventData(
+        TeamPerfomanceData(
           rank: rankings[i]['rank'],
           teamNumber: rankings[i]['teamNumber'],
           teamName: rankings[i]['teamName'], 

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:myapp/pages/eventSubpage.dart';
-import 'package:myapp/teamEventData.dart';
+import 'package:myapp/data/teamPerformanceData.dart';
 import 'dart:convert';
 
 class EventRankings extends StatefulWidget {
@@ -20,13 +20,13 @@ class _EventRankingsState extends State<EventRankings> {
   late dynamic data;
   bool isCallingAPI = false;
 
-  void mergeSortRank(List<TeamEventData> arr){
+  void mergeSortRank(List<TeamPerfomanceData> arr){
     if (arr.length <= 1){
       return;
     }
     int mid = (arr.length / 2).floor() ;
-    List<TeamEventData> L = arr.sublist(0, mid);
-    List<TeamEventData> R = arr.sublist(mid, arr.length);
+    List<TeamPerfomanceData> L = arr.sublist(0, mid);
+    List<TeamPerfomanceData> R = arr.sublist(mid, arr.length);
   
     mergeSortRank(L);
     mergeSortRank(R);
@@ -71,7 +71,7 @@ class _EventRankingsState extends State<EventRankings> {
 
     if(response.statusCode == 200){
       print("API CALL SUCCESS");
-      List<TeamEventData> teamList = TeamEventData.fromJson(json.decode(response.body) as Map<String,dynamic>);
+      List<TeamPerfomanceData> teamList = TeamPerfomanceData.fromJson(json.decode(response.body) as Map<String,dynamic>);
       EventSubpage.storedResults["rankings"] = teamList;
       isCallingAPI = false;
       return teamList;
@@ -91,7 +91,7 @@ class _EventRankingsState extends State<EventRankings> {
 
     if(response.statusCode == 200){
       print("API CALL SUCCESS");
-      List<TeamEventData> teamList = TeamEventData.fromJson(json.decode(response.body) as Map<String,dynamic>);
+      List<TeamPerfomanceData> teamList = TeamPerfomanceData.fromJson(json.decode(response.body) as Map<String,dynamic>);
       EventSubpage.storedResults["rankings"] = teamList;
       isCallingAPI = false;
       return teamList;
@@ -112,7 +112,7 @@ class _EventRankingsState extends State<EventRankings> {
     });
   }
 
-  Widget generateListTiles(List<TeamEventData> teamList){
+  Widget generateListTiles(List<TeamPerfomanceData> teamList){
     if(teamList.isEmpty){
       return Expanded(
         child: RefreshIndicator(
@@ -135,7 +135,7 @@ class _EventRankingsState extends State<EventRankings> {
           physics: const AlwaysScrollableScrollPhysics(),
           itemCount: teamList.length,
           itemBuilder: (context, index){
-            TeamEventData team = teamList[index];
+            TeamPerfomanceData team = teamList[index];
             return Column(
               children: [
                 ListTile(
@@ -179,7 +179,7 @@ class _EventRankingsState extends State<EventRankings> {
       future: data,
       builder: (context, data){
         if(data.hasData && !isCallingAPI){
-          List<TeamEventData> teamList = data.data!;
+          List<TeamPerfomanceData> teamList = data.data!;
           mergeSortRank(teamList);
           return generateListTiles(teamList); 
         }

@@ -2,7 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
-import 'package:myapp/hybridMatchData.dart';
+import 'package:myapp/data/hybridMatchData.dart';
 import 'package:myapp/pages/eventSubpage.dart';
 import 'dart:convert';
 
@@ -121,14 +121,14 @@ class _EventScheduleState extends State<EventSchedule> {
           return [arr[1], arr[0], arr[2]];
         }
       }
-    }else{
+    }else if (arr.length == 2){
       if(arr[0] > arr[1]){
         return [arr[1], arr[0]];
       }else{
         return arr;
       }
     }
-   
+    return arr;
   }
 
   List<Widget> generateListTiles(List<HybridMatchData> matches){
