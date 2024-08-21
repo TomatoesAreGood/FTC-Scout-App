@@ -22,7 +22,7 @@ class _EventScheduleState extends State<EventSchedule> {
   bool isCallingAPI = false;
 
   dynamic getSchedule() async{
-    if(EventSubpage.storedResults.containsKey("schedule") && EventSubpage.storedResults["schedule"].isNotEmpty){
+    if(EventSubpage.storedResults.containsKey("schedule") && EventSubpage.storedResults["schedule"][0].isNotEmpty){
       return EventSubpage.storedResults["schedule"];
     }
     isCallingAPI = true;
