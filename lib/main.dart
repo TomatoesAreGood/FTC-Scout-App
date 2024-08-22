@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:myapp/data/teamListing.dart';
 import 'package:myapp/pages/eventSubpage.dart';
 import 'package:myapp/pages/events.dart';
 import 'package:myapp/pages/favorited.dart';
 import 'package:myapp/pages/teams.dart';
 import 'data/eventListing.dart';
 import 'data/sizeConfig.dart';
+
+class YearlyTeamListing{
+  int page;
+  final List<TeamListing> teams;
+
+  YearlyTeamListing ({required this.page, required this.teams});
+}
 
 void main() async{
   await dotenv.load(fileName: "lib/.env");
@@ -15,7 +23,7 @@ void main() async{
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
   static Map<String, List<EventListing>> yearlyEventListings = {};
-  static Map<String, List<EventListing>> yearlyTeamListings = {};
+  static Map<String, YearlyTeamListing> yearlyTeamListings = {};
 
   static final Map<String, String> yearlyStartDates = {
     "2019":"2019-09-07",
