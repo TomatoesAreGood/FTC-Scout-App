@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:myapp/data/sizeConfig.dart';
 import 'package:myapp/data/teamListing.dart';
 import 'dart:convert';
 import 'dart:async';
-import '../data/eventListing.dart';
 import '../main.dart';
-import '../expandedTile.dart';
-import 'eventSubpage.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class Teams extends StatefulWidget {
@@ -29,7 +24,6 @@ class _TeamsState extends State<Teams> {
   static int pageNum = 1;
 
   final controller = ScrollController();
-
 
   dynamic getTeams(String year, int page) async{
     if(MyApp.yearlyTeamListings.containsKey(year) && page <= MyApp.yearlyTeamListings[selectedYear]!.page){
@@ -108,6 +102,14 @@ class _TeamsState extends State<Teams> {
     super.dispose();
   }
 
+  Widget generateScaffold(Widget child){
+    return Scaffold(
+      appBar: AppBar(title: Text("Teams"), backgroundColor: Colors.lightGreen,),
+      drawer: Drawer(),
+      body: child,
+    );
+  }
+
   Widget generateListView(List<TeamListing> teamList){
     return RefreshIndicator(
       onRefresh: refresh,
@@ -146,9 +148,9 @@ class _TeamsState extends State<Teams> {
         if(data.hasData && !isCallingAPI){
           List<TeamListing> teamList = data.data!;
           print(teamList.length);
-          return generateListView(teamList);
+          return generateScaffold(generateListView(teamList));
         }
-        return const Center(child: CircularProgressIndicator());
+        return generateScaffold(const Center(child: CircularProgressIndicator()));
       },
     );;
   }
