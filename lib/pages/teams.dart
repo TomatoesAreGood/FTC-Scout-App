@@ -31,8 +31,12 @@ class _TeamsState extends State<Teams> {
   final controller = ScrollController();
 
 
-  dynamic getTeams(String year, int page)async{
-    print(page);
+  dynamic getTeams(String year, int page) async{
+    if(MyApp.yearlyTeamListings.containsKey(year) && page <= MyApp.yearlyTeamListings[selectedYear]!.page){
+      pageNum = MyApp.yearlyTeamListings[year]!.page;
+      return MyApp.yearlyTeamListings[year]!.teams; 
+    }
+
     String? user = dotenv.env['USER'];
     String? token = dotenv.env['TOKEN'];
     String authorization = "$user:$token";
@@ -50,7 +54,6 @@ class _TeamsState extends State<Teams> {
       }else{
         MyApp.yearlyTeamListings[year]!.teams.addAll(teamList);
         MyApp.yearlyTeamListings[year]!.page = page;
-        pageNum = page;
         return MyApp.yearlyTeamListings[year]!.teams;
       }
     }else{
@@ -91,7 +94,8 @@ class _TeamsState extends State<Teams> {
     controller.addListener((){
       if(controller.position.maxScrollExtent == controller.offset){
         setState(() {
-          teams = getTeams(selectedYear, pageNum + 1);
+          pageNum++;
+          teams = getTeams(selectedYear, pageNum);
         });
       }
     });
