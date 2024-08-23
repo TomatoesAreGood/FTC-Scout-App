@@ -102,10 +102,37 @@ class _TeamsState extends State<Teams> {
     super.dispose();
   }
 
+  void scrollUp(){
+    int seconds = 0;
+    int milliseconds = 200;
+    if(controller.position.pixels > 2500){
+      milliseconds = 400;
+      seconds = 0;
+    }
+    if(controller.position.pixels > 5000){
+      milliseconds = 650;
+      seconds = 0;
+    }
+    if(controller.position.pixels > 10000){
+      seconds = (controller.position.pixels/10000).round();
+      milliseconds = 0;
+    }
+    controller.animateTo(0, duration: Duration(seconds: seconds, milliseconds: milliseconds), curve: Curves.easeIn);
+  }
+
+
   Widget generateScaffold(Widget child){
+    FloatingActionButton? button = null;
+    if(pageNum > 1){
+      button = FloatingActionButton(
+        child: Icon(Icons.arrow_upward),
+        onPressed: scrollUp,
+      );
+    }
     return Scaffold(
       appBar: AppBar(title: Text("Teams"), backgroundColor: Colors.lightGreen,),
       drawer: Drawer(),
+      floatingActionButton: button,
       body: child,
     );
   }
