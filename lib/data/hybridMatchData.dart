@@ -1,8 +1,8 @@
 class HybridMatchData{
   final List<int> blueTeam;
   final List<int> redTeam;
-  final int scoreRedFinal;
-  final int scoreBlueFinal;
+  final int? scoreRedFinal;
+  final int? scoreBlueFinal;
   final int matchNumber;
   final int seriesNumber;
   final int tournamentLevel;
@@ -26,10 +26,10 @@ class HybridMatchData{
 
       List teams = schedule[i]['teams'];
       for(var j = 0; j < teams.length; j++){
-        if(teams[j]['station'].startsWith("Red")){
-          redTeam.add(teams[j]['teamNumber']);
+        if(teams[j]['station']!.startsWith("Red")){
+          redTeam.add(teams[j]['teamNumber'] ?? 00000);
         }else{
-          blueTeam.add(teams[j]['teamNumber']);
+          blueTeam.add(teams[j]!['teamNumber'] ?? 00000);
         }
       }
 
@@ -37,8 +37,8 @@ class HybridMatchData{
         HybridMatchData(
           blueTeam: blueTeam, 
           redTeam: redTeam, 
-          scoreBlueFinal: schedule[i]['scoreBlueFinal'], 
-          scoreRedFinal: schedule[i]['scoreRedFinal'],
+          scoreBlueFinal: schedule[i]['scoreBlueFinal'] ?? 0, 
+          scoreRedFinal: schedule[i]['scoreRedFinal'] ?? 0,
           matchNumber: schedule[i]['matchNumber'],
           seriesNumber: schedule[i]['series'],
           tournamentLevel: tournamentLevelMap[schedule[i]['tournamentLevel']]!,
