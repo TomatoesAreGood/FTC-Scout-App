@@ -171,7 +171,7 @@ class _TeamsState extends State<Teams> {
         ),
       drawer: Drawer(),
       floatingActionButton: button,
-      body: filtersExpanded ? Column(children: [generateFilterMenu(),child],) : child,
+      body: filtersExpanded ? Column(children: [generateFilterMenu(),child],) : Column(children:[child,])
     );
   }
 
