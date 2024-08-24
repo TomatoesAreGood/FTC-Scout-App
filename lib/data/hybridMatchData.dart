@@ -27,9 +27,9 @@ class HybridMatchData{
       List teams = schedule[i]['teams'];
       for(var j = 0; j < teams.length; j++){
         if(teams[j]['station']!.startsWith("Red")){
-          redTeam.add(teams[j]['teamNumber'] ?? 00000);
+          redTeam.add(teams[j]['teamNumber'] ?? 0);
         }else{
-          blueTeam.add(teams[j]!['teamNumber'] ?? 00000);
+          blueTeam.add(teams[j]!['teamNumber'] ?? 0);
         }
       }
 
