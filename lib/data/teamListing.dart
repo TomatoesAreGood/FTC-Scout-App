@@ -1,3 +1,8 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:myapp/data/yearlyTeamDivisions.dart';
+
 class TeamListing{
   final int teamNumber;
   final int rookieYear;
@@ -10,6 +15,32 @@ class TeamListing{
 
   String getDisplayLocation(){
     return "$city, $stateProv, $country";
+  }
+
+  static Future<TeamListing?> getTeam(String year, int page, int teamNum) async {
+    String? user = dotenv.env['USER'];
+    String? token = dotenv.env['TOKEN'];
+    String authorization = "$user:$token";
+    String encodedToken = base64.encode(utf8.encode(authorization));
+
+    var response = await http.get(Uri.parse('https://ftc-api.firstinspires.org/v2.0/$year/teams?page=$page'), headers: {"Authorization": "Basic $encodedToken"});
+
+    if(response.statusCode == 200){
+      List teams = (json.decode(response.body) as Map<String, dynamic>)['teams'];
+
+      for(var i = 0; i < teams.length; i++){
+        if(teams[i]['teamNumber'] == teamNum){
+          return singleFromJson(teams[i]);
+        }
+      }
+      return null;
+    }else{
+      throw Exception("API error ${response.statusCode}");
+    }
+  }
+
+  static TeamListing singleFromJson(Map<String, dynamic> json){
+    return TeamListing(city: json['city'], country: json['country'], rookieYear: json['rookieYear'], stateProv: json['stateProv'], teamName: json['nameShort'], teamNumber: json['teamNumber']);
   }
 
   static List<TeamListing> fromJson(Map<String, dynamic> json){

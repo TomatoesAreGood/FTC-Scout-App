@@ -1,5 +1,9 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 class YearlyTeamDivisions{
-  static Map<String, List> yearlyTeamDivisions = {
+  static Map<String, List> map = {
     "2024": 
     [
       [1, 535],
@@ -746,5 +750,37 @@ class YearlyTeamDivisions{
       [18110, 18174],
       [18175, 201902089],
     ]
-};
+  };
+
+  void printYearlyTeamDivisions(int year) async{
+    String? user = dotenv.env['USER'];
+    String? token = dotenv.env['TOKEN'];
+    String authorization = "$user:$token";
+    String encodedToken = base64.encode(utf8.encode(authorization));
+
+    var response = await http.get(Uri.parse('https://ftc-api.firstinspires.org/v2.0/$year/teams?page=1'), headers: {"Authorization": "Basic $encodedToken"});
+    print( "[${(json.decode(response.body) as Map<String, dynamic>)['teams'][0]['teamNumber']}, ${(json.decode(response.body) as Map<String, dynamic>)['teams'][64]['teamNumber']}],");
+    int totalPages = (json.decode(response.body) as Map<String, dynamic>)['pageTotal'];
+
+    for(var i = 2; i <= totalPages; i++){
+      response = await http.get(Uri.parse('https://ftc-api.firstinspires.org/v2.0/$year/teams?page=$i'), headers: {"Authorization": "Basic $encodedToken"});
+      if(i != totalPages){
+        print("[${(json.decode(response.body) as Map<String, dynamic>)['teams'][0]['teamNumber']}, ${(json.decode(response.body) as Map<String, dynamic>)['teams'][64]['teamNumber']}],");
+      }else{
+        int teamCountPage = (json.decode(response.body) as Map<String, dynamic>)['teamCountPage'] - 1;
+        print("[${(json.decode(response.body) as Map<String, dynamic>)['teams'][0]['teamNumber']}, ${(json.decode(response.body) as Map<String, dynamic>)['teams'][teamCountPage]['teamNumber']}],");
+      }
+    }
+  }
+
+  //COULD MAKE THIS MORE EFFICIENT
+  static int getPageNum(String year, int teamNum){
+    List? divisions = YearlyTeamDivisions.map[year];
+    for(var i = 0; i < divisions!.length; i++){
+      if(teamNum >= divisions[i][0] && teamNum <= divisions[i][1]){
+        return i + 1;
+      }
+    }
+    return -1;
+  }
 }
