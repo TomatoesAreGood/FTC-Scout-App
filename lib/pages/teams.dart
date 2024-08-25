@@ -29,6 +29,28 @@ class _TeamsState extends State<Teams> {
   String? searchLabelText = "Search";
   bool filtersExpanded = false;
 
+  void printYearlyTeamDivisions(int year) async{
+    String? user = dotenv.env['USER'];
+    String? token = dotenv.env['TOKEN'];
+    String authorization = "$user:$token";
+    String encodedToken = base64.encode(utf8.encode(authorization));
+
+    var response = await http.get(Uri.parse('https://ftc-api.firstinspires.org/v2.0/$year/teams?page=1'), headers: {"Authorization": "Basic $encodedToken"});
+    print( "[${(json.decode(response.body) as Map<String, dynamic>)['teams'][0]['teamNumber']}, ${(json.decode(response.body) as Map<String, dynamic>)['teams'][64]['teamNumber']}],");
+    int totalPages = (json.decode(response.body) as Map<String, dynamic>)['pageTotal'];
+
+    for(var i = 2; i <= totalPages; i++){
+      response = await http.get(Uri.parse('https://ftc-api.firstinspires.org/v2.0/$year/teams?page=$i'), headers: {"Authorization": "Basic $encodedToken"});
+      if(i != totalPages){
+        print("[${(json.decode(response.body) as Map<String, dynamic>)['teams'][0]['teamNumber']}, ${(json.decode(response.body) as Map<String, dynamic>)['teams'][64]['teamNumber']}],");
+      }else{
+        int teamCountPage = (json.decode(response.body) as Map<String, dynamic>)['teamCountPage'] - 1;
+        print("[${(json.decode(response.body) as Map<String, dynamic>)['teams'][0]['teamNumber']}, ${(json.decode(response.body) as Map<String, dynamic>)['teams'][teamCountPage]['teamNumber']}],");
+      }
+    }
+  }
+
+
   dynamic getTeams(String year, int page) async{
     if(MyApp.yearlyTeamListings.containsKey(year) && page <= MyApp.yearlyTeamListings[selectedYear]!.page){
       pageNum = MyApp.yearlyTeamListings[year]!.page;
@@ -311,6 +333,6 @@ class _TeamsState extends State<Teams> {
         }
         return generateScaffold(const Expanded(flex: 3, child: Center(child: CircularProgressIndicator())));
       },
-    );;
+    );
   }
 }
