@@ -275,7 +275,7 @@ class _TeamsState extends State<Teams> {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => 
-                        TeamSubpage(teamNumber: team.teamNumber, year: int.parse(selectedYear))
+                        TeamSubpage(teamNumber: team.teamNumber, year: int.parse(selectedYear), teamName: team.teamName,)
                     )
                   );
                 },

@@ -10,9 +10,10 @@ import 'package:myapp/data/yearlyTeamDivisions.dart';
 class TeamSubpage extends StatefulWidget {
   final int teamNumber;
   final int year;
+  final String teamName;
   static Map<String, dynamic> storedResults = {};
 
-  const TeamSubpage({super.key, required this.teamNumber, required this.year});
+  const TeamSubpage({super.key, required this.teamNumber, required this.year, required this.teamName});
 
   @override
   State<TeamSubpage> createState() => _TeamSubpageState();
@@ -46,7 +47,19 @@ class _TeamSubpageState extends State<TeamSubpage> {
 
   Widget generateScaffold(Widget child){
     return Scaffold(
-      appBar: AppBar(title: Text("${widget.teamNumber}")),
+      appBar: AppBar(
+        title: 
+          Row(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Text("${widget.teamNumber} - ${widget.teamName}")
+                )
+              ),
+            ]
+          ),
+      ),
       body: child,
     );
   }
