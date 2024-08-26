@@ -26,6 +26,7 @@ class TeamListing{
     var response = await http.get(Uri.parse('https://ftc-api.firstinspires.org/v2.0/$year/teams?page=$page'), headers: {"Authorization": "Basic $encodedToken"});
 
     if(response.statusCode == 200){
+      print("API CALL SUCCESS");
       List teams = (json.decode(response.body) as Map<String, dynamic>)['teams'];
 
       for(var i = 0; i < teams.length; i++){

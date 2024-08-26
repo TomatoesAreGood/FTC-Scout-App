@@ -23,11 +23,11 @@ class _TeamSubpageState extends State<TeamSubpage> {
   late Future<TeamListing?> team;
   late Future<List> events;
 
-  int selectedIndex = 0;
   Color? selectedColor = Colors.grey[300];
 
   final List years = [2019, 2020, 2021, 2022, 2023, 2024];
-  int selectedYear = 2019;
+  int selectedIndex = 0;
+  late int selectedYear = years[selectedIndex];
 
   bool isCallingAPI = false;
 
@@ -239,12 +239,29 @@ class _TeamSubpageState extends State<TeamSubpage> {
             ]
           ),
       ),
-      body: Column(
-        children: [
-          horizontalScrollable(),
-          child
-        ],
-      ) ,
+      body: child
+    );
+  }
+
+  Widget generateBody(Widget child, TeamListing team){
+    return Column(
+      children: [
+        ListTile(
+          leading: Icon(Icons.location_on),
+          title: Text(team.getDisplayLocation()),
+        ),
+        ListTile(
+          leading: Icon(Icons.cake),
+          title: Text("Rookie Year: ${team.rookieYear}"),
+        ),
+        Align(
+          child: Text("Events", style: TextStyle(fontSize: 25)),
+          alignment: Alignment.centerLeft,
+        ),
+        Container(height: 6, color: Colors.lightBlue,),
+        horizontalScrollable(),
+        child
+      ],
     );
   }
   
@@ -253,14 +270,17 @@ class _TeamSubpageState extends State<TeamSubpage> {
     return FutureBuilder<dynamic>(
       future: Future.wait([team, events]),
       builder: (context, data){
-        if(data.hasData && !isCallingAPI){
+        if(data.hasData){
           TeamListing team = data.data![0];
           List<EventListing> eventList = data.data![1];
+          if(!isCallingAPI){
+            return generateScaffold(generateBody(Expanded(child: ListView(children: generateListTiles(eventList))), team));
+          }
           // print(team.city);
           print(eventList.length);
-          return generateScaffold(Expanded(child: ListView(children: generateListTiles(eventList))));
+          return generateScaffold(generateBody(Expanded(child: Center(child: CircularProgressIndicator())), team));
         }
-        return generateScaffold(Expanded(child: Center(child: CircularProgressIndicator())));
+        return generateScaffold(Column(children: [Expanded(child: Center(child: CircularProgressIndicator()))]));
       },
     );
   }
