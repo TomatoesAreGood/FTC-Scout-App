@@ -11,7 +11,7 @@ class TeamSubpage extends StatefulWidget {
   final int teamNumber;
   final int year;
   final String teamName;
-  static Map<String, dynamic> storedResults = {};
+  static Map<int, dynamic> storedResults = {};
 
   const TeamSubpage({super.key, required this.teamNumber, required this.year, required this.teamName});
 
@@ -23,16 +23,33 @@ class _TeamSubpageState extends State<TeamSubpage> {
   late Future<TeamListing?> team;
   late Future<List> events;
 
-  Future<List> getEvents(int teamNum, int year) async{
+  int selectedIndex = 0;
+  Color? selectedColor = Colors.grey[300];
+
+  final List years = [2019, 2020, 2021, 2022, 2023, 2024];
+  int selectedYear = 2019;
+
+  bool isCallingAPI = false;
+
+  Future<List> getEvents(int year) async{
+    if(TeamSubpage.storedResults.containsKey(year)){
+      return TeamSubpage.storedResults[year];
+    }
+
     String? user = dotenv.env['USER'];
     String? token = dotenv.env['TOKEN'];
     String authorization = "$user:$token";
     String encodedToken = base64.encode(utf8.encode(authorization));
 
-    var response = await http.get(Uri.parse('https://ftc-api.firstinspires.org/v2.0/$year/events?teamNumber=$teamNum'), headers: {"Authorization": "Basic $encodedToken"});
+    isCallingAPI = true;
+    var response = await http.get(Uri.parse('https://ftc-api.firstinspires.org/v2.0/$year/events?teamNumber=${widget.teamNumber}'), headers: {"Authorization": "Basic $encodedToken"});
 
     if(response.statusCode == 200){
-      return EventListing.fromJson(json.decode(response.body) as Map<String, dynamic>);
+      print("API CALL SUCCESS");
+      List eventList = EventListing.fromJson(json.decode(response.body) as Map<String, dynamic>);
+      TeamSubpage.storedResults[year] = eventList;
+      isCallingAPI = false;
+      return eventList;
     }else{
       throw Exception("API error ${response.statusCode}");
     }
@@ -40,14 +57,176 @@ class _TeamSubpageState extends State<TeamSubpage> {
 
   @override
   void initState(){
+    TeamSubpage.storedResults = {};
     team = TeamListing.getTeam("${widget.year}", YearlyTeamDivisions.getPageNum("${widget.year}", widget.teamNumber), widget.teamNumber);
-    events = getEvents(widget.teamNumber, widget.year);
+    events = getEvents(selectedYear);
     super.initState();
+  }
+
+  Widget horizontalScrollable(){
+    List<Color?> buttonColors = [for (var i = 0; i < years.length; i++) null];
+    buttonColors[selectedIndex] = selectedColor;
+
+    return Container(
+      height: 40,
+      child: Row(
+        children: [
+          Expanded(
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: [
+                TextButton(
+                  onPressed: (){
+                    setState(() {
+                      if(selectedIndex != 0){
+                        selectedIndex = 0;
+                        selectedYear = years[selectedIndex];
+                        events = getEvents(selectedYear);
+                      }
+                    });
+                  }, 
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.black,
+                    backgroundColor: buttonColors[0]
+                  ),
+                  child: Text("2019")
+                ),
+                TextButton(
+                  onPressed: (){
+                    setState(() {
+                      if(selectedIndex != 1){
+                        selectedIndex = 1;
+                        selectedYear = years[selectedIndex];
+                        events = getEvents(selectedYear);
+                      }
+                    });
+                  }, 
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.black,
+                    backgroundColor: buttonColors[1]
+                  ),
+                  child: Text("2020")
+                ),
+                TextButton(
+                  onPressed: (){
+                    setState(() {
+                      if(selectedIndex != 2){
+                        selectedIndex = 2;
+                        selectedYear = years[selectedIndex];
+                        events = getEvents(selectedYear);
+                      }
+                    });
+                  }, 
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.black,
+                    backgroundColor: buttonColors[2]
+                  ),
+                  child: Text("2021")
+                ),
+                TextButton(
+                  onPressed: (){
+                    setState(() {
+                      if(selectedIndex != 3){
+                        selectedIndex = 3;
+                        selectedYear = years[selectedIndex];
+                        events = getEvents(selectedYear);
+                      }
+                    });
+                  }, 
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.black,
+                    backgroundColor: buttonColors[3]
+                  ),
+                  child: Text("2022")
+                ),
+                TextButton(
+                  onPressed: (){
+                    setState(() {
+                      if(selectedIndex != 4){
+                        selectedIndex = 4;
+                        selectedYear = years[selectedIndex];
+                        events = getEvents(selectedYear);
+                      }
+                    });
+                  }, 
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.black,
+                    backgroundColor: buttonColors[4]
+                  ),
+                  child: Text("2023")
+                ),
+                TextButton(
+                  onPressed: (){
+                    setState(() {
+                      if(selectedIndex != 5){
+                        selectedIndex = 5;
+                        selectedYear = years[selectedIndex];
+                        events = getEvents(selectedYear);
+                      }
+                    });
+                  }, 
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.black,
+                    backgroundColor: buttonColors[5]
+                  ),
+                  child: Text("2024")
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  List<Column> generateListTiles(List<EventListing> events){
+    List<Column> listings = [
+      Column(
+        children: [
+          Container(
+            height: 1,
+            color: Colors.black,
+          )
+        ]
+      )
+    ];
+    int i = 0;
+    while(i < events.length){
+      String code = events[i].code;
+      String name = events[i].name;
+      String date = events[i].dateStart;
+      listings.add(
+        Column(
+          children: [
+            ListTile(
+              title: Text(name, maxLines: 1, overflow: TextOverflow.ellipsis),
+              subtitle: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("${events[i].city}, ${events[i].country}"),
+                  Text(date)
+                ],
+              ),
+            ),
+            Container(
+              height: 1,
+              color: Colors.black,
+            )
+          ],
+        )
+      );
+      i++;
+    }
+    return listings;
   }
 
   Widget generateScaffold(Widget child){
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.lightGreen,
+        actions: [
+          IconButton(onPressed: (){print("favouited");}, icon: Icon(Icons.star_border))
+        ],
         title: 
           Row(
             children: [
@@ -60,7 +239,12 @@ class _TeamSubpageState extends State<TeamSubpage> {
             ]
           ),
       ),
-      body: child,
+      body: Column(
+        children: [
+          horizontalScrollable(),
+          child
+        ],
+      ) ,
     );
   }
   
@@ -69,14 +253,14 @@ class _TeamSubpageState extends State<TeamSubpage> {
     return FutureBuilder<dynamic>(
       future: Future.wait([team, events]),
       builder: (context, data){
-        if(data.hasData){
+        if(data.hasData && !isCallingAPI){
           TeamListing team = data.data![0];
           List<EventListing> eventList = data.data![1];
-          print(team.city);
+          // print(team.city);
           print(eventList.length);
-          return generateScaffold(Text("among us"));
+          return generateScaffold(Expanded(child: ListView(children: generateListTiles(eventList))));
         }
-        return generateScaffold(Center(child: CircularProgressIndicator()));
+        return generateScaffold(Expanded(child: Center(child: CircularProgressIndicator())));
       },
     );
   }
