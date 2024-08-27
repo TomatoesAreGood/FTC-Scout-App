@@ -43,6 +43,11 @@ class _TeamSubpageState extends State<TeamSubpage> {
 
     isCallingAPI = true;
     var response = await http.get(Uri.parse('https://ftc-api.firstinspires.org/v2.0/$year/events?teamNumber=${widget.teamNumber}'), headers: {"Authorization": "Basic $encodedToken"});
+    if(response.body[0] != '{'){  
+      isCallingAPI = false;
+      List<EventListing> eventList = [];
+      return eventList;
+    }
 
     if(response.statusCode == 200){
       print("API CALL SUCCESS");
@@ -179,6 +184,15 @@ class _TeamSubpageState extends State<TeamSubpage> {
     );
   }
 
+  Widget generateListView(List<EventListing> events){
+    if(events.isEmpty){
+      return Center(child: Text("No events to show"));
+    }
+    return ListView(
+      children: generateListTiles(events),
+    );
+  }
+
   List<Column> generateListTiles(List<EventListing> events){
     List<Column> listings = [
       Column(
@@ -273,11 +287,11 @@ class _TeamSubpageState extends State<TeamSubpage> {
         if(data.hasData){
           TeamListing team = data.data![0];
           List<EventListing> eventList = data.data![1];
+
           if(!isCallingAPI){
-            return generateScaffold(generateBody(Expanded(child: ListView(children: generateListTiles(eventList))), team));
+            return generateScaffold(generateBody(Expanded(child: generateListView(eventList)), team));
           }
           // print(team.city);
-          print(eventList.length);
           return generateScaffold(generateBody(Expanded(child: Center(child: CircularProgressIndicator())), team));
         }
         return generateScaffold(Column(children: [Expanded(child: Center(child: CircularProgressIndicator()))]));
