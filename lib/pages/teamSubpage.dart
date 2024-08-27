@@ -260,6 +260,16 @@ class _TeamSubpageState extends State<TeamSubpage> {
   Widget generateBody(Widget child, TeamListing team){
     return Column(
       children: [
+        Padding(padding: EdgeInsets.all(5)),
+        Align(
+          child: Text("General Information", style: TextStyle(fontSize: 22)),
+          alignment: Alignment.centerLeft,
+        ),
+        Container(height: 6, color: Colors.lightBlue,),
+        ListTile(
+          leading: Icon(Icons.info_outline_rounded),
+          title: Text(team.fullTeamName),
+        ),
         ListTile(
           leading: Icon(Icons.location_on),
           title: Text(team.getDisplayLocation()),
@@ -268,8 +278,9 @@ class _TeamSubpageState extends State<TeamSubpage> {
           leading: Icon(Icons.cake),
           title: Text("Rookie Year: ${team.rookieYear}"),
         ),
+        Padding(padding: EdgeInsets.all(5)),
         Align(
-          child: Text("Events", style: TextStyle(fontSize: 25)),
+          child: Text("Events", style: TextStyle(fontSize: 22)),
           alignment: Alignment.centerLeft,
         ),
         Container(height: 6, color: Colors.lightBlue,),

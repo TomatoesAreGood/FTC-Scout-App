@@ -10,8 +10,9 @@ class TeamListing{
   final String city;
   final String stateProv;
   final String country;
+  final String fullTeamName;
 
-  const TeamListing({required this.city, required this.country, required this.rookieYear, required this.stateProv, required this.teamName, required this.teamNumber});
+  const TeamListing({required this.city, required this.country, required this.rookieYear, required this.stateProv, required this.teamName, required this.teamNumber, required this.fullTeamName});
 
   String getDisplayLocation(){
     return "$city, $stateProv, $country";
@@ -41,7 +42,7 @@ class TeamListing{
   }
 
   static TeamListing singleFromJson(Map<String, dynamic> json){
-    return TeamListing(city: json['city'], country: json['country'], rookieYear: json['rookieYear'], stateProv: json['stateProv'], teamName: json['nameShort'], teamNumber: json['teamNumber']);
+    return TeamListing(city: json['city'], country: json['country'], rookieYear: json['rookieYear'], stateProv: json['stateProv'], teamName: json['nameShort'], teamNumber: json['teamNumber'], fullTeamName: json['nameFull']);
   }
 
   static List<TeamListing> fromJson(Map<String, dynamic> json){
@@ -56,7 +57,8 @@ class TeamListing{
           teamName: teamList[i]['nameShort'],
           city: teamList[i]['city'],
           stateProv: teamList[i]['stateProv'],
-          country: teamList[i]['country']
+          country: teamList[i]['country'],
+          fullTeamName: teamList[i]['nameFull']
         )
       );
     }   
