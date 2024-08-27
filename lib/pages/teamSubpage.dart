@@ -94,7 +94,7 @@ class _TeamSubpageState extends State<TeamSubpage> {
                     foregroundColor: Colors.black,
                     backgroundColor: buttonColors[0]
                   ),
-                  child: Text("2019")
+                  child: const Text("2019")
                 ),
                 TextButton(
                   onPressed: (){
@@ -110,7 +110,7 @@ class _TeamSubpageState extends State<TeamSubpage> {
                     foregroundColor: Colors.black,
                     backgroundColor: buttonColors[1]
                   ),
-                  child: Text("2020")
+                  child: const Text("2020")
                 ),
                 TextButton(
                   onPressed: (){
@@ -126,7 +126,7 @@ class _TeamSubpageState extends State<TeamSubpage> {
                     foregroundColor: Colors.black,
                     backgroundColor: buttonColors[2]
                   ),
-                  child: Text("2021")
+                  child: const Text("2021")
                 ),
                 TextButton(
                   onPressed: (){
@@ -142,7 +142,7 @@ class _TeamSubpageState extends State<TeamSubpage> {
                     foregroundColor: Colors.black,
                     backgroundColor: buttonColors[3]
                   ),
-                  child: Text("2022")
+                  child: const Text("2022")
                 ),
                 TextButton(
                   onPressed: (){
@@ -158,7 +158,7 @@ class _TeamSubpageState extends State<TeamSubpage> {
                     foregroundColor: Colors.black,
                     backgroundColor: buttonColors[4]
                   ),
-                  child: Text("2023")
+                  child: const Text("2023")
                 ),
                 TextButton(
                   onPressed: (){
@@ -174,7 +174,7 @@ class _TeamSubpageState extends State<TeamSubpage> {
                     foregroundColor: Colors.black,
                     backgroundColor: buttonColors[5]
                   ),
-                  child: Text("2024")
+                  child: const Text("2024")
                 ),
               ],
             ),
@@ -186,7 +186,7 @@ class _TeamSubpageState extends State<TeamSubpage> {
 
   Widget generateListView(List<EventListing> events){
     if(events.isEmpty){
-      return Center(child: Text("No events to show"));
+      return const Center(child: Text("No events to show"));
     }
     return ListView(
       children: generateListTiles(events),
@@ -239,7 +239,7 @@ class _TeamSubpageState extends State<TeamSubpage> {
       appBar: AppBar(
         backgroundColor: Colors.lightGreen,
         actions: [
-          IconButton(onPressed: (){print("favouited");}, icon: Icon(Icons.star_border))
+          IconButton(onPressed: (){print("favouited");}, icon: const Icon(Icons.star_border))
         ],
         title: 
           Row(
@@ -266,7 +266,7 @@ class _TeamSubpageState extends State<TeamSubpage> {
       List dividedSchool = fullTeamName.split("&");
       schoolName = dividedSchool[dividedSchool.length-1];
       if(schoolName!.startsWith(" ")){
-        schoolName = schoolName!.substring(1);
+        schoolName = schoolName.substring(1);
       }
     }else if(!fullTeamName.contains("/")){
       schoolName = fullTeamName;
@@ -294,32 +294,32 @@ class _TeamSubpageState extends State<TeamSubpage> {
 
     return Column(
       children: [
-        Padding(padding: EdgeInsets.all(5)),
-        Align(
-          child: Text("General Information", style: TextStyle(fontSize: 22)),
+        const Padding(padding: EdgeInsets.all(5)),
+        const Align(
           alignment: Alignment.centerLeft,
+          child: Text("General Information", style: TextStyle(fontSize: 22)),
         ),
         Container(height: 6, color: Colors.lightBlue,),
         (schoolName != null) ?  ListTile(
-          leading: Icon(Icons.school),
+          leading: const Icon(Icons.school),
           title: Text(schoolName),
         ) : Container(height: 0),
         (sponsors != null) ?  ListTile(
-          leading: Icon(Icons.handshake_rounded),
+          leading: const Icon(Icons.handshake_rounded),
           title: Text(sponsors),
         ) : Container(height: 0),
         ListTile(
-          leading: Icon(Icons.location_on),
+          leading: const Icon(Icons.location_on),
           title: Text(team.getDisplayLocation()),
         ),
         ListTile(
-          leading: Icon(Icons.cake),
+          leading: const Icon(Icons.cake),
           title: Text("Rookie Year: ${team.rookieYear}"),
         ),
-        Padding(padding: EdgeInsets.all(5)),
-        Align(
-          child: Text("Events", style: TextStyle(fontSize: 22)),
+        const Padding(padding: EdgeInsets.all(5)),
+        const Align(
           alignment: Alignment.centerLeft,
+          child: Text("Events", style: TextStyle(fontSize: 22)),
         ),
         Container(height: 6, color: Colors.lightBlue,),
         horizontalScrollable(),
@@ -341,9 +341,9 @@ class _TeamSubpageState extends State<TeamSubpage> {
             return generateScaffold(generateBody(Expanded(child: generateListView(eventList)), team));
           }
           // print(team.city);
-          return generateScaffold(generateBody(Expanded(child: Center(child: CircularProgressIndicator())), team));
+          return generateScaffold(generateBody(const Expanded(child: Center(child: CircularProgressIndicator())), team));
         }
-        return generateScaffold(Column(children: [Expanded(child: Center(child: CircularProgressIndicator()))]));
+        return generateScaffold(const Column(children: [Expanded(child: Center(child: CircularProgressIndicator()))]));
       },
     );
   }
