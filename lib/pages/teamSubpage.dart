@@ -258,6 +258,40 @@ class _TeamSubpageState extends State<TeamSubpage> {
   }
 
   Widget generateBody(Widget child, TeamListing team){
+    String fullTeamName = team.fullTeamName;
+    String? sponsors;
+    String? schoolName;
+
+    if(fullTeamName.contains("&")){
+      List dividedSchool = fullTeamName.split("&");
+      schoolName = dividedSchool[dividedSchool.length-1];
+      if(schoolName!.startsWith(" ")){
+        schoolName = schoolName!.substring(1);
+      }
+    }else if(!fullTeamName.contains("/")){
+      schoolName = fullTeamName;
+    }else if(fullTeamName.contains("Family/Community")){
+      schoolName = "Family/Community";
+    }
+
+    List? dividedSponsors;
+
+    if(fullTeamName != "Family/Community"){
+      if(fullTeamName.contains("&")){
+        String substring = fullTeamName.substring(0, fullTeamName.lastIndexOf("&"));
+        if(substring.contains("/")){
+          dividedSponsors = substring.split("/");
+        }else{
+          sponsors = substring;
+        }
+      }else if(fullTeamName.contains("/")){
+        dividedSponsors = fullTeamName.split("/");
+      }
+    }
+    if(dividedSponsors != null){
+      sponsors = dividedSponsors.join(", ");
+    }
+
     return Column(
       children: [
         Padding(padding: EdgeInsets.all(5)),
@@ -266,10 +300,14 @@ class _TeamSubpageState extends State<TeamSubpage> {
           alignment: Alignment.centerLeft,
         ),
         Container(height: 6, color: Colors.lightBlue,),
-        ListTile(
-          leading: Icon(Icons.info_outline_rounded),
-          title: Text(team.fullTeamName),
-        ),
+        (schoolName != null) ?  ListTile(
+          leading: Icon(Icons.school),
+          title: Text(schoolName),
+        ) : Container(height: 0),
+        (sponsors != null) ?  ListTile(
+          leading: Icon(Icons.handshake_rounded),
+          title: Text(sponsors),
+        ) : Container(height: 0),
         ListTile(
           leading: Icon(Icons.location_on),
           title: Text(team.getDisplayLocation()),
