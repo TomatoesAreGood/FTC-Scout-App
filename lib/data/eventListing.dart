@@ -46,7 +46,6 @@ class EventListing {
     int.parse(input.substring(5, 7)), 
     int.parse(input.substring(8, 10)), 0, 0, 0);
     return date.difference(julianEpoch).inDays;
-    // return int.parse(date.substring(0,4))*365 + int.parse(date.substring(5, 7))*30 + int.parse(date.substring(8, 10));
   }
 
   static void mergeSortDate(List<EventListing> arr){

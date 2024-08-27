@@ -62,7 +62,7 @@ class TeamListing{
       );
     }   
     
-    // print("FROM JSON SUCCESS");
+    print("FROM JSON SUCCESS");
     return allTeams;
   }
 }

@@ -46,6 +46,7 @@ class _TeamSubpageState extends State<TeamSubpage> {
     if(response.body[0] != '{'){  
       isCallingAPI = false;
       List<EventListing> eventList = [];
+      TeamSubpage.storedResults[year] = eventList;
       return eventList;
     }
 
@@ -130,7 +131,7 @@ class _TeamSubpageState extends State<TeamSubpage> {
                 ),
                 TextButton(
                   onPressed: (){
-                    setState(() {
+                    setState(() { 
                       if(selectedIndex != 3){
                         selectedIndex = 3;
                         selectedYear = years[selectedIndex];
@@ -186,9 +187,12 @@ class _TeamSubpageState extends State<TeamSubpage> {
 
   Widget generateListView(List<EventListing> events){
     if(events.isEmpty){
-      return const Center(child: Text("No events to show"));
+      return const Padding(
+        padding: EdgeInsets.all(40.0),
+        child: Text("No events to show"),
+      );
     }
-    return ListView(
+    return Column(
       children: generateListTiles(events),
     );
   }
@@ -338,10 +342,10 @@ class _TeamSubpageState extends State<TeamSubpage> {
           List<EventListing> eventList = data.data![1];
 
           if(!isCallingAPI){
-            return generateScaffold(generateBody(Expanded(child: generateListView(eventList)), team));
+            return generateScaffold(SingleChildScrollView(child: generateBody(generateListView(eventList), team)));
           }
           // print(team.city);
-          return generateScaffold(generateBody(const Expanded(child: Center(child: CircularProgressIndicator())), team));
+          return generateScaffold(SingleChildScrollView(child: generateBody(const Center(child: CircularProgressIndicator()), team)));
         }
         return generateScaffold(const Column(children: [Expanded(child: Center(child: CircularProgressIndicator()))]));
       },
