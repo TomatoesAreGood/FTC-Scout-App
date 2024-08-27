@@ -154,8 +154,6 @@ class _EventRankingsState extends State<EventRankings> {
                           ),
                         )
                       )
-                        
-                        // child: Text("${team.rank} (${team.wins}-${team.ties}-${team.losses})", style: TextStyle(height: 0.5, fontSize: 13, color: Colors.red)))
                     ],
                   ),
                   title: Text(team.teamName ?? "Unknown", overflow: TextOverflow.ellipsis),

@@ -6,6 +6,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:myapp/data/eventListing.dart';
 import 'package:myapp/data/teamListing.dart';
 import 'package:myapp/data/yearlyTeamDivisions.dart';
+import 'package:myapp/pages/eventSubpage.dart';
 
 class TeamSubpage extends StatefulWidget {
   final int teamNumber;
@@ -43,6 +44,8 @@ class _TeamSubpageState extends State<TeamSubpage> {
 
     isCallingAPI = true;
     var response = await http.get(Uri.parse('https://ftc-api.firstinspires.org/v2.0/$year/events?teamNumber=${widget.teamNumber}'), headers: {"Authorization": "Basic $encodedToken"});
+    print("API CALL SUCCESS");
+
     if(response.body[0] != '{'){  
       isCallingAPI = false;
       List<EventListing> eventList = [];
@@ -51,7 +54,6 @@ class _TeamSubpageState extends State<TeamSubpage> {
     }
 
     if(response.statusCode == 200){
-      print("API CALL SUCCESS");
       List eventList = EventListing.fromJson(json.decode(response.body) as Map<String, dynamic>);
       TeamSubpage.storedResults[year] = eventList;
       isCallingAPI = false;
@@ -216,14 +218,25 @@ class _TeamSubpageState extends State<TeamSubpage> {
       listings.add(
         Column(
           children: [
-            ListTile(
-              title: Text(name, maxLines: 1, overflow: TextOverflow.ellipsis),
-              subtitle: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text("${events[i].city}, ${events[i].country}"),
-                  Text(date)
-                ],
+            Tooltip(
+              message: name,
+              child: ListTile(
+                title: Text(name, maxLines: 1, overflow: TextOverflow.ellipsis),
+                subtitle: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("${events[i].city}, ${events[i].country}"),
+                    Text(date)
+                  ],
+                ),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => 
+                        EventSubpage(name: name, code: code, year: selectedYear)
+                    )
+                  );
+                },
               ),
             ),
             Container(
