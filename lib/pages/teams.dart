@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:myapp/data/sizeConfig.dart';
 import 'package:myapp/data/teamListing.dart';
 import 'package:myapp/pages/teamSubpage.dart';
 import 'dart:convert';
@@ -149,8 +150,7 @@ class _TeamsState extends State<Teams> {
     controller.animateTo(0, duration: Duration(seconds: seconds, milliseconds: milliseconds), curve: Curves.easeIn);
   }
 
-
-  Widget generateScaffold(Widget child){
+  Widget generateVerticalScaffold(Widget child){
     FloatingActionButton? button;
     if(pageNum > 1){
       button = FloatingActionButton(
@@ -173,6 +173,38 @@ class _TeamsState extends State<Teams> {
       floatingActionButton: button,
       body: filtersExpanded ? Column(children: [generateFilterMenu(),child],) : Column(children:[child,])
     );
+  }
+
+  Widget generateHorizontalScaffold(Widget child){
+    FloatingActionButton? button;
+    if(pageNum > 1){
+      button = FloatingActionButton(
+        onPressed: scrollUp,
+        child: const Icon(Icons.arrow_upward),
+      );
+    }
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Teams"),
+        backgroundColor: Colors.lightGreen,
+        actions: [
+          IconButton(onPressed: (){ setState(() {
+            filtersExpanded = !filtersExpanded;
+          });}, 
+          icon: const Icon(Icons.filter_list_rounded))
+        ],
+        ),
+      drawer: Drawer(),
+      floatingActionButton: button,
+      body: filtersExpanded ? Column(children: [generateFilters(),child],) : Column(children:[child,])
+    );
+  }
+
+  Widget generateScaffold(Widget child){
+    if(SizeConfig.screenHeight < 500){
+      return generateHorizontalScaffold(child);
+    }
+    return generateVerticalScaffold(child);
   }
 
    Widget generateFilters(){
