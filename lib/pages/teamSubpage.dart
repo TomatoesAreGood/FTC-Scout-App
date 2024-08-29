@@ -299,7 +299,9 @@ class _TeamSubpageState extends State<TeamSubpage> {
         if(substring.contains("/")){
           dividedSponsors = substring.split("/");
         }else{
-          sponsors = substring;
+          if(substring.isNotEmpty){
+            sponsors = substring;
+          }
         }
       }else if(fullTeamName.contains("/")){
         dividedSponsors = fullTeamName.split("/");

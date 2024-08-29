@@ -1,7 +1,9 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:myapp/data/sizeConfig.dart';
 import 'package:myapp/data/teamListing.dart';
+import 'package:myapp/data/yearlyTeamDivisions.dart';
 import 'package:myapp/pages/teamSubpage.dart';
 import 'dart:convert';
 import 'dart:async';
@@ -26,6 +28,7 @@ class _TeamsState extends State<Teams> {
   static int pageNum = 1;
 
   final controller = ScrollController();
+  final textController = TextEditingController();
 
   String? searchLabelText = "Search";
   bool filtersExpanded = false;
@@ -129,6 +132,7 @@ class _TeamsState extends State<Teams> {
   @override 
   void dispose(){
     controller.dispose();
+    textController.dispose();
     super.dispose();
   }
 
@@ -240,6 +244,55 @@ class _TeamsState extends State<Teams> {
     );
   }
 
+  searchTeam(String teamNum) async{
+    if(teamNum.isEmpty){
+      return;
+    }
+    try{
+      int teamNumber = int.parse(teamNum);
+      TeamListing? team = await TeamListing.getTeam(selectedYear, YearlyTeamDivisions.getPageNum(selectedYear, teamNumber), teamNumber);
+      if(team == null){
+        return showDialog(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+            contentPadding: EdgeInsets.zero,
+            title: AutoSizeText("Team does not exist. Try a different year or double check your search.", maxLines: 2,maxFontSize: 18, minFontSize: 10,textAlign: TextAlign.center),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Ok'),
+              ),
+            ],
+          )
+        );
+      }
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => 
+            TeamSubpage(teamNumber: team.teamNumber, year: int.parse(selectedYear), teamName: team.teamName,)
+        )
+      );
+    }
+    on FormatException{
+      return showDialog(
+        context: context,
+        builder: (BuildContext context) => 
+          AlertDialog(
+            contentPadding: EdgeInsets.zero,
+            title: AutoSizeText("Search query can only include numbers", maxLines: 2,maxFontSize: 18, minFontSize: 10,textAlign: TextAlign.center),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Ok'),
+              ),
+            ],
+          )
+        );
+      }
+  }
+
+
+
   Widget generateFilterMenu(){
     return Expanded(
       flex:1,
@@ -259,7 +312,8 @@ class _TeamsState extends State<Teams> {
                 Expanded(
                   flex:3,
                   child: TextField(
-                    onSubmitted: (value) => print(value),
+                    controller: textController,
+                    onSubmitted: (value) => searchTeam(value),
                     onChanged: (value){
                       setState(() {
                         if(value.isEmpty){
@@ -271,7 +325,7 @@ class _TeamsState extends State<Teams> {
                     },
                     decoration: InputDecoration(
                       labelText: searchLabelText ?? "",
-                      suffixIcon: const Icon(Icons.search)
+                      suffixIcon: IconButton( onPressed: (){searchTeam(textController.text); }, icon:const Icon(Icons.search))
                     ),
                   ),
                 ),
