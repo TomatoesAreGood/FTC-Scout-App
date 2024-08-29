@@ -16,6 +16,9 @@ class EventListing {
     required this.type
   });
 
+  @override
+  operator ==(o) => o is EventListing && o.city == city && o.name == name && o.country == country && o.dateStart == dateStart && o.code == code && o.type == type;
+
   static List<EventListing> fromJson(Map<String, dynamic> json){
     List<EventListing> allEvents = [];
     List eventList = json['events'];

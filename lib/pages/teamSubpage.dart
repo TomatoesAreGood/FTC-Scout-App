@@ -214,7 +214,11 @@ class _TeamSubpageState extends State<TeamSubpage> {
     while(i < events.length){
       String code = events[i].code;
       String name = events[i].name;
-      String date = events[i].dateStart;
+      String country = events[i].country;
+      String city = events[i].city;
+      String dateStart = events[i].dateStart;
+      int type = events[i].type;
+
       listings.add(
         Column(
           children: [
@@ -225,15 +229,15 @@ class _TeamSubpageState extends State<TeamSubpage> {
                 subtitle: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("${events[i].city}, ${events[i].country}"),
-                    Text(date)
+                    Text("$city, $country"),
+                    Text(dateStart)
                   ],
                 ),
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => 
-                        EventSubpage(name: name, code: code, year: selectedYear)
+                        EventSubpage(data:EventListing(city: city, code: code, country: country, dateStart: "$selectedYear", name: name, type: type))
                     )
                   );
                 },

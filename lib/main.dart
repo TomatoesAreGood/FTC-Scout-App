@@ -20,10 +20,10 @@ void main() async{
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key});
   static Map<String, List<EventListing>> yearlyEventListings = {};
   static Map<String, YearlyTeamListing> yearlyTeamListings = {};
-
+  // static Map<String, List> favorited = {};
+  static List<EventListing> favoritedEvents = [];
   static final Map<String, String> yearlyStartDates = {
     "2019":"2019-09-07",
     "2020":"2020-09-12",
@@ -32,6 +32,22 @@ class MyApp extends StatefulWidget {
     "2023":"2023-09-09",
     "2024":"2024-09-07"
   };
+
+  static int containsObject(List? list, Object obj){
+    if(list == null){
+      return -1;
+    }
+
+    for(var i = 0; i < list.length; i++){
+      if(list[i] == obj){
+        return i;
+      }
+    }
+
+    return -1;
+  }
+
+  const MyApp({super.key});
 
   @override
   State<MyApp> createState() => _MyAppState();

@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/data/eventListing.dart';
 import 'package:myapp/event%20sub%20pages/eventAwards.dart';
 import 'package:myapp/event%20sub%20pages/eventRankings.dart';
 import 'package:myapp/event%20sub%20pages/eventSchedule.dart';
 import 'package:myapp/event%20sub%20pages/eventTeams.dart';
+import 'package:myapp/main.dart';
 
 class EventSubpage extends StatefulWidget {
-  final String code;
-  final String name;
-  final int year;
+  final EventListing data;
   static Map<String, dynamic> storedResults = {};
 
-  const EventSubpage({super.key, required this.name, required this.code, required this.year});
+  const EventSubpage({super.key, required this.data});
 
   @override
   State<EventSubpage> createState() => _EventSubpageState();
@@ -20,6 +20,8 @@ class EventSubpage extends StatefulWidget {
 class _EventSubpageState extends State<EventSubpage> {
   int selectedIndex = 0;
   Color? selectedColor = Colors.grey[300];
+  
+  bool isFavorited = false;
 
   Widget horizontalScrollable(){
     List<Color?> buttonColors = [null, null, null, null];
@@ -100,11 +102,18 @@ class _EventSubpageState extends State<EventSubpage> {
   @override
   void initState(){
     EventSubpage.storedResults = {};
+    if(MyApp.containsObject(MyApp.favoritedEvents, widget.data) >= 0){
+      isFavorited = true;
+    }else{
+      isFavorited = false;
+    }
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    int year = int.parse(widget.data.dateStart);
+    String code = widget.data.code;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.lightGreen,
@@ -113,19 +122,33 @@ class _EventSubpageState extends State<EventSubpage> {
             Expanded(
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
-                child: Text(widget.name)
+                child: Text(widget.data.name)
               )
             ),
           ]
         ),
         actions: [
-          IconButton(onPressed: (){print("favouited");}, icon: Icon(Icons.star_border))
+          IconButton(
+            onPressed: (){
+              setState(() {
+                if(!isFavorited){
+                  MyApp.favoritedEvents.add(widget.data);
+                  isFavorited = true;
+                }else{
+                  int index = MyApp.containsObject(MyApp.favoritedEvents, widget.data);
+                  MyApp.favoritedEvents.removeAt(index);
+                  isFavorited = false;
+                }
+              });
+            }, 
+            icon: isFavorited ?  const Icon(Icons.star): const Icon(Icons.star_border)
+          )
         ],
       ),
       body: Column(
         children: [
           horizontalScrollable(),
-          [EventTeams(code: widget.code, year: widget.year),EventRankings(code: widget.code, year: widget.year), EventSchedule(code: widget.code, year: widget.year), EventAwards(code: widget.code, year: widget.year)][selectedIndex]
+          [EventTeams(code: code, year: year),EventRankings(code: code, year: year), EventSchedule(code: code, year: year), EventAwards(code: code, year: year)][selectedIndex]
         ],
       ),
     );

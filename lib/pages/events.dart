@@ -321,7 +321,10 @@ class _EventsState extends State<Events> {
     while(i < weekListings.length){
       String code = weekListings[i].code;
       String name = weekListings[i].name;
-      String date = weekListings[i].dateStart;
+      String country = weekListings[i].country;
+      String city = weekListings[i].city;
+      String dateStart = weekListings[i].dateStart;
+      int type = weekListings[i].type;
       listings.add(
         Column (
           children: [
@@ -332,19 +335,19 @@ class _EventsState extends State<Events> {
                 subtitle: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("${weekListings[i].city}, ${weekListings[i].country}"),
-                    Text(weekListings[i].dateStart)
+                    Text("$city, $country"),
+                    Text(dateStart)
                   ],
                 ),
                 onTap: (){
                   print(name);
-                  print(int.parse(date.substring(0,4)));
+                  print(selectedYear);
                   print(code);
 
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => 
-                        EventSubpage(name: name, code: code, year: int.parse(selectedYear))
+                        EventSubpage(data:EventListing(city: city, code: code, country: country, dateStart: selectedYear, name: name, type: type),)
                     )
                   );
                 },
