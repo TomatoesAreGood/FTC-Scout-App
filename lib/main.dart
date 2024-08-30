@@ -22,8 +22,8 @@ void main() async{
 class MyApp extends StatefulWidget {
   static Map<String, List<EventListing>> yearlyEventListings = {};
   static Map<String, YearlyTeamListing> yearlyTeamListings = {};
-  // static Map<String, List> favorited = {};
   static List<EventListing> favoritedEvents = [];
+  static List<ExtendedTeamListing> favoritedTeams = [];
   static final Map<String, String> yearlyStartDates = {
     "2019":"2019-09-07",
     "2020":"2020-09-12",
@@ -33,7 +33,7 @@ class MyApp extends StatefulWidget {
     "2024":"2024-09-07"
   };
 
-  static int containsObject(List? list, Object obj){
+  static int findObject(List? list, Object obj){
     if(list == null){
       return -1;
     }

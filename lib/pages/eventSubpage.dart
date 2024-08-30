@@ -102,7 +102,7 @@ class _EventSubpageState extends State<EventSubpage> {
   @override
   void initState(){
     EventSubpage.storedResults = {};
-    if(MyApp.containsObject(MyApp.favoritedEvents, widget.data) >= 0){
+    if(MyApp.findObject(MyApp.favoritedEvents, widget.data) >= 0){
       isFavorited = true;
     }else{
       isFavorited = false;
@@ -135,7 +135,7 @@ class _EventSubpageState extends State<EventSubpage> {
                   MyApp.favoritedEvents.add(widget.data);
                   isFavorited = true;
                 }else{
-                  int index = MyApp.containsObject(MyApp.favoritedEvents, widget.data);
+                  int index = MyApp.findObject(MyApp.favoritedEvents, widget.data);
                   MyApp.favoritedEvents.removeAt(index);
                   isFavorited = false;
                 }

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/data/eventListing.dart';
+import 'package:myapp/data/teamListing.dart';
 import 'package:myapp/main.dart';
 import 'package:myapp/pages/eventSubpage.dart';
+import 'package:myapp/pages/teamSubpage.dart';
 
 class Favorited extends StatefulWidget {
   const Favorited({super.key});
@@ -11,17 +13,9 @@ class Favorited extends StatefulWidget {
 }
 
 class _FavoritedState extends State<Favorited> {
-  List<Column> generateListTiles(List<EventListing> weekListings){
-    List<Column> listings = [
-      Column(
-        children: [
-          Container(
-            height: 1,
-            color: Colors.black,
-          )
-        ]
-      )
-    ];
+
+  List<Column> generateListTilesEvents(List<EventListing> weekListings){
+    List<Column> listings = [];
     int i = 0;
     while(i < weekListings.length){
       String code = weekListings[i].code;
@@ -52,7 +46,55 @@ class _FavoritedState extends State<Favorited> {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => 
-                        EventSubpage(data:EventListing(city: city, code: code, country: country, dateStart: dateStart, name: name, type: type),)
+                        EventSubpage(data:EventListing(city: city, code: code, country: country, dateStart: dateStart, name: name, type: type))
+                    )
+                  ).then((_){setState((){});});
+                },
+              ),
+            ), 
+            Container(
+              height: 1,
+              color: Colors.black,
+            )
+          ],
+        ) 
+      );
+      i++;
+    }
+    return listings;
+  }
+
+  List<Column> generateListTilesTeams(List<ExtendedTeamListing> teamListings){
+    List<Column> listings = [];
+    int i = 0;
+    while(i < teamListings.length){
+      int teamNumber = teamListings[i].teamNumber;
+      int rookieYear = teamListings[i].rookieYear;
+      int year = teamListings[i].year;
+      String teamName = teamListings[i].teamName;
+      String city = teamListings[i].city;
+      String stateProv = teamListings[i].stateProv;
+      String country = teamListings[i].country;
+      String fullTeamName = teamListings[i].fullTeamName;
+      listings.add(
+        Column (
+          children: [
+            Tooltip(
+              message: teamName,
+              child: ListTile(
+                leading: SizedBox(width: 80, child: Text("${teamNumber}", style: const TextStyle(fontSize: 21), textAlign: TextAlign.center,)),
+                title: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(teamName, overflow: TextOverflow.ellipsis,),
+                    Text(teamListings[i].getDisplayLocation(), style: const TextStyle(fontStyle: FontStyle.italic, fontSize: 12),)
+                  ],
+                ),
+                onTap: (){
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => 
+                        TeamSubpage(data:ExtendedTeamListing(teamNumber: teamNumber, rookieYear: rookieYear, teamName: teamName, city: city, stateProv: stateProv, country: country, fullTeamName: fullTeamName, year: year))
                     )
                   ).then((_){setState((){});});
                 },
@@ -78,19 +120,32 @@ class _FavoritedState extends State<Favorited> {
           child: Text("Events", style: TextStyle(fontSize: 22)),
         ),
         Container(height: 6, color: Colors.lightBlue),
-        Column(children: generateListTiles(MyApp.favoritedEvents))
+        Column(children: generateListTilesEvents(MyApp.favoritedEvents))
+      ],
+    );
+  }
+
+  Widget generateTeams(){
+    return Column(
+      children: [
+        const Align(
+          alignment: Alignment.centerLeft,
+          child: Text("Teams", style: TextStyle(fontSize: 22)),
+        ),
+        Container(height: 6, color: Colors.lightBlue),
+        Column(children: generateListTilesTeams(MyApp.favoritedTeams))
       ],
     );
   }
 
   Widget generateScaffold(){
-    return Column(
+    return ListView(
       children:[
+        Padding(padding: EdgeInsets.all(5)),
         MyApp.favoritedEvents.isNotEmpty ? generateEvents(): Container(height: 0),
-
+        Padding(padding: EdgeInsets.all(10)),
+        MyApp.favoritedTeams.isNotEmpty ? generateTeams(): Container(height: 0,)
       ]
-       
-      
     );
   }
 
@@ -102,7 +157,7 @@ class _FavoritedState extends State<Favorited> {
         title: Text("Favorited"),
         backgroundColor: Colors.lightGreen,
       ),
-      body: MyApp.favoritedEvents.isEmpty ? const Center(child: Text("Favorited events and teams will show up here")): generateScaffold()
+      body: MyApp.favoritedEvents.isEmpty && MyApp.favoritedTeams.isEmpty ? const Center(child: Text("Favorited events and teams will show up here")): generateScaffold()
     );
   }
 }

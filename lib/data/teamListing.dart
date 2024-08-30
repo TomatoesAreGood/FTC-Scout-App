@@ -66,3 +66,13 @@ class TeamListing{
     return allTeams;
   }
 }
+
+class ExtendedTeamListing extends TeamListing{
+  final int year;
+  
+  ExtendedTeamListing({required this.year, required super.city, required super.country, required super.rookieYear, required super.stateProv, required super.teamName, required super.teamNumber, required super.fullTeamName});
+  
+  @override
+  operator ==(o) => o is ExtendedTeamListing && o.city == city && o.teamNumber == teamNumber && o.rookieYear == rookieYear && o.teamName == teamName && o.stateProv == stateProv && o.country == country && o.fullTeamName == fullTeamName && o.year == year;
+
+}

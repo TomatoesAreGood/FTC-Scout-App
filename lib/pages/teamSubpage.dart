@@ -6,15 +6,14 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:myapp/data/eventListing.dart';
 import 'package:myapp/data/teamListing.dart';
 import 'package:myapp/data/yearlyTeamDivisions.dart';
+import 'package:myapp/main.dart';
 import 'package:myapp/pages/eventSubpage.dart';
 
 class TeamSubpage extends StatefulWidget {
-  final int teamNumber;
-  final int year;
-  final String teamName;
+  final ExtendedTeamListing data;
   static Map<int, dynamic> storedResults = {};
 
-  const TeamSubpage({super.key, required this.teamNumber, required this.year, required this.teamName});
+  const TeamSubpage({super.key, required this.data});
 
   @override
   State<TeamSubpage> createState() => _TeamSubpageState();
@@ -31,6 +30,7 @@ class _TeamSubpageState extends State<TeamSubpage> {
   late int selectedYear = years[selectedIndex];
 
   bool isCallingAPI = false;
+  bool isFavorited = false;
 
   Future<List> getEvents(int year) async{
     if(TeamSubpage.storedResults.containsKey(year)){
@@ -43,7 +43,7 @@ class _TeamSubpageState extends State<TeamSubpage> {
     String encodedToken = base64.encode(utf8.encode(authorization));
 
     isCallingAPI = true;
-    var response = await http.get(Uri.parse('https://ftc-api.firstinspires.org/v2.0/$year/events?teamNumber=${widget.teamNumber}'), headers: {"Authorization": "Basic $encodedToken"});
+    var response = await http.get(Uri.parse('https://ftc-api.firstinspires.org/v2.0/$year/events?teamNumber=${widget.data.teamNumber}'), headers: {"Authorization": "Basic $encodedToken"});
     print("API CALL SUCCESS");
 
     if(response.body[0] != '{'){  
@@ -66,8 +66,13 @@ class _TeamSubpageState extends State<TeamSubpage> {
   @override
   void initState(){
     TeamSubpage.storedResults = {};
-    team = TeamListing.getTeam("${widget.year}", YearlyTeamDivisions.getPageNum("${widget.year}", widget.teamNumber), widget.teamNumber);
+    team = TeamListing.getTeam("${widget.data.year}", YearlyTeamDivisions.getPageNum("${widget.data.year}", widget.data.teamNumber), widget.data.teamNumber);
     events = getEvents(selectedYear);
+    if(MyApp.findObject(MyApp.favoritedTeams, widget.data) >= 0){
+      isFavorited = true;
+    }else{
+      isFavorited = false;
+    }
     super.initState();
   }
 
@@ -260,7 +265,21 @@ class _TeamSubpageState extends State<TeamSubpage> {
       appBar: AppBar(
         backgroundColor: Colors.lightGreen,
         actions: [
-          IconButton(onPressed: (){print("favouited");}, icon: const Icon(Icons.star_border))
+          IconButton(
+            onPressed: (){
+              setState(() {
+                if(!isFavorited){
+                  MyApp.favoritedTeams.add(widget.data);
+                  isFavorited = true;
+                }else{
+                  int index = MyApp.findObject(MyApp.favoritedTeams, widget.data);
+                  MyApp.favoritedTeams.removeAt(index);
+                  isFavorited = false;
+                }
+              });
+            }, 
+            icon: isFavorited ? const Icon(Icons.star): const Icon(Icons.star_border)
+          )
         ],
         title: 
           Row(
@@ -268,7 +287,7 @@ class _TeamSubpageState extends State<TeamSubpage> {
               Expanded(
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
-                  child: Text("${widget.teamNumber} - ${widget.teamName}")
+                  child: Text("${widget.data.teamNumber} - ${widget.data.teamName}")
                 )
               ),
             ]

@@ -269,7 +269,7 @@ class _TeamsState extends State<Teams> {
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => 
-            TeamSubpage(teamNumber: team.teamNumber, year: int.parse(selectedYear), teamName: team.teamName,)
+            TeamSubpage(data: ExtendedTeamListing(teamNumber: team.teamNumber, rookieYear: team.rookieYear, teamName: team.teamName, city: team.city, stateProv: team.stateProv, country: team.country, fullTeamName: team.fullTeamName, year: int.parse(selectedYear)))
         )
       );
     }
@@ -357,11 +357,10 @@ class _TeamsState extends State<Teams> {
               TeamListing team = teamList[index];
               return ListTile(
                 onTap: (){
-
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => 
-                        TeamSubpage(teamNumber: team.teamNumber, year: int.parse(selectedYear), teamName: team.teamName,)
+                        TeamSubpage(data: ExtendedTeamListing(teamNumber: team.teamNumber, rookieYear: team.rookieYear, teamName: team.teamName, city: team.city, stateProv: team.stateProv, country: team.country, fullTeamName: team.fullTeamName, year: int.parse(selectedYear)))
                     )
                   );
                 },
