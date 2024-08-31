@@ -30,7 +30,6 @@ class _TeamsState extends State<Teams> {
   final controller = ScrollController();
   final textController = TextEditingController();
 
-  String? searchLabelText = "Search";
   bool filtersExpanded = false;
 
   dynamic getTeams(String year, int page) async{
@@ -294,52 +293,28 @@ class _TeamsState extends State<Teams> {
 
 
   Widget generateFilterMenu(){
-    return Expanded(
-      flex:1,
-      child: Column(
-        children: [
-          Expanded(
-            flex:1,
-            child: Column(
-              children: [
-                const Expanded(
-                  flex:1,
-                  child: SizedBox(
-                    height: 20,
-                  ),
-                ),
-                generateFilters(),
-                Expanded(
-                  flex:3,
-                  child: TextField(
-                    controller: textController,
-                    onSubmitted: (value) => searchTeam(value),
-                    onChanged: (value){
-                      setState(() {
-                        if(value.isEmpty){
-                          searchLabelText = "Search";
-                        }else{
-                          searchLabelText = null;
-                        }
-                      });
-                    },
-                    decoration: InputDecoration(
-                      labelText: searchLabelText ?? "",
-                      suffixIcon: IconButton( onPressed: (){searchTeam(textController.text); }, icon:const Icon(Icons.search))
-                    ),
-                  ),
-                ),
-                const Expanded(
-                  flex:1,
-                  child: SizedBox(
-                    height: 20
-                  ),
-                ),   
-              ],
+    return Column(
+      children: [
+        Column(
+          children: [
+            const SizedBox(
+              height: 20,
             ),
-          )
-        ]
-      )
+            generateFilters(),
+            TextField(
+              controller: textController,
+              onSubmitted: (value) => searchTeam(value),
+              decoration: InputDecoration(
+                labelText: "Search",
+                suffixIcon: IconButton( onPressed: (){searchTeam(textController.text); }, icon:const Icon(Icons.search))
+              ),
+            ),
+            const SizedBox(
+              height: 20
+            ),   
+          ],
+        )
+      ]
     );
   }
 
