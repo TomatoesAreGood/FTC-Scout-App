@@ -141,9 +141,9 @@ class _FavoritedState extends State<Favorited> {
   Widget generateScaffold(){
     return ListView(
       children:[
-        Padding(padding: EdgeInsets.all(5)),
+        MyApp.favoritedEvents.isNotEmpty ? const Padding(padding: EdgeInsets.all(5)): Container(height: 0),
         MyApp.favoritedEvents.isNotEmpty ? generateEvents(): Container(height: 0),
-        Padding(padding: EdgeInsets.all(10)),
+        MyApp.favoritedTeams.isNotEmpty ? const Padding(padding: EdgeInsets.all(5)): Container(height: 0),
         MyApp.favoritedTeams.isNotEmpty ? generateTeams(): Container(height: 0,)
       ]
     );

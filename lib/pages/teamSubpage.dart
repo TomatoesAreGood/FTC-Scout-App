@@ -20,7 +20,6 @@ class TeamSubpage extends StatefulWidget {
 }
 
 class _TeamSubpageState extends State<TeamSubpage> {
-  late Future<TeamListing?> team;
   late Future<List> events;
 
   Color? selectedColor = Colors.grey[300];
@@ -66,7 +65,6 @@ class _TeamSubpageState extends State<TeamSubpage> {
   @override
   void initState(){
     TeamSubpage.storedResults = {};
-    team = TeamListing.getTeam("${widget.data.year}", YearlyTeamDivisions.getPageNum("${widget.data.year}", widget.data.teamNumber), widget.data.teamNumber);
     events = getEvents(selectedYear);
     if(MyApp.findObject(MyApp.favoritedTeams, widget.data) >= 0){
       isFavorited = true;
@@ -297,7 +295,7 @@ class _TeamSubpageState extends State<TeamSubpage> {
     );
   }
 
-  Widget generateBody(Widget child, TeamListing team){
+  Widget generateBody(Widget child, ExtendedTeamListing team){
     String fullTeamName = team.fullTeamName;
     String? sponsors;
     String? schoolName;
@@ -373,19 +371,13 @@ class _TeamSubpageState extends State<TeamSubpage> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<dynamic>(
-      future: Future.wait([team, events]),
+      future: events,
       builder: (context, data){
-        if(data.hasData){
-          TeamListing team = data.data![0];
-          List<EventListing> eventList = data.data![1];
-
-          if(!isCallingAPI){
-            return generateScaffold(SingleChildScrollView(child: generateBody(generateListView(eventList), team)));
-          }
-          // print(team.city);
-          return generateScaffold(SingleChildScrollView(child: generateBody(const Center(child: CircularProgressIndicator()), team)));
+        if(data.hasData && !isCallingAPI){
+          List<EventListing> eventList = data.data!;
+          return generateScaffold(SingleChildScrollView(child: generateBody(generateListView(eventList), widget.data)));
         }
-        return generateScaffold(const Column(children: [Expanded(child: Center(child: CircularProgressIndicator()))]));
+        return generateScaffold(SingleChildScrollView(child: generateBody(const Padding(padding: EdgeInsets.all(55), child: CircularProgressIndicator()), widget.data)));
       },
     );
   }
