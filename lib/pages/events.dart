@@ -90,16 +90,14 @@ class _EventsState extends State<Events> {
   bool isExpandedFilters = false;
 
   String? searchedWord;
-  String? searchLabelText = "Search";
+  // String? searchLabelText = "Search";
 
   void updateSearchedWord(String enteredWord){
     setState(() {
       if(enteredWord.isEmpty){
         searchedWord = null;
-        searchLabelText = "Search";
       }else{
         searchedWord = enteredWord;
-        searchLabelText = null;
       }
     });
   }
@@ -423,9 +421,9 @@ class _EventsState extends State<Events> {
             generateFilters(),
             TextField(
               onChanged: (value) => updateSearchedWord(value),
-              decoration: InputDecoration(
-                labelText: searchLabelText ?? "",
-                suffixIcon: const Icon(Icons.search)
+              decoration: const InputDecoration(
+                labelText: "Search",
+                suffixIcon: Icon(Icons.search)
               ),
             ),
             const SizedBox(
@@ -459,7 +457,6 @@ class _EventsState extends State<Events> {
             onPressed: (){
               setState(() {
                 isExpandedFilters = !isExpandedFilters;
-                searchLabelText = "Search";
                 searchedWord = null;
               });
             }
@@ -521,7 +518,6 @@ class _EventsState extends State<Events> {
             onPressed: (){
               setState(() {
                 isExpandedFilters = !isExpandedFilters;
-                searchLabelText = "Search";
                 searchedWord = null;
               });
             }
