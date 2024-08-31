@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:myapp/data/sizeConfig.dart';
+import 'package:myapp/widgets/drawer.dart';
 import 'dart:convert';
 import 'dart:async';
 import '../data/eventListing.dart';
 import '../main.dart';
-import '../expandedTile.dart';
+import '../widgets/expandedTile.dart';
 import 'eventSubpage.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -463,7 +464,7 @@ class _EventsState extends State<Events> {
           ),
         ],
       ),
-      drawer: const Drawer(),
+      drawer: const MyDrawer(),
       body: Column(
         children: scaffoldChildren
       ) 
@@ -524,7 +525,7 @@ class _EventsState extends State<Events> {
           ),
         ],
       ),
-      drawer: const Drawer(),
+      drawer: const MyDrawer(),
       body: Column(
         children: scaffoldChildren
       ) 

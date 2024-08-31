@@ -4,6 +4,7 @@ import 'package:myapp/data/teamListing.dart';
 import 'package:myapp/main.dart';
 import 'package:myapp/pages/eventSubpage.dart';
 import 'package:myapp/pages/teamSubpage.dart';
+import 'package:myapp/widgets/drawer.dart';
 
 class Favorited extends StatefulWidget {
   const Favorited({super.key});
@@ -153,7 +154,7 @@ class _FavoritedState extends State<Favorited> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Drawer(),
+      drawer: const MyDrawer(),
       appBar: AppBar(
         title: Text("Favorited"),
         backgroundColor: Colors.lightGreen,

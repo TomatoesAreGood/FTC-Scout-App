@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:myapp/data/eventListing.dart';
 import 'package:myapp/data/teamListing.dart';
-import 'package:myapp/data/yearlyTeamDivisions.dart';
 import 'package:myapp/main.dart';
 import 'package:myapp/pages/eventSubpage.dart';
 
