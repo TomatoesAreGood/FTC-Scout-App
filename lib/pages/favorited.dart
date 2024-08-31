@@ -14,7 +14,7 @@ class Favorited extends StatefulWidget {
 
 class _FavoritedState extends State<Favorited> {
 
-  List<Column> generateListTilesEvents(List<EventListing> weekListings){
+  List<Column> generateListTilesEvents(List<ExtendedEventListing> weekListings){
     List<Column> listings = [];
     int i = 0;
     while(i < weekListings.length){
@@ -24,6 +24,7 @@ class _FavoritedState extends State<Favorited> {
       String city = weekListings[i].city;
       String dateStart = weekListings[i].dateStart;
       int type = weekListings[i].type;
+      int year = weekListings[i].year;
       listings.add(
         Column (
           children: [
@@ -46,7 +47,7 @@ class _FavoritedState extends State<Favorited> {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => 
-                        EventSubpage(data:EventListing(city: city, code: code, country: country, dateStart: dateStart, name: name, type: type))
+                        EventSubpage(data:ExtendedEventListing(city: city, code: code, country: country, dateStart: dateStart, name: name, type: type, year: year))
                     )
                   ).then((_){setState((){});});
                 },
@@ -82,7 +83,7 @@ class _FavoritedState extends State<Favorited> {
             Tooltip(
               message: teamName,
               child: ListTile(
-                leading: SizedBox(width: 80, child: Text("${teamNumber}", style: const TextStyle(fontSize: 21), textAlign: TextAlign.center,)),
+                leading: SizedBox(width: 80, child: Text("$teamNumber", style: const TextStyle(fontSize: 21), textAlign: TextAlign.center,)),
                 title: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

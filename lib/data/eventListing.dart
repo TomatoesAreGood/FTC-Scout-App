@@ -16,9 +16,6 @@ class EventListing {
     required this.type
   });
 
-  @override
-  operator ==(o) => o is EventListing && o.city == city && o.name == name && o.country == country && o.dateStart == dateStart && o.code == code && o.type == type;
-
   static List<EventListing> fromJson(Map<String, dynamic> json){
     List<EventListing> allEvents = [];
     List eventList = json['events'];
@@ -97,4 +94,13 @@ class EventListing {
       k++;
     }
   } 
+}
+
+class ExtendedEventListing extends EventListing{
+  final int year;
+
+  ExtendedEventListing({required this.year, required super.name, required super.country, required super.city, required super.dateStart, required super.code, required super.type});
+
+  @override
+  operator ==(o) => o is ExtendedEventListing && o.city == city && o.name == name && o.country == country && o.dateStart == dateStart && o.code == code && o.type == type && o.year == year;
 }

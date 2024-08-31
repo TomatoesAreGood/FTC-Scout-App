@@ -7,7 +7,7 @@ import 'package:myapp/event%20sub%20pages/eventTeams.dart';
 import 'package:myapp/main.dart';
 
 class EventSubpage extends StatefulWidget {
-  final EventListing data;
+  final ExtendedEventListing data;
   static Map<String, dynamic> storedResults = {};
 
   const EventSubpage({super.key, required this.data});
@@ -112,7 +112,7 @@ class _EventSubpageState extends State<EventSubpage> {
 
   @override
   Widget build(BuildContext context) {
-    int year = int.parse(widget.data.dateStart);
+    int year = widget.data.year;
     String code = widget.data.code;
     return Scaffold(
       appBar: AppBar(

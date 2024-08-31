@@ -22,7 +22,7 @@ void main() async{
 class MyApp extends StatefulWidget {
   static Map<String, List<EventListing>> yearlyEventListings = {};
   static Map<String, YearlyTeamListing> yearlyTeamListings = {};
-  static List<EventListing> favoritedEvents = [];
+  static List<ExtendedEventListing> favoritedEvents = [];
   static List<ExtendedTeamListing> favoritedTeams = [];
   static final Map<String, String> yearlyStartDates = {
     "2019":"2019-09-07",

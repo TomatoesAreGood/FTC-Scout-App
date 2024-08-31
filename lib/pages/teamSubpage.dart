@@ -240,7 +240,7 @@ class _TeamSubpageState extends State<TeamSubpage> {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => 
-                        EventSubpage(data:EventListing(city: city, code: code, country: country, dateStart: "$selectedYear", name: name, type: type))
+                        EventSubpage(data:ExtendedEventListing(city: city, code: code, country: country, dateStart: dateStart, name: name, type: type, year: selectedYear))
                     )
                   );
                 },
