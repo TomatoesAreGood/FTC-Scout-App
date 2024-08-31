@@ -413,42 +413,27 @@ class _EventsState extends State<Events> {
   }
 
   Widget generateFilterMenu(){
-    return Expanded(
-      flex:1,
-      child: Column(
-        children: [
-          Expanded(
-            flex:1,
-            child: Column(
-              children: [
-                const Expanded(
-                  flex:1,
-                  child: SizedBox(
-                    height: 20,
-                  ),
-                ),
-                generateFilters(),
-                Expanded(
-                  flex:3,
-                  child: TextField(
-                    onChanged: (value) => updateSearchedWord(value),
-                    decoration: InputDecoration(
-                      labelText: searchLabelText ?? "",
-                      suffixIcon: const Icon(Icons.search)
-                    ),
-                  ),
-                ),
-                const Expanded(
-                  flex:1,
-                  child: SizedBox(
-                    height: 20
-                  ),
-                ),   
-              ],
+    return Column(
+      children: [
+        Column(
+          children: [
+            const SizedBox(
+              height: 20,
             ),
-          )
-        ]
-      )
+            generateFilters(),
+            TextField(
+              onChanged: (value) => updateSearchedWord(value),
+              decoration: InputDecoration(
+                labelText: searchLabelText ?? "",
+                suffixIcon: const Icon(Icons.search)
+              ),
+            ),
+            const SizedBox(
+              height: 20
+            ),   
+          ],
+        )
+      ]
     );
   }
 
