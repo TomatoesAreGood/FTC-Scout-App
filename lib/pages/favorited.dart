@@ -41,7 +41,7 @@ class _FavoritedState extends State<Favorited> {
                 ),
                 onTap: (){
                   print(name);
-                  print(int.parse(dateStart.substring(0,4)));
+                  print(year);
                   print(code);
 
                   Navigator.of(context).push(

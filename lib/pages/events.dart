@@ -163,6 +163,7 @@ class _EventsState extends State<Events> {
 
     if(response.statusCode == 200){
       print("API CALL SUCCESS");
+      print(response.body.length);
       List<EventListing> eventList = EventListing.fromJson(json.decode(response.body) as Map<String,dynamic>);
       addKVPToYearlyListing(year, eventList);
       isCallingAPI = false;
@@ -526,7 +527,6 @@ class _EventsState extends State<Events> {
 
     return Scaffold(
       appBar : AppBar(
-        toolbarHeight: SizeConfig.heightMultiplier * 12,
         backgroundColor: Colors.lightGreen,
         title: Text("Events"),
         actions: [
