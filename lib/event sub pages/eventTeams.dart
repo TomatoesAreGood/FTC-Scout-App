@@ -69,6 +69,13 @@ class _EventTeamsState extends State<EventTeams> {
     String encodedToken = base64.encode(utf8.encode(authorization));
 
     final response = await http.get(Uri.parse('https://ftc-api.firstinspires.org/v2.0/${widget.year}/rankings/${widget.code}'), headers: {"Authorization": "Basic $encodedToken"});
+    
+    if(response.body[0] != '{'){  
+      isCallingAPI = false;
+      List<TeamPerfomanceData> teamList = [];
+      EventSubpage.storedResults["rankings"] = teamList;
+      return teamList;
+    }
 
     if(response.statusCode == 200){
       print("API CALL SUCCESS");
