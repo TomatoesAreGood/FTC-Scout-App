@@ -295,10 +295,6 @@ class _EventsState extends State<Events> {
                     child: Text("Championship")
                   ),
                   DropdownMenuItem(
-                    value: 5,
-                    child: Text("Other")
-                  ),
-                  DropdownMenuItem(
                     value: 6,
                     child: Text("FIRST Championship")
                   ),
@@ -309,6 +305,10 @@ class _EventsState extends State<Events> {
                   DropdownMenuItem(
                     value: 10,
                     child: Text("Off-Season")
+                  ),
+                  DropdownMenuItem(
+                    value: 5,
+                    child: Text("Other")
                   ),
                 ],
                 onChanged: (int? newValue){
@@ -342,7 +342,12 @@ class _EventsState extends State<Events> {
       String country = weekListings[i].country;
       String city = weekListings[i].city;
       String dateStart = weekListings[i].dateStart;
+      String venue = weekListings[i].venue;
+      String dateEnd = weekListings[i].dateEnd;
+      String? website = weekListings[i].website;
+      String? liveStream = weekListings[i].liveStream;
       int type = weekListings[i].type;
+
       listings.add(
         Column (
           children: [
@@ -365,7 +370,7 @@ class _EventsState extends State<Events> {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => 
-                        EventSubpage(data:ExtendedEventListing(city: city, code: code, country: country, dateStart: dateStart, name: name, type: type, year: int.parse(selectedYear)))
+                        EventSubpage(data:ExtendedEventListing(city: city, code: code, country: country, dateStart: dateStart, name: name, type: type, year: int.parse(selectedYear), dateEnd: dateEnd, venue: venue, liveStream: liveStream, website: website))
                     )
                   );
                 },

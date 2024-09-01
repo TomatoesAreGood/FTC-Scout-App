@@ -219,6 +219,10 @@ class _TeamSubpageState extends State<TeamSubpage> {
       String country = events[i].country;
       String city = events[i].city;
       String dateStart = events[i].dateStart;
+      String venue = events[i].venue;
+      String dateEnd = events[i].dateEnd;
+      String? website = events[i].website;
+      String? liveStream = events[i].liveStream;
       int type = events[i].type;
 
       listings.add(
@@ -239,7 +243,7 @@ class _TeamSubpageState extends State<TeamSubpage> {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => 
-                        EventSubpage(data:ExtendedEventListing(city: city, code: code, country: country, dateStart: dateStart, name: name, type: type, year: selectedYear))
+                        EventSubpage(data:ExtendedEventListing(city: city, code: code, country: country, dateStart: dateStart, name: name, type: type, year: selectedYear, venue: venue, dateEnd: dateEnd, liveStream: liveStream, website: website))
                     )
                   );
                 },

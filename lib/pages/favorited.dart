@@ -24,8 +24,13 @@ class _FavoritedState extends State<Favorited> {
       String country = weekListings[i].country;
       String city = weekListings[i].city;
       String dateStart = weekListings[i].dateStart;
+      String venue = weekListings[i].venue;
+      String dateEnd = weekListings[i].dateEnd;
+      String? website = weekListings[i].website;
+      String? liveStream = weekListings[i].liveStream;
       int type = weekListings[i].type;
       int year = weekListings[i].year;
+
       listings.add(
         Column (
           children: [
@@ -48,7 +53,7 @@ class _FavoritedState extends State<Favorited> {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => 
-                        EventSubpage(data:ExtendedEventListing(city: city, code: code, country: country, dateStart: dateStart, name: name, type: type, year: year))
+                        EventSubpage(data:ExtendedEventListing(city: city, code: code, country: country, dateStart: dateStart, name: name, type: type, year: year, venue: venue, dateEnd: dateEnd, liveStream: liveStream, website: website))
                     )
                   ).then((_){setState((){});});
                 },

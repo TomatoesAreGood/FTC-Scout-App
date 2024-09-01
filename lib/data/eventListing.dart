@@ -4,7 +4,11 @@ class EventListing {
   final String country;
   final String city;
   final String dateStart;
+  final String dateEnd;
   final String code;
+  final String venue;
+  final String? website;
+  final String? liveStream;
   final int type;
 
   const EventListing({
@@ -13,7 +17,11 @@ class EventListing {
     required this.city,
     required this.dateStart,
     required this.code,
-    required this.type
+    required this.type,
+    required this.dateEnd,
+    required this.venue,
+    required this.liveStream,
+    required this.website
   });
 
   static List<EventListing> fromJson(Map<String, dynamic> json){
@@ -28,7 +36,11 @@ class EventListing {
           city: eventList[i]['city'], 
           dateStart: eventList[i]['dateStart'].substring(0, 10), 
           code: eventList[i]['code'],
-          type: int.parse(eventList[i]['type'])
+          type: int.parse(eventList[i]['type']),
+          dateEnd: eventList[i]['dateEnd'],
+          venue: eventList[i]['venue'],
+          liveStream: eventList[i]['liveStreamUrl'],
+          website: eventList[i]['website']
         ));
       }   
     }
@@ -99,7 +111,7 @@ class EventListing {
 class ExtendedEventListing extends EventListing{
   final int year;
 
-  ExtendedEventListing({required this.year, required super.name, required super.country, required super.city, required super.dateStart, required super.code, required super.type});
+  ExtendedEventListing({required this.year, required super.name, required super.country, required super.city, required super.dateStart, required super.code, required super.type, required super.dateEnd, required super.venue, required super.liveStream, required super.website});
 
   @override
   operator ==(o) => o is ExtendedEventListing && o.city == city && o.name == name && o.country == country && o.dateStart == dateStart && o.code == code && o.type == type && o.year == year;
