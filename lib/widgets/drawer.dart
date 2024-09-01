@@ -19,7 +19,7 @@ class _MyDrawerState extends State<MyDrawer> {
         children: [
           DrawerHeader(
             decoration: BoxDecoration(color: Colors.black),
-            child: Icon(Icons.electric_bolt_rounded),
+            child: Image(image:AssetImage('assets/logo.png')),
           ),
           ListTile(
             leading: Icon(Icons.settings),
