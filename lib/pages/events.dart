@@ -12,6 +12,14 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 
 class Events extends StatefulWidget {
+  static Map<String, int> expectedResponseLength = {
+    "2019": 641613,
+    "2020": 539452,
+    "2021": 700495,
+    "2022": 765067,
+    "2023": 919249,
+    "2024": 130073,
+  };
   const Events({super.key});
 
   @override
@@ -91,7 +99,6 @@ class _EventsState extends State<Events> {
   bool isExpandedFilters = false;
 
   String? searchedWord;
-  // String? searchLabelText = "Search";
 
   void updateSearchedWord(String enteredWord){
     setState(() {
@@ -163,6 +170,11 @@ class _EventsState extends State<Events> {
     if(response.statusCode == 200){
       print("API CALL SUCCESS");
       print(response.body.length);
+      if(response.body.length < Events.expectedResponseLength[year]!){
+        return fetchEvents(year);
+      }else if(response.body.length > Events.expectedResponseLength[year]!){
+        Events.expectedResponseLength[year] = response.body.length;
+      }
       List<EventListing> eventList = EventListing.fromJson(json.decode(response.body) as Map<String,dynamic>);
       addKVPToYearlyListing(year, eventList);
       isCallingAPI = false;
@@ -183,6 +195,12 @@ class _EventsState extends State<Events> {
 
     if(response.statusCode == 200){
       print("API CALL SUCCESS");
+      print(response.body.length);
+      if(response.body.length < Events.expectedResponseLength[year]!){
+        return refreshEvents(year);
+      }else if(response.body.length > Events.expectedResponseLength[year]!){
+        Events.expectedResponseLength[year] = response.body.length;
+      }
       List<EventListing> eventList = EventListing.fromJson(json.decode(response.body) as Map<String,dynamic>);
       addKVPToYearlyListing(year, eventList);
       isCallingAPI = false;
@@ -569,7 +587,6 @@ class _EventsState extends State<Events> {
                 children: [
                   CircularProgressIndicator(),
                   Padding(padding: EdgeInsets.all(8)),
-                  Text("If loading persists, exit and reload the page")
                 ],
               ),
             )
