@@ -15,7 +15,7 @@ class _AboutState extends State<About> {
         backgroundColor: Colors.lightGreen,
         title: Text("About Us"),
       ),
-      body: Center(child: Text("Nothing here yet")),
+      body: Center(child: Text("This ")),
     );
   }
 }
