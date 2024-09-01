@@ -6,7 +6,7 @@ class EventListing {
   final String dateStart;
   final String dateEnd;
   final String code;
-  final String venue;
+  final String? venue;
   final String? website;
   final String? liveStream;
   final int type;

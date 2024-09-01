@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/data/eventListing.dart';
+import 'package:myapp/event%20sub%20pages/eventAbout.dart';
 import 'package:myapp/event%20sub%20pages/eventAwards.dart';
 import 'package:myapp/event%20sub%20pages/eventRankings.dart';
 import 'package:myapp/event%20sub%20pages/eventSchedule.dart';
@@ -24,7 +25,7 @@ class _EventSubpageState extends State<EventSubpage> {
   bool isFavorited = false;
 
   Widget horizontalScrollable(){
-    List<Color?> buttonColors = [null, null, null, null];
+    List<Color?> buttonColors = [null, null, null, null, null];
     buttonColors[selectedIndex] = selectedColor;
 
     return Container(
@@ -91,6 +92,20 @@ class _EventSubpageState extends State<EventSubpage> {
                   ),
                   child: Text("Awards")
                 ),
+                TextButton(
+                  onPressed: (){
+                    setState(() {
+                      if(selectedIndex != 4){
+                        selectedIndex = 4;
+                      }
+                    });
+                  }, 
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.black,
+                    backgroundColor: buttonColors[4]
+                  ),
+                  child: Text("About")
+                ),
               ],
             ),
           ),
@@ -148,7 +163,7 @@ class _EventSubpageState extends State<EventSubpage> {
       body: Column(
         children: [
           horizontalScrollable(),
-          [EventTeams(code: code, year: year),EventRankings(code: code, year: year), EventSchedule(code: code, year: year), EventAwards(code: code, year: year)][selectedIndex]
+          [EventTeams(code: code, year: year),EventRankings(code: code, year: year), EventSchedule(code: code, year: year), EventAwards(code: code, year: year), About(data: widget.data)][selectedIndex]
         ],
       ),
     );

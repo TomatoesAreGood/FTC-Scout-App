@@ -219,7 +219,7 @@ class _TeamSubpageState extends State<TeamSubpage> {
       String country = events[i].country;
       String city = events[i].city;
       String dateStart = events[i].dateStart;
-      String venue = events[i].venue;
+      String? venue = events[i].venue;
       String dateEnd = events[i].dateEnd;
       String? website = events[i].website;
       String? liveStream = events[i].liveStream;

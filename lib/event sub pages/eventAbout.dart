@@ -1,4 +1,6 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:icons_plus/icons_plus.dart';
 import 'package:myapp/data/eventListing.dart';
 
 class About extends StatefulWidget {
@@ -24,7 +26,7 @@ class _AboutState extends State<About> {
 
   Text getDateRange(DateTime start, DateTime end){
     final List<String> monthStrings = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-  
+
     if(start.month == end.month && start.year == end.year && start.day == end.day){
       return Text("${monthStrings[start.month-1]} ${start.day}, ${start.year}");
     }else if(start.month == end.month && start.year == end.year){
@@ -38,29 +40,39 @@ class _AboutState extends State<About> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: [
-        ListTile(
-          leading: Icon(Icons.type_specimen),
-          title: Text(typeToString[widget.data.type] ?? "Other"),
-        ),
-        ListTile(
-          leading: Icon(Icons.place),
-          title: Text("${widget.data.venue}, ${widget.data.city}, ${widget.data.country}")
-        ),
-        ListTile(
-          leading: Icon(Icons.calendar_month),
-          title: getDateRange(DateTime.parse(widget.data.dateStart), DateTime.parse(widget.data.dateStart))
-        ),
-        (widget.data.website != null && widget.data.website!.isNotEmpty) ?  ListTile(
-          leading: Icon(Icons.link),
-          title: Text(widget.data.website!),
-        ) : Container(height: 0),
-        (widget.data.liveStream != null && widget.data.liveStream!.isNotEmpty) ? ListTile(
-          leading: Icon(Icons.live_tv_outlined),
-          title: Text(widget.data.liveStream!),
-        ) : Container(height: 0)
-      ],
+    return Expanded(
+      child: ListView(
+        children: [
+          ListTile(
+            leading: const Tooltip(message: "Event Type", child: Icon(Icons.type_specimen)),
+            title: Text(typeToString[widget.data.type] ?? "Other"),
+          ),
+          ListTile(
+            leading: const Tooltip(message: "Country", child: Icon(HeroIcons.flag)),
+            title:Text(widget.data.country)
+          ),
+          ListTile(
+            leading: const Tooltip(message: "City", child: Icon(MingCute.building_2_fill)),
+            title:Text(widget.data.city)
+          ),
+          (widget.data.venue != null) ? ListTile(
+            leading: const Tooltip(message: "Venue", child: Icon(FontAwesome.house_chimney_solid, size: 20)),
+            title: AutoSizeText("${widget.data.venue}", maxLines: 1)
+          ) : Container(height: 0),
+          ListTile(
+            leading: const Tooltip(message: "Date", child: Icon(Icons.calendar_month)),
+            title: getDateRange(DateTime.parse(widget.data.dateStart), DateTime.parse(widget.data.dateEnd))
+          ),
+          (widget.data.website != null && widget.data.website!.isNotEmpty) ?  ListTile(
+            leading: const Tooltip(message: "Website", child: Icon(Icons.link)),
+            title: Text(widget.data.website!),
+          ) : Container(height: 0),
+          (widget.data.liveStream != null && widget.data.liveStream!.isNotEmpty) ? ListTile(
+            leading: const Tooltip(message: "Live Stream", child: Icon(Icons.live_tv_outlined)),
+            title: Text(widget.data.liveStream!),
+          ) : Container(height: 0)
+        ],
+      ),
     );
   }
 }
