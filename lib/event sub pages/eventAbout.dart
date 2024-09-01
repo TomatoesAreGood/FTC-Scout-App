@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:myapp/data/eventListing.dart';
+import 'package:url_launcher/link.dart';
 
 class About extends StatefulWidget {
   final ExtendedEventListing data;
@@ -65,11 +66,35 @@ class _AboutState extends State<About> {
           ),
           (widget.data.website != null && widget.data.website!.isNotEmpty) ?  ListTile(
             leading: const Tooltip(message: "Website", child: Icon(Icons.link)),
-            title: Text(widget.data.website!),
+            title: Link(
+              uri: Uri.parse(widget.data.website!),
+              builder: (context, followLink) => GestureDetector(
+                onTap: followLink,
+                child: Text(
+                  widget.data.website!,
+                  style: const TextStyle(
+                    color: Colors.blue,
+                    decoration: TextDecoration.underline
+                  ),
+                ),
+              ),
+            ),
           ) : Container(height: 0),
           (widget.data.liveStream != null && widget.data.liveStream!.isNotEmpty) ? ListTile(
             leading: const Tooltip(message: "Live Stream", child: Icon(Icons.live_tv_outlined)),
-            title: Text(widget.data.liveStream!),
+            title: Link(
+              uri: Uri.parse(widget.data.liveStream!),
+              builder: (context, followLink) => GestureDetector(
+                onTap: followLink,
+                child: Text(
+                  widget.data.liveStream!,
+                  style: const TextStyle(
+                    color: Colors.blue,
+                    decoration: TextDecoration.underline
+                  ),
+                ),
+              ),
+            ),
           ) : Container(height: 0)
         ],
       ),
