@@ -5,6 +5,7 @@ import 'package:myapp/data/sizeConfig.dart';
 import 'package:myapp/data/teamListing.dart';
 import 'package:myapp/data/yearlyTeamDivisions.dart';
 import 'package:myapp/pages/teamSubpage.dart';
+import 'package:myapp/widgets/drawer.dart';
 import 'dart:convert';
 import 'dart:async';
 import '../main.dart';
@@ -172,7 +173,7 @@ class _TeamsState extends State<Teams> {
           icon: const Icon(Icons.filter_list_rounded))
         ],
         ),
-      drawer: Drawer(),
+      drawer: const MyDrawer(),
       floatingActionButton: button,
       body: filtersExpanded ? Column(children: [generateFilterMenu(),child],) : Column(children:[child,])
     );
@@ -197,7 +198,7 @@ class _TeamsState extends State<Teams> {
           icon: const Icon(Icons.filter_list_rounded))
         ],
         ),
-      drawer: Drawer(),
+      drawer: const MyDrawer(),
       floatingActionButton: button,
       body: filtersExpanded ? Column(children: [generateFilters(),child],) : Column(children:[child,])
     );
