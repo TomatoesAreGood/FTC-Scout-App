@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/data/eventListing.dart';
 import 'package:myapp/event%20sub%20pages/eventAbout.dart';
@@ -145,16 +146,37 @@ class _EventSubpageState extends State<EventSubpage> {
         actions: [
           IconButton(
             onPressed: (){
+              bool showPopUp = false;
               setState(() {
-                if(!isFavorited){
-                  MyApp.favoritedEvents.add(widget.data);
-                  isFavorited = true;
+                if(MyApp.favoritedEvents.length < 10){
+                  if(!isFavorited){
+                    MyApp.favoritedEvents.add(widget.data);
+                    isFavorited = true;
+                  }else{
+                    int index = MyApp.findObject(MyApp.favoritedEvents, widget.data);
+                    MyApp.favoritedEvents.removeAt(index);
+                    isFavorited = false;
+                  }
                 }else{
-                  int index = MyApp.findObject(MyApp.favoritedEvents, widget.data);
-                  MyApp.favoritedEvents.removeAt(index);
-                  isFavorited = false;
+                  showPopUp = true;
                 }
               });
+              if(showPopUp){
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) => 
+                    AlertDialog(
+                      contentPadding: EdgeInsets.zero,
+                      title: const Text("You can only favorite up to 10 events", maxLines: 2,textAlign: TextAlign.center, style: TextStyle(fontSize: 18)),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text('Ok'),
+                        ),
+                      ],
+                    )
+                  );
+              }
             }, 
             icon: isFavorited ?  const Icon(Icons.star): const Icon(Icons.star_border)
           )
