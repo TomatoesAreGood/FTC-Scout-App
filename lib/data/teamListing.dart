@@ -18,6 +18,10 @@ class TeamListing{
   }
 
   static Future<TeamListing?> getTeam(String year, int page, int teamNum) async {
+    if(page == - 1){
+      return null;
+    }
+
     String? user = dotenv.env['USER'];
     String? token = dotenv.env['TOKEN'];
     String authorization = "$user:$token";

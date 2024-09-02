@@ -4,7 +4,6 @@ import 'package:myapp/data/teamListing.dart';
 import 'package:myapp/main.dart';
 import 'package:myapp/pages/eventSubpage.dart';
 import 'package:myapp/pages/teamSubpage.dart';
-import 'package:myapp/userPreferences.dart';
 import 'package:myapp/widgets/drawer.dart';
 
 class Favorited extends StatefulWidget {

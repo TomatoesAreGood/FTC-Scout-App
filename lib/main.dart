@@ -69,9 +69,9 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
   
   @override
   void initState(){
+    WidgetsBinding.instance.addObserver(this);
     MyApp.favoritedEvents = UserPreferences.getSavedEvents();
     MyApp.favoritedTeams = UserPreferences.getSavedTeams();
-    WidgetsBinding.instance.addObserver(this);
     super.initState();
   }
 

@@ -256,7 +256,7 @@ class _TeamsState extends State<Teams> {
           context: context,
           builder: (BuildContext context) => AlertDialog(
             contentPadding: EdgeInsets.zero,
-            title: AutoSizeText("Team does not exist. Try a different year or double check your search.", maxLines: 2,maxFontSize: 18, minFontSize: 10,textAlign: TextAlign.center),
+            title: Text("Team does not exist. Try a different year or double check your search.", maxLines: 2,textAlign: TextAlign.center, style: TextStyle(fontSize: 15)),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
@@ -279,7 +279,7 @@ class _TeamsState extends State<Teams> {
         builder: (BuildContext context) => 
           AlertDialog(
             contentPadding: EdgeInsets.zero,
-            title: AutoSizeText("Search query can only include numbers", maxLines: 2,maxFontSize: 18, minFontSize: 10,textAlign: TextAlign.center),
+            title: Text("Search query can only include numbers", maxLines: 2,textAlign: TextAlign.center, style: TextStyle(fontSize: 15)),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
