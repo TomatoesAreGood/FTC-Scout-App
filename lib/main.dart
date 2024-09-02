@@ -70,6 +70,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState(){
     MyApp.favoritedEvents = UserPreferences.getSavedEvents();
+    MyApp.favoritedTeams = UserPreferences.getSavedTeams();
     super.initState();
   }
 

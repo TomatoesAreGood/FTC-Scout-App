@@ -162,7 +162,7 @@ class _FavoritedState extends State<Favorited> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(onPressed: (){
         UserPreferences.setSavedEvents(MyApp.favoritedEvents);
-        // MyApp.favoritedEvents = UserPreferences.getSavedEvents();
+        UserPreferences.setSavedTeams(MyApp.favoritedTeams);
       }),
       drawer: const MyDrawer(),
       appBar: AppBar(

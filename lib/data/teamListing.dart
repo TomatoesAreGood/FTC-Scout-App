@@ -72,6 +72,42 @@ class ExtendedTeamListing extends TeamListing{
   
   ExtendedTeamListing({required this.year, required super.city, required super.country, required super.rookieYear, required super.stateProv, required super.teamName, required super.teamNumber, required super.fullTeamName});
   
+  static List<ExtendedTeamListing> fromJson(Map<String, dynamic> json){
+    List<ExtendedTeamListing> allTeams = [];
+    List teamList = json['teams'];
+    
+    for (var i = 0; i < teamList.length; i++){
+      allTeams.add(
+        ExtendedTeamListing(
+          teamNumber: teamList[i]['teamNumber'],
+          rookieYear: teamList[i]['rookieYear'],
+          teamName: teamList[i]['nameShort'],
+          city: teamList[i]['city'],
+          stateProv: teamList[i]['stateProv'],
+          country: teamList[i]['country'],
+          fullTeamName: teamList[i]['nameFull'],
+          year: teamList[i]['year']
+        )
+      );
+    }   
+    
+    print("FROM JSON SUCCESS");
+    return allTeams;
+  }
+
+  Map<String, dynamic> toJson(){
+    return {
+      'teamNumber': teamNumber,
+      'rookieYear': rookieYear,
+      'nameShort': teamName,
+      'city': city,
+      'stateProv': stateProv,
+      'country': country,
+      'nameFull': fullTeamName,
+      'year': year
+    };
+  }
+
   @override
   operator ==(o) => o is ExtendedTeamListing && o.city == city && o.teamNumber == teamNumber && o.rookieYear == rookieYear && o.teamName == teamName && o.stateProv == stateProv && o.country == country && o.fullTeamName == fullTeamName && o.year == year;
 
