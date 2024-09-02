@@ -109,6 +109,6 @@ class ExtendedTeamListing extends TeamListing{
   }
 
   @override
-  operator ==(o) => o is ExtendedTeamListing && o.city == city && o.teamNumber == teamNumber && o.rookieYear == rookieYear && o.teamName == teamName && o.stateProv == stateProv && o.country == country && o.fullTeamName == fullTeamName && o.year == year;
+  operator ==(o) => o is ExtendedTeamListing && o.teamNumber == teamNumber && o.rookieYear == rookieYear;
 
 }
