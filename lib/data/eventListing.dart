@@ -37,7 +37,7 @@ class EventListing {
           dateStart: eventList[i]['dateStart'].substring(0, 10), 
           code: eventList[i]['code'],
           type: int.parse(eventList[i]['type']),
-          dateEnd: eventList[i]['dateEnd'],
+          dateEnd: eventList[i]['dateEnd'].substring(0, 10),
           venue: eventList[i]['venue'],
           liveStream: eventList[i]['liveStreamUrl'],
           website: eventList[i]['website']

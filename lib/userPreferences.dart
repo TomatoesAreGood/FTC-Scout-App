@@ -1,7 +1,4 @@
-
 import 'dart:convert';
-import 'dart:math';
-
 import 'package:myapp/data/eventListing.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -13,10 +10,7 @@ class UserPreferences {
   }
 
   static Future setSavedEvents(List<ExtendedEventListing> list) async{
-    if(list.isNotEmpty){
-      print(eventListingToJson(list));
-      await preferences.setStringList("savedEvents", eventListingToJson(list));
-    }
+    await preferences.setStringList("savedEvents", eventListingToJson(list));
   }
 
   static List<ExtendedEventListing> getSavedEvents(){
@@ -38,5 +32,7 @@ class UserPreferences {
     }
     return list;
   }
+
+  
 
 }
