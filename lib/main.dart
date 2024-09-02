@@ -4,6 +4,7 @@ import 'package:myapp/data/teamListing.dart';
 import 'package:myapp/pages/events.dart';
 import 'package:myapp/pages/favorited.dart';
 import 'package:myapp/pages/teams.dart';
+import 'package:myapp/userPreferences.dart';
 import 'data/eventListing.dart';
 import 'data/sizeConfig.dart';
 
@@ -16,6 +17,8 @@ class YearlyTeamListing{
 
 void main() async{
   await dotenv.load(fileName: "lib/.env");
+  WidgetsFlutterBinding.ensureInitialized();
+  await UserPreferences.init();
   runApp(const MyApp());
 }
 
@@ -62,6 +65,12 @@ class _MyAppState extends State<MyApp> {
         selectedIndex = index;
       });
     }
+  }
+  
+  @override
+  void initState(){
+    MyApp.favoritedEvents = UserPreferences.getSavedEvents();
+    super.initState();
   }
 
   @override

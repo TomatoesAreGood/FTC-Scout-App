@@ -113,6 +113,47 @@ class ExtendedEventListing extends EventListing{
 
   ExtendedEventListing({required this.year, required super.name, required super.country, required super.city, required super.dateStart, required super.code, required super.type, required super.dateEnd, required super.venue, required super.liveStream, required super.website});
 
+  static List<ExtendedEventListing> fromJson(Map<String, dynamic> json){
+    List<ExtendedEventListing> allEvents = [];
+    List eventList = json['events'];
+
+    for (var i = 0; i < eventList.length; i++){
+      if(eventList[i]['type'] < 12 || eventList[i]['type'] > 16){
+        allEvents.add(ExtendedEventListing(
+          name: eventList[i]['name'], 
+          country: eventList[i]['country'], 
+          city: eventList[i]['city'], 
+          dateStart: eventList[i]['dateStart'], 
+          code: eventList[i]['code'],
+          type: eventList[i]['type'],
+          dateEnd: eventList[i]['dateEnd'],
+          venue: eventList[i]['venue'],
+          liveStream: eventList[i]['liveStreamUrl'],
+          website: eventList[i]['website'],
+          year: eventList[i]['year']
+        ));
+      }   
+    }
+    print("FROM JSON SUCCESS");
+    return allEvents;
+  }
+
+  Map<String, dynamic> toJson(){
+    return {
+      'name': name,
+      'country' : country,
+      'city': city,
+      'dateStart': dateStart,
+      'code': code,
+      'type': type,
+      'dateEnd': dateEnd,
+      'venue': venue,
+      'liveStreamUrl': liveStream,
+      'webiste' : website,
+      'year': year      
+    };
+  }
+
   @override
   operator ==(o) => o is ExtendedEventListing && o.city == city && o.name == name && o.country == country && o.dateStart == dateStart && o.code == code && o.type == type && o.year == year;
 }
