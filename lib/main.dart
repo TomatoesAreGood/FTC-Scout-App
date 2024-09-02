@@ -56,7 +56,7 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
   int selectedIndex = 0;
 
   void onItemTapped(int index){
@@ -71,7 +71,28 @@ class _MyAppState extends State<MyApp> {
   void initState(){
     MyApp.favoritedEvents = UserPreferences.getSavedEvents();
     MyApp.favoritedTeams = UserPreferences.getSavedTeams();
+    WidgetsBinding.instance.addObserver(this);
     super.initState();
+  }
+
+  @override
+  void dispose(){
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state){
+    if(state == AppLifecycleState.inactive || state == AppLifecycleState.detached){
+      return;
+    }
+    final bool isBackground = state == AppLifecycleState.paused;
+    if(isBackground){
+      UserPreferences.setSavedEvents(MyApp.favoritedEvents);
+      UserPreferences.setSavedTeams(MyApp.favoritedTeams);
+    }
+    super.didChangeAppLifecycleState(state);
+
   }
 
   @override

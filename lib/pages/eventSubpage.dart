@@ -1,4 +1,3 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/data/eventListing.dart';
 import 'package:myapp/event%20sub%20pages/eventAbout.dart';
@@ -148,17 +147,17 @@ class _EventSubpageState extends State<EventSubpage> {
             onPressed: (){
               bool showPopUp = false;
               setState(() {
-                if(MyApp.favoritedEvents.length < 10){
-                  if(!isFavorited){
+                if(!isFavorited){
+                  if(MyApp.favoritedEvents.length < 10){
                     MyApp.favoritedEvents.add(widget.data);
                     isFavorited = true;
                   }else{
-                    int index = MyApp.findObject(MyApp.favoritedEvents, widget.data);
-                    MyApp.favoritedEvents.removeAt(index);
-                    isFavorited = false;
+                    showPopUp = true;
                   }
                 }else{
-                  showPopUp = true;
+                  int index = MyApp.findObject(MyApp.favoritedEvents, widget.data);
+                  MyApp.favoritedEvents.removeAt(index);
+                  isFavorited = false;
                 }
               });
               if(showPopUp){

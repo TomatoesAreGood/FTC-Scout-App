@@ -160,10 +160,6 @@ class _FavoritedState extends State<Favorited> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(onPressed: (){
-        UserPreferences.setSavedEvents(MyApp.favoritedEvents);
-        UserPreferences.setSavedTeams(MyApp.favoritedTeams);
-      }),
       drawer: const MyDrawer(),
       appBar: AppBar(
         title: Text("Favorited"),

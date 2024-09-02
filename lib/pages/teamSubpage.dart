@@ -270,17 +270,17 @@ class _TeamSubpageState extends State<TeamSubpage> {
             onPressed: (){
               bool showPopUp = false;
               setState(() {
-                if(MyApp.favoritedTeams.length < 10){
-                  if(!isFavorited){
+                if(!isFavorited){
+                  if(MyApp.favoritedTeams.length < 10){
                     MyApp.favoritedTeams.add(widget.data);
                     isFavorited = true;
                   }else{
-                    int index = MyApp.findObject(MyApp.favoritedTeams, widget.data);
-                    MyApp.favoritedTeams.removeAt(index);
-                    isFavorited = false;
+                    showPopUp = true;
                   }
                 }else{
-                  showPopUp = true;
+                  int index = MyApp.findObject(MyApp.favoritedTeams, widget.data);
+                  MyApp.favoritedTeams.removeAt(index);
+                  isFavorited = false;
                 }
               });
               if(showPopUp){
