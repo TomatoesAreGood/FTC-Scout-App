@@ -6,13 +6,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 class UserPreferences {
   static late SharedPreferences preferences;
   static const teamsKey = "savedTeams";
+  static const eventsKey = "savedEvents";
 
   static Future init() async{
     preferences = await SharedPreferences.getInstance();
+    await preferences.reload();
   }
 
   static Future setSavedEvents(List<ExtendedEventListing> list) async{
-    await preferences.setStringList("savedEvents", eventListingToJson(list));
+    await preferences.setStringList(eventsKey, eventListingToJson(list));
   }
 
   static List<String> eventListingToJson(List<ExtendedEventListing> events){
@@ -24,9 +26,8 @@ class UserPreferences {
   }
 
   static List<ExtendedEventListing> getSavedEvents(){
-    preferences.reload();
-    if(preferences.getStringList("savedEvents") != null){
-      return jsonToEventListing(preferences.getStringList("savedEvents")!);
+    if(preferences.getStringList(eventsKey) != null){
+      return jsonToEventListing(preferences.getStringList(eventsKey)!);
     }
     return [];
   }
@@ -36,7 +37,7 @@ class UserPreferences {
     return ExtendedEventListing.fromJson(json.decode(response) as Map<String, dynamic>);
   }
 
-  static Future setSavedTeams(List<ExtendedTeamListing> teamList)  async{
+  static Future setSavedTeams(List<ExtendedTeamListing> teamList) async{
     print(teamListingToJson(teamList));
     await preferences.setStringList(teamsKey, teamListingToJson(teamList));
   }
@@ -50,7 +51,6 @@ class UserPreferences {
   }
 
   static List<ExtendedTeamListing> getSavedTeams(){
-    preferences.reload();
     if(preferences.getStringList(teamsKey) != null){
       print(preferences.getStringList(teamsKey));
       return jsonToTeamListing(preferences.getStringList(teamsKey)!);
