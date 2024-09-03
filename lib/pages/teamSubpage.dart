@@ -298,6 +298,8 @@ class _TeamSubpageState extends State<TeamSubpage> {
                       ],
                     )
                 );
+              }else{
+                MyApp.updateFavoritedTeams();
               }
             }, 
             icon: isFavorited ? const Icon(Icons.star): const Icon(Icons.star_border)

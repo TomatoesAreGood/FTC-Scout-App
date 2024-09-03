@@ -36,6 +36,8 @@ class MyApp extends StatefulWidget {
     "2024":"2024-09-07"
   };
 
+  const MyApp({super.key});
+
   static int findObject(List? list, Object obj){
     if(list == null){
       return -1;
@@ -50,13 +52,19 @@ class MyApp extends StatefulWidget {
     return -1;
   }
 
-  const MyApp({super.key});
+  static void updateFavoritedEvents(){
+    UserPreferences.setSavedEvents(MyApp.favoritedEvents);
+  }
+
+  static void updateFavoritedTeams(){
+    UserPreferences.setSavedTeams(MyApp.favoritedTeams);
+  }
 
   @override
   State<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
+class _MyAppState extends State<MyApp> {
   int selectedIndex = 0;
 
   void onItemTapped(int index){
@@ -69,30 +77,9 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
   
   @override
   void initState(){
-    WidgetsBinding.instance.addObserver(this);
     MyApp.favoritedEvents = UserPreferences.getSavedEvents();
     MyApp.favoritedTeams = UserPreferences.getSavedTeams();
     super.initState();
-  }
-
-  @override
-  void dispose(){
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state){
-    if(state == AppLifecycleState.inactive || state == AppLifecycleState.detached){
-      return;
-    }
-    final bool isBackground = state == AppLifecycleState.paused;
-    if(isBackground){
-      UserPreferences.setSavedEvents(MyApp.favoritedEvents);
-      UserPreferences.setSavedTeams(MyApp.favoritedTeams);
-    }
-    super.didChangeAppLifecycleState(state);
-
   }
 
   @override
