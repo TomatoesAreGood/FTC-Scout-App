@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -759,16 +760,16 @@ class YearlyTeamDivisions{
     String encodedToken = base64.encode(utf8.encode(authorization));
 
     var response = await http.get(Uri.parse('https://ftc-api.firstinspires.org/v2.0/$year/teams?page=1'), headers: {"Authorization": "Basic $encodedToken"});
-    print( "[${(json.decode(response.body) as Map<String, dynamic>)['teams'][0]['teamNumber']}, ${(json.decode(response.body) as Map<String, dynamic>)['teams'][64]['teamNumber']}],");
+    debugPrint( "[${(json.decode(response.body) as Map<String, dynamic>)['teams'][0]['teamNumber']}, ${(json.decode(response.body) as Map<String, dynamic>)['teams'][64]['teamNumber']}],");
     int totalPages = (json.decode(response.body) as Map<String, dynamic>)['pageTotal'];
 
     for(var i = 2; i <= totalPages; i++){
       response = await http.get(Uri.parse('https://ftc-api.firstinspires.org/v2.0/$year/teams?page=$i'), headers: {"Authorization": "Basic $encodedToken"});
       if(i != totalPages){
-        print("[${(json.decode(response.body) as Map<String, dynamic>)['teams'][0]['teamNumber']}, ${(json.decode(response.body) as Map<String, dynamic>)['teams'][64]['teamNumber']}],");
+        debugPrint("[${(json.decode(response.body) as Map<String, dynamic>)['teams'][0]['teamNumber']}, ${(json.decode(response.body) as Map<String, dynamic>)['teams'][64]['teamNumber']}],");
       }else{
         int teamCountPage = (json.decode(response.body) as Map<String, dynamic>)['teamCountPage'] - 1;
-        print("[${(json.decode(response.body) as Map<String, dynamic>)['teams'][0]['teamNumber']}, ${(json.decode(response.body) as Map<String, dynamic>)['teams'][teamCountPage]['teamNumber']}],");
+        debugPrint("[${(json.decode(response.body) as Map<String, dynamic>)['teams'][0]['teamNumber']}, ${(json.decode(response.body) as Map<String, dynamic>)['teams'][teamCountPage]['teamNumber']}],");
       }
     }
   }

@@ -46,15 +46,6 @@ class HybridMatchData{
         )
       );
     }
-    print("FROM JSON SUCCESS");
     return scheduleList;
   }
 }
-
-
-
-// class TeamMatchData{
-//   final int teamNumber;
-//   final String teamName;
-
-// }

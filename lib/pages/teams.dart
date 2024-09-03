@@ -32,7 +32,7 @@ class _TeamsState extends State<Teams> {
 
   bool filtersExpanded = false;
 
-  dynamic getTeams(String year, int page) async{
+  dynamic fetchTeams(String year, int page) async{
     if(MyApp.yearlyTeamListings.containsKey(year) && page <= MyApp.yearlyTeamListings[selectedYear]!.page){
       pageNum = MyApp.yearlyTeamListings[year]!.page;
       return MyApp.yearlyTeamListings[year]!.teams; 
@@ -46,7 +46,6 @@ class _TeamsState extends State<Teams> {
     var response = await http.get(Uri.parse('https://ftc-api.firstinspires.org/v2.0/$year/teams?page=$page'), headers: {"Authorization": "Basic $encodedToken"});
 
     if(response.statusCode == 200){
-      print("API CALL SUCCESS");
       List<TeamListing> teamList = TeamListing.fromJson(json.decode(response.body) as Map<String, dynamic>);
 
       if(page == 1){
@@ -82,7 +81,7 @@ class _TeamsState extends State<Teams> {
     }
   }
 
-  dynamic getNewTeams() async{
+  dynamic fetchNewTeams() async{
     if(MyApp.yearlyTeamListings.containsKey(selectedYear)){
       pageNum = MyApp.yearlyTeamListings[selectedYear]!.page;
       return MyApp.yearlyTeamListings[selectedYear]!.teams; 
@@ -97,7 +96,6 @@ class _TeamsState extends State<Teams> {
     var response = await http.get(Uri.parse('https://ftc-api.firstinspires.org/v2.0/$selectedYear/teams?page=1'), headers: {"Authorization": "Basic $encodedToken"});
 
     if(response.statusCode == 200){
-      print("API CALL SUCCESS");
       List<TeamListing> teamList = TeamListing.fromJson(json.decode(response.body) as Map<String, dynamic>);
       MyApp.yearlyTeamListings[selectedYear] = YearlyTeamListing(page: 1, teams: teamList);
       isCallingAPI = false;
@@ -116,12 +114,12 @@ class _TeamsState extends State<Teams> {
   
   @override
   void initState(){
-    teams = getTeams(selectedYear, pageNum);
+    teams = fetchTeams(selectedYear, pageNum);
     controller.addListener((){
       if(controller.position.maxScrollExtent == controller.offset){
         setState(() {
           pageNum++;
-          teams = getTeams(selectedYear, pageNum);
+          teams = fetchTeams(selectedYear, pageNum);
         });
       }
     });
@@ -230,9 +228,8 @@ class _TeamsState extends State<Teams> {
                 }).toList(),
                 onChanged: (String? newValue){
                   setState((){
-                    print("Set State");
                     selectedYear = newValue!;
-                    teams = getNewTeams();
+                    teams = fetchNewTeams();
                   });
                 }
               )
@@ -249,7 +246,7 @@ class _TeamsState extends State<Teams> {
     }
     try{
       int teamNumber = int.parse(teamNum);
-      TeamListing? team = await TeamListing.getTeam(selectedYear, YearlyTeamDivisions.getPageNum(selectedYear, teamNumber), teamNumber);
+      TeamListing? team = await TeamListing.findTeam(selectedYear, YearlyTeamDivisions.getPageNum(selectedYear, teamNumber), teamNumber);
       if(team == null){
         return showDialog(
           context: context,

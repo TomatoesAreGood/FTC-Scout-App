@@ -57,7 +57,7 @@ class _EventRankingsState extends State<EventRankings> {
     }
   }
 
-  dynamic getRankings() async{
+  dynamic fetchRankings() async{
     if(EventSubpage.storedResults.containsKey("rankings") && EventSubpage.storedResults["rankings"].isNotEmpty){
       return EventSubpage.storedResults["rankings"];
     }
@@ -77,7 +77,6 @@ class _EventRankingsState extends State<EventRankings> {
     }
     
     if(response.statusCode == 200){
-      print("API CALL SUCCESS");
       List<TeamPerfomanceData> teamList = TeamPerfomanceData.fromJson(json.decode(response.body) as Map<String,dynamic>);
       EventSubpage.storedResults["rankings"] = teamList;
       isCallingAPI = false;
@@ -97,7 +96,6 @@ class _EventRankingsState extends State<EventRankings> {
     final response = await http.get(Uri.parse('https://ftc-api.firstinspires.org/v2.0/${widget.year}/rankings/${widget.code}'), headers: {"Authorization": "Basic $encodedToken"});
 
     if(response.statusCode == 200){
-      print("API CALL SUCCESS");
       List<TeamPerfomanceData> teamList = TeamPerfomanceData.fromJson(json.decode(response.body) as Map<String,dynamic>);
       EventSubpage.storedResults["rankings"] = teamList;
       isCallingAPI = false;
@@ -109,7 +107,7 @@ class _EventRankingsState extends State<EventRankings> {
 
   @override
   void initState(){
-    data = getRankings(); 
+    data = fetchRankings(); 
     super.initState();
   }
 

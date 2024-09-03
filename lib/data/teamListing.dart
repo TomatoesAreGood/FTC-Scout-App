@@ -17,7 +17,7 @@ class TeamListing{
     return "$city, $stateProv, $country";
   }
 
-  static Future<TeamListing?> getTeam(String year, int page, int teamNum) async {
+  static Future<TeamListing?> findTeam(String year, int page, int teamNum) async {
     if(page == - 1){
       return null;
     }
@@ -30,7 +30,6 @@ class TeamListing{
     var response = await http.get(Uri.parse('https://ftc-api.firstinspires.org/v2.0/$year/teams?page=$page'), headers: {"Authorization": "Basic $encodedToken"});
 
     if(response.statusCode == 200){
-      print("API CALL SUCCESS");
       List teams = (json.decode(response.body) as Map<String, dynamic>)['teams'];
 
       for(var i = 0; i < teams.length; i++){
@@ -66,7 +65,6 @@ class TeamListing{
       );
     }   
     
-    print("FROM JSON SUCCESS");
     return allTeams;
   }
 }
@@ -95,7 +93,6 @@ class ExtendedTeamListing extends TeamListing{
       );
     }   
     
-    print("FROM JSON SUCCESS");
     return allTeams;
   }
 
@@ -113,6 +110,6 @@ class ExtendedTeamListing extends TeamListing{
   }
 
   @override
-  operator ==(o) => o is ExtendedTeamListing && o.teamNumber == teamNumber && o.rookieYear == rookieYear;
+  operator ==(other) => other is ExtendedTeamListing && other.teamNumber == teamNumber && other.rookieYear == rookieYear;
 
 }

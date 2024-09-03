@@ -44,7 +44,6 @@ class EventListing {
         ));
       }   
     }
-    print("FROM JSON SUCCESS");
     return allEvents;
   }
 
@@ -134,7 +133,6 @@ class ExtendedEventListing extends EventListing{
         ));
       }   
     }
-    print("FROM JSON SUCCESS");
     return allEvents;
   }
 
@@ -154,6 +152,7 @@ class ExtendedEventListing extends EventListing{
     };
   }
 
+
   @override
-  operator ==(o) => o is ExtendedEventListing && o.city == city && o.name == name && o.country == country && o.dateStart == dateStart && o.code == code && o.type == type && o.year == year;
+  operator ==(other) => other is ExtendedEventListing && other.city == city && other.name == name && other.country == country && other.dateStart == dateStart && other.code == code && other.type == type && other.year == year; 
 }

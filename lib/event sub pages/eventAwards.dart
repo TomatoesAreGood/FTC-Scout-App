@@ -20,32 +20,7 @@ class _EventAwardsState extends State<EventAwards> {
   late dynamic data;
   bool isCallingAPI = false;
 
-  dynamic getTeams() async{
-    if(EventSubpage.storedResults.containsKey("rankings") && EventSubpage.storedResults["rankings"].isNotEmpty){
-      return EventSubpage.storedResults["rankings"];
-    }
-    isCallingAPI = true;
-    String? user = dotenv.env['USER'];
-    String? token = dotenv.env['TOKEN'];
-    String authorization = "$user:$token";
-    String encodedToken = base64.encode(utf8.encode(authorization));
-
-    final response = await http.get(Uri.parse('https://ftc-api.firstinspires.org/v2.0/${widget.year}/rankings/${widget.code}'), headers: {"Authorization": "Basic $encodedToken"});
-
-    if(response.statusCode == 200){
-      print("API CALL SUCCESS");
-      List<TeamPerfomanceData> teamList = TeamPerfomanceData.fromJson(json.decode(response.body) as Map<String,dynamic>);
-      if(!EventSubpage.storedResults.containsKey("rankings")){
-        EventSubpage.storedResults["rankings"] = teamList;
-      }
-      isCallingAPI = false;
-      return teamList;
-    }else{
-      throw Exception("API error ${response.statusCode}");
-    }
-  }
-
-  dynamic getAwards() async{
+  dynamic fetchAwards() async{
     if(EventSubpage.storedResults.containsKey("awards") && EventSubpage.storedResults["awards"].isNotEmpty){
       return EventSubpage.storedResults["awards"];
     }
@@ -58,7 +33,6 @@ class _EventAwardsState extends State<EventAwards> {
     final response = await http.get(Uri.parse('https://ftc-api.firstinspires.org/v2.0/${widget.year}/awards/${widget.code}'), headers: {"Authorization": "Basic $encodedToken"});
 
     if(response.statusCode == 200){
-      print("API CALL SUCCESS");
       List<Award> awards = Award.fromJson(json.decode(response.body) as Map<String,dynamic>);
       EventSubpage.storedResults["awards"] = awards;
       isCallingAPI = false;
@@ -78,7 +52,6 @@ class _EventAwardsState extends State<EventAwards> {
     final response = await http.get(Uri.parse('https://ftc-api.firstinspires.org/v2.0/${widget.year}/awards/${widget.code}'), headers: {"Authorization": "Basic $encodedToken"});
 
     if(response.statusCode == 200){
-      print("API CALL SUCCESS");
       List<Award> awards = Award.fromJson(json.decode(response.body) as Map<String,dynamic>);
       EventSubpage.storedResults["awards"] = awards;
       isCallingAPI = false;
@@ -151,7 +124,7 @@ class _EventAwardsState extends State<EventAwards> {
 
   Map<int, String> getTeamDisplayNames(){
     Map<int, String> teamDisplayNames = {};
-    List<TeamPerfomanceData> teamData = EventSubpage.storedResults["rankings"];
+    List<TeamPerfomanceData> teamData = EventSubpage.storedResults["rankings"] ?? [];
     for(var i = 0; i < teamData.length; i++){
       teamDisplayNames[teamData[i].teamNumber] = teamData[i].teamName ?? "Unknown";
     }
@@ -177,7 +150,7 @@ class _EventAwardsState extends State<EventAwards> {
 
   @override
   void initState(){
-    data = getAwards();
+    data = fetchAwards();
     super.initState();
   }
 

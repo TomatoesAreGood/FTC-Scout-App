@@ -27,9 +27,8 @@ class Events extends StatefulWidget {
 }
 
 
-String fetchStartDate(String year){
+String getStartDate(String year){
   if(MyApp.yearlyStartDates.containsKey(year)){
-    print("FETCH START DATE SUCCESS");
     return MyApp.yearlyStartDates[year] as String;
   }else{
     throw Exception("Yearly Start Dates does not contain $year");
@@ -233,7 +232,7 @@ class _EventsState extends State<Events> {
                     print("Set State");
                     selectedYear = newValue!;
                     allEventListings = fetchEvents(selectedYear);
-                    seasonStart = fetchStartDate(selectedYear);
+                    seasonStart = getStartDate(selectedYear);
                   });
                 }
               )
@@ -558,7 +557,7 @@ class _EventsState extends State<Events> {
   @override
   void initState(){
     allEventListings = fetchEvents(selectedYear);
-    seasonStart = fetchStartDate(selectedYear);
+    seasonStart = getStartDate(selectedYear);
     super.initState();
   }
 

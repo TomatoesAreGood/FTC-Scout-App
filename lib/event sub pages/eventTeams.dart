@@ -58,7 +58,7 @@ class _EventTeamsState extends State<EventTeams> {
     }
   }
 
-  dynamic getTeams() async{
+  dynamic fetchTeams() async{
     if(EventSubpage.storedResults.containsKey("rankings") && EventSubpage.storedResults["rankings"].isNotEmpty){
       return EventSubpage.storedResults["rankings"];
     }
@@ -78,7 +78,6 @@ class _EventTeamsState extends State<EventTeams> {
     }
 
     if(response.statusCode == 200){
-      print("API CALL SUCCESS");
       List<TeamPerfomanceData> teamList = TeamPerfomanceData.fromJson(json.decode(response.body) as Map<String,dynamic>);
       EventSubpage.storedResults["rankings"] = teamList;
       isCallingAPI = false;
@@ -110,7 +109,7 @@ class _EventTeamsState extends State<EventTeams> {
   
   @override
   void initState(){
-    data = getTeams(); 
+    data = fetchTeams(); 
     super.initState();
   }
 

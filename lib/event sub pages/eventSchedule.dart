@@ -21,7 +21,7 @@ class _EventScheduleState extends State<EventSchedule> {
 
   bool isCallingAPI = false;
 
-  dynamic getSchedule() async{
+  dynamic fetchSchedule() async{
     if(EventSubpage.storedResults.containsKey("schedule") && EventSubpage.storedResults["schedule"][0].isNotEmpty){
       return EventSubpage.storedResults["schedule"];
     }
@@ -35,7 +35,6 @@ class _EventScheduleState extends State<EventSchedule> {
     final playoffResponse = await http.get(Uri.parse('https://ftc-api.firstinspires.org/v2.0/${widget.year}/schedule/${widget.code}/playoff/hybrid'), headers: {"Authorization": "Basic $encodedToken"});
 
     if(qualResponse.statusCode == 200 && playoffResponse.statusCode == 200){
-      print("API CALL SUCCESS");
       List<HybridMatchData> qualSchedule = HybridMatchData.fromJson(json.decode(qualResponse.body) as Map<String,dynamic>);
       List<HybridMatchData> playoffSchedule = HybridMatchData.fromJson(json.decode(playoffResponse.body) as Map<String,dynamic>);
       List<List<HybridMatchData>> scheduleData = [qualSchedule, playoffSchedule];
@@ -58,7 +57,6 @@ class _EventScheduleState extends State<EventSchedule> {
     final playoffResponse = await http.get(Uri.parse('https://ftc-api.firstinspires.org/v2.0/${widget.year}/schedule/${widget.code}/playoff/hybrid'), headers: {"Authorization": "Basic $encodedToken"});
 
     if(qualResponse.statusCode == 200 && playoffResponse.statusCode == 200){
-      print("API CALL SUCCESS");
       List<HybridMatchData> qualSchedule = HybridMatchData.fromJson(json.decode(qualResponse.body) as Map<String,dynamic>);
       List<HybridMatchData> playoffSchedule = HybridMatchData.fromJson(json.decode(playoffResponse.body) as Map<String,dynamic>);
       List<List<HybridMatchData>> scheduleData = [qualSchedule, playoffSchedule];
@@ -78,7 +76,7 @@ class _EventScheduleState extends State<EventSchedule> {
 
   @override
   void initState(){
-    data = getSchedule();
+    data = fetchSchedule();
     super.initState();
   }
 
@@ -134,8 +132,8 @@ class _EventScheduleState extends State<EventSchedule> {
   List<Widget> generateListTiles(List<HybridMatchData> matches){
     List<Widget> listTiles = [Container(height: 5,color: Colors.blue,)];
     if(matches.isEmpty){
-      listTiles.add(Padding(
-        padding: const EdgeInsets.all(8.0),
+      listTiles.add(const Padding(
+        padding: EdgeInsets.all(8.0),
         child: Center(child: Text("No recorded matches", textScaler: TextScaler.linear(1.2),)),
       ));
       return listTiles;
