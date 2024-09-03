@@ -366,19 +366,19 @@ class _TeamSubpageState extends State<TeamSubpage> {
         ),
         Container(height: 6, color: Colors.lightBlue,),
         (schoolName != null) ?  ListTile(
-          leading: const Icon(Icons.school),
+          leading: const Tooltip(message: "School", child: Icon(Icons.school)),
           title: Text(schoolName),
         ) : Container(height: 0),
         (sponsors != null) ?  ListTile(
-          leading: const Icon(Icons.handshake_rounded),
+          leading: const Tooltip(message: "Sponsors", child: Icon(Icons.handshake_rounded)),
           title: Text(sponsors),
         ) : Container(height: 0),
         ListTile(
-          leading: const Icon(Icons.location_on),
+          leading: const Tooltip(message: "Location", child: Icon(Icons.location_on)),
           title: Text(team.getDisplayLocation()),
         ),
         ListTile(
-          leading: const Icon(Icons.cake),
+          leading: const Tooltip(message: "Rookie Year", child: Icon(Icons.cake)),
           title: Text("Rookie Year: ${team.rookieYear}"),
         ),
         const Padding(padding: EdgeInsets.all(5)),
