@@ -161,7 +161,7 @@ class _FavoritedState extends State<Favorited> {
     return Scaffold(
       drawer: const MyDrawer(),
       appBar: AppBar(
-        title: Text("Favorited"),
+        title: const Text("Favorited"),
         backgroundColor: Colors.lightGreen,
       ),
       body: MyApp.favoritedEvents.isEmpty && MyApp.favoritedTeams.isEmpty ? const Center(child: Text("Favorited events and teams will show up here")): generateScaffold()

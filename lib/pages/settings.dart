@@ -13,9 +13,9 @@ class _SettingsState extends State<Settings> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.lightGreen,
-        title: Text("Settings"),
+        title: const Text("Settings"),
       ),
-      body: Center(child: Text("Nothing here yet")),
+      body: const Center(child: Text("Nothing here yet")),
     );
   }
 }

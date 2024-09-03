@@ -97,7 +97,6 @@ class _EventTeamsState extends State<EventTeams> {
     final response = await http.get(Uri.parse('https://ftc-api.firstinspires.org/v2.0/${widget.year}/rankings/${widget.code}'), headers: {"Authorization": "Basic $encodedToken"});
 
     if(response.statusCode == 200){
-      print("API CALL SUCCESS");
       List<TeamPerfomanceData> teamList = TeamPerfomanceData.fromJson(json.decode(response.body) as Map<String,dynamic>);
       EventSubpage.storedResults["rankings"] = teamList;
       isCallingAPI = false;
@@ -146,7 +145,7 @@ class _EventTeamsState extends State<EventTeams> {
             return Column(
               children: [
                 ListTile(
-                  leading: Text("${team.teamNumber}", style: TextStyle(height: 1.7, fontSize: 20)),
+                  leading: Text("${team.teamNumber}", style: const TextStyle(height: 1.7, fontSize: 20)),
                   title: Text(team.teamName ?? "Unknown", overflow: TextOverflow.ellipsis),
                   subtitle: Text("${team.rankingPoints} RP   ${team.tieBreakerPoints} TBP", overflow: TextOverflow.ellipsis),
                 ),

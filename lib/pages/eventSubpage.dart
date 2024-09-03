@@ -28,7 +28,7 @@ class _EventSubpageState extends State<EventSubpage> {
     List<Color?> buttonColors = [null, null, null, null, null];
     buttonColors[selectedIndex] = selectedColor;
 
-    return Container(
+    return SizedBox(
       height: 40,
       child: Row(
         children: [
@@ -48,7 +48,7 @@ class _EventSubpageState extends State<EventSubpage> {
                     foregroundColor: Colors.black,
                     backgroundColor: buttonColors[0]
                   ),
-                  child: Text("Teams")
+                  child: const Text("Teams")
                 ),
                 TextButton(
                   onPressed: (){
@@ -62,7 +62,7 @@ class _EventSubpageState extends State<EventSubpage> {
                     foregroundColor: Colors.black,
                     backgroundColor: buttonColors[1]
                   ),
-                  child: Text("Rankings")
+                  child: const Text("Rankings")
                 ),
                 TextButton(
                   onPressed: (){
@@ -76,7 +76,7 @@ class _EventSubpageState extends State<EventSubpage> {
                     foregroundColor: Colors.black,
                     backgroundColor: buttonColors[2]
                   ),
-                  child: Text("Schedule")
+                  child: const Text("Schedule")
                 ),
                 TextButton(
                   onPressed: (){
@@ -90,7 +90,7 @@ class _EventSubpageState extends State<EventSubpage> {
                     foregroundColor: Colors.black,
                     backgroundColor: buttonColors[3]
                   ),
-                  child: Text("Awards")
+                  child: const Text("Awards")
                 ),
                 TextButton(
                   onPressed: (){
@@ -104,7 +104,7 @@ class _EventSubpageState extends State<EventSubpage> {
                     foregroundColor: Colors.black,
                     backgroundColor: buttonColors[4]
                   ),
-                  child: Text("About")
+                  child: const Text("About")
                 ),
               ],
             ),

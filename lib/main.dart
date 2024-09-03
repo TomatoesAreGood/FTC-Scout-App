@@ -89,7 +89,6 @@ class _MyAppState extends State<MyApp> {
         return OrientationBuilder(
           builder: (context, orientation) {
             SizeConfig.init(constraints, orientation);
-            var selectedNavBar;
 
             BottomNavigationBar navBar = BottomNavigationBar(
               items: const [
@@ -116,16 +115,11 @@ class _MyAppState extends State<MyApp> {
               ),
             );
 
-            if(SizeConfig.isMobilePortrait){
-              selectedNavBar = navBar;
-            }else{
-              selectedNavBar = sizedNavBar;
-            }
             return MaterialApp(
               home: SafeArea(
                 child: Scaffold(
-                    bottomNavigationBar: selectedNavBar,
-                    body: <Widget>[Events(), Teams(), Favorited()][selectedIndex]
+                    bottomNavigationBar: SizeConfig.isMobilePortrait ? navBar: sizedNavBar,
+                    body: [const Events(), const Teams(), const Favorited()][selectedIndex]
                 ),
               )
             );

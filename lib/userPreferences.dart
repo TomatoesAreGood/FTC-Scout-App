@@ -38,7 +38,6 @@ class UserPreferences {
   }
 
   static Future setSavedTeams(List<ExtendedTeamListing> teamList) async{
-    print(teamListingToJson(teamList));
     await preferences.setStringList(teamsKey, teamListingToJson(teamList));
   }
   
@@ -52,7 +51,6 @@ class UserPreferences {
 
   static List<ExtendedTeamListing> getSavedTeams(){
     if(preferences.getStringList(teamsKey) != null){
-      print(preferences.getStringList(teamsKey));
       return jsonToTeamListing(preferences.getStringList(teamsKey)!);
     }
     return [];

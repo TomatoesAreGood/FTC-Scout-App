@@ -30,7 +30,7 @@ class _TeamSubpageState extends State<TeamSubpage> {
   bool isCallingAPI = false;
   bool isFavorited = false;
 
-  Future<List> getEvents(int year) async{
+  Future<List> fetchEvents(int year) async{
     if(TeamSubpage.storedResults.containsKey(year)){
       return TeamSubpage.storedResults[year];
     }
@@ -42,7 +42,6 @@ class _TeamSubpageState extends State<TeamSubpage> {
 
     isCallingAPI = true;
     var response = await http.get(Uri.parse('https://ftc-api.firstinspires.org/v2.0/$year/events?teamNumber=${widget.data.teamNumber}'), headers: {"Authorization": "Basic $encodedToken"});
-    print("API CALL SUCCESS");
 
     if(response.body[0] != '{'){  
       isCallingAPI = false;
@@ -64,7 +63,7 @@ class _TeamSubpageState extends State<TeamSubpage> {
   @override
   void initState(){
     TeamSubpage.storedResults = {};
-    events = getEvents(selectedYear);
+    events = fetchEvents(selectedYear);
     if(MyApp.findObject(MyApp.favoritedTeams, widget.data) >= 0){
       isFavorited = true;
     }else{
@@ -77,7 +76,7 @@ class _TeamSubpageState extends State<TeamSubpage> {
     List<Color?> buttonColors = [for (var i = 0; i < years.length; i++) null];
     buttonColors[selectedIndex] = selectedColor;
 
-    return Container(
+    return SizedBox(
       height: 40,
       child: Row(
         children: [
@@ -91,7 +90,7 @@ class _TeamSubpageState extends State<TeamSubpage> {
                       if(selectedIndex != 0){
                         selectedIndex = 0;
                         selectedYear = years[selectedIndex];
-                        events = getEvents(selectedYear);
+                        events = fetchEvents(selectedYear);
                       }
                     });
                   }, 
@@ -107,7 +106,7 @@ class _TeamSubpageState extends State<TeamSubpage> {
                       if(selectedIndex != 1){
                         selectedIndex = 1;
                         selectedYear = years[selectedIndex];
-                        events = getEvents(selectedYear);
+                        events = fetchEvents(selectedYear);
                       }
                     });
                   }, 
@@ -123,7 +122,7 @@ class _TeamSubpageState extends State<TeamSubpage> {
                       if(selectedIndex != 2){
                         selectedIndex = 2;
                         selectedYear = years[selectedIndex];
-                        events = getEvents(selectedYear);
+                        events = fetchEvents(selectedYear);
                       }
                     });
                   }, 
@@ -139,7 +138,7 @@ class _TeamSubpageState extends State<TeamSubpage> {
                       if(selectedIndex != 3){
                         selectedIndex = 3;
                         selectedYear = years[selectedIndex];
-                        events = getEvents(selectedYear);
+                        events = fetchEvents(selectedYear);
                       }
                     });
                   }, 
@@ -155,7 +154,7 @@ class _TeamSubpageState extends State<TeamSubpage> {
                       if(selectedIndex != 4){
                         selectedIndex = 4;
                         selectedYear = years[selectedIndex];
-                        events = getEvents(selectedYear);
+                        events = fetchEvents(selectedYear);
                       }
                     });
                   }, 
@@ -171,7 +170,7 @@ class _TeamSubpageState extends State<TeamSubpage> {
                       if(selectedIndex != 5){
                         selectedIndex = 5;
                         selectedYear = years[selectedIndex];
-                        events = getEvents(selectedYear);
+                        events = fetchEvents(selectedYear);
                       }
                     });
                   }, 

@@ -17,18 +17,18 @@ class _MyDrawerState extends State<MyDrawer> {
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
-          DrawerHeader(
+          const DrawerHeader(
             decoration: BoxDecoration(color: Colors.black),
             child: Image(image:AssetImage('assets/logo.png')),
           ),
           ListTile(
-            leading: Icon(Icons.settings),
-            title: Text("Settings"),
+            leading: const Icon(Icons.settings),
+            title: const Text("Settings"),
             onTap: (){
              Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => 
-                    Settings()
+                    const Settings()
                 )
               );
             },
@@ -46,13 +46,13 @@ class _MyDrawerState extends State<MyDrawer> {
             },
           ),
           ListTile(
-            leading: Icon(Icons.privacy_tip_outlined),
-            title: Text("Privacy Policy"),
+            leading: const Icon(Icons.privacy_tip_outlined),
+            title: const Text("Privacy Policy"),
              onTap: (){
              Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => 
-                    PrivacyPolicy()
+                    const PrivacyPolicy()
                 )
               );
             },

@@ -229,7 +229,6 @@ class _EventsState extends State<Events> {
                 }).toList(),
                 onChanged: (String? newValue){
                   setState((){
-                    print("Set State");
                     selectedYear = newValue!;
                     allEventListings = fetchEvents(selectedYear);
                     seasonStart = getStartDate(selectedYear);
@@ -533,7 +532,7 @@ class _EventsState extends State<Events> {
     return Scaffold(
       appBar : AppBar(
         backgroundColor: Colors.lightGreen,
-        title: Text("Events"),
+        title: const Text("Events"),
         actions: [
           IconButton(
             icon: const Icon(Icons.filter_list_rounded),

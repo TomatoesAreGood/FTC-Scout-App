@@ -57,7 +57,7 @@ class _TeamsState extends State<Teams> {
         return MyApp.yearlyTeamListings[year]!.teams;
       }
     }else{
-      throw Exception("API error ${response.statusCode} on page ${page}");
+      throw Exception("API error ${response.statusCode} on page $page");
     }
   }
 
@@ -71,7 +71,6 @@ class _TeamsState extends State<Teams> {
     var response = await http.get(Uri.parse('https://ftc-api.firstinspires.org/v2.0/$selectedYear/teams?page=1'), headers: {"Authorization": "Basic $encodedToken"});
 
     if(response.statusCode == 200){
-      print("API CALL SUCCESS");
       List<TeamListing> teamList = TeamListing.fromJson(json.decode(response.body) as Map<String, dynamic>);
       MyApp.yearlyTeamListings[selectedYear] = YearlyTeamListing(page: 1, teams: teamList);
       isCallingAPI = false;
@@ -161,7 +160,7 @@ class _TeamsState extends State<Teams> {
     }
     return Scaffold(
       appBar: AppBar(
-        title: Text("Teams"),
+        title: const Text("Teams"),
         backgroundColor: Colors.lightGreen,
         actions: [
           IconButton(onPressed: (){ setState(() {
@@ -186,7 +185,7 @@ class _TeamsState extends State<Teams> {
     }
     return Scaffold(
       appBar: AppBar(
-        title: Text("Teams"),
+        title: const Text("Teams"),
         backgroundColor: Colors.lightGreen,
         actions: [
           IconButton(onPressed: (){ setState(() {
@@ -252,7 +251,7 @@ class _TeamsState extends State<Teams> {
           context: context,
           builder: (BuildContext context) => AlertDialog(
             contentPadding: EdgeInsets.zero,
-            title: Text("Team does not exist. Try a different year or double check your search.", maxLines: 2,textAlign: TextAlign.center, style: TextStyle(fontSize: 15)),
+            title: const Text("Team does not exist. Try a different year or double check your search.", maxLines: 2,textAlign: TextAlign.center, style: TextStyle(fontSize: 15)),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
@@ -275,7 +274,7 @@ class _TeamsState extends State<Teams> {
         builder: (BuildContext context) => 
           AlertDialog(
             contentPadding: EdgeInsets.zero,
-            title: Text("Search query can only include numbers", maxLines: 2,textAlign: TextAlign.center, style: TextStyle(fontSize: 15)),
+            title: const Text("Search query can only include numbers", maxLines: 2,textAlign: TextAlign.center, style: TextStyle(fontSize: 15)),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
@@ -364,7 +363,6 @@ class _TeamsState extends State<Teams> {
       builder: (context, data){
         if(data.hasData && !isCallingAPI){
           List<TeamListing> teamList = data.data!;
-          print(teamList.length);
           return generateScaffold(generateListView(teamList));
         }
         return generateScaffold(const Expanded(flex: 3, child: Center(child: CircularProgressIndicator())));
