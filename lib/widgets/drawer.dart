@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/pages/API.dart';
+import 'package:myapp/pages/privacyPolicy.dart';
 import 'package:myapp/pages/about.dart';
 import 'package:myapp/pages/settings.dart';
 
@@ -34,25 +34,25 @@ class _MyDrawerState extends State<MyDrawer> {
             },
           ),
           ListTile(
-            leading: Icon(Icons.question_mark),
-            title: Text("About Us"),
+            leading: const Icon(Icons.question_mark),
+            title: const Text("About Us"),
              onTap: (){
              Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => 
-                    About()
+                    const About()
                 )
               );
             },
           ),
           ListTile(
-            leading: Icon(Icons.code),
-            title: Text("API"),
+            leading: Icon(Icons.privacy_tip_outlined),
+            title: Text("Privacy Policy"),
              onTap: (){
              Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => 
-                    Api()
+                    PrivacyPolicy()
                 )
               );
             },
