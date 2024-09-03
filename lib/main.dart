@@ -38,6 +38,16 @@ class MyApp extends StatefulWidget {
   static List<ExtendedEventListing> favoritedEvents = [];
   static List<ExtendedTeamListing> favoritedTeams = [];
 
+  static String? eventsYear;
+  static bool? isEventsFiltersExpanded;
+  static String? countryFilter;
+  static int? typeFilter;
+
+  static String? teamsYear;
+  static int? teamsPage;
+  static bool? isTeamsFiltersExpanded;
+
+
   const MyApp({super.key});
 
   static int findObject(List? list, Object obj){

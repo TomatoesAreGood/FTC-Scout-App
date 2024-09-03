@@ -10,7 +10,7 @@ class ExpandedTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ExpansionTile(
-      key: PageStorageKey('expandTile$weekNum'),
+      key: PageStorageKey('$weekNum'),
       title: Text("Week $weekNum", overflow: TextOverflow.ellipsis, maxLines: 1),
       subtitle: subtitle,
       collapsedBackgroundColor: const Color.fromARGB(255, 197, 197, 197),

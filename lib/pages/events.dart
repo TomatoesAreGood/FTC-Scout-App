@@ -18,7 +18,7 @@ class Events extends StatefulWidget {
     "2021": 700495,
     "2022": 765067,
     "2023": 919249,
-    "2024": 130073,
+    "2024": 158199,
   };
   const Events({super.key});
 
@@ -71,29 +71,18 @@ Text getDateRange(DateTime start, DateTime end, List<String> monthStrings){
   }
 }
 
-List<String> getCountries(List<EventListing> eventList){
-  List<String> countries = ["All"];
-  for (var i = 0; i < eventList.length; i++){
-    if(!countries.contains(eventList[i].country)){
-      countries.add(eventList[i].country);
-    }
-  }
-  countries.sort();
-  return countries;
-}
-
 
 class _EventsState extends State<Events> {
   final List<String> monthStrings = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
   final List<String> years = ["2019", "2020", "2021", "2022", "2023", "2024"];
-  List<String> countries = ["All"];
+  final List<String> countries = ["All",  "Thailand",  "USA",  "Australia",  "Belgium",  "Brazil",  "Canada",  "China",  "Chinese Taipei",  "Cyprus",  "France",  "Greece",  "India",  "Indonesia",  "Israel",  "Italy",  "Jamaica",  "Kazakhstan",  "Libya",  "Malaysia",  "Mexico",  "Morocco",  "Netherlands",  "New Zealand",  "Nigeria",  "Qatar",  "Romania",  "Saudi Arabia",  "South Africa",  "South Korea",  "United Kingdom",  "Vietnam",  "eSwatini",  "Egypt",  "Germany",  "Russia",  "Spain",  "United Arab Emirates",  "Iceland"];
 
-  String selectedYear = "2024";
+  late String selectedYear;
   late String seasonStart;
   late dynamic allEventListings;
 
-  int typeFilter = -1;
-  String countryFilter = "All";
+  late int typeFilter;
+  late String countryFilter;
   bool isCallingAPI = false;
   bool isExpandedFilters = false;
 
@@ -208,6 +197,7 @@ class _EventsState extends State<Events> {
       throw Exception("API error ${response.statusCode}");
     }
   }
+
 
   Widget generateFilters(){
     return Row(
@@ -555,9 +545,22 @@ class _EventsState extends State<Events> {
 
   @override
   void initState(){
+    selectedYear = MyApp.eventsYear ?? "2024";
     allEventListings = fetchEvents(selectedYear);
     seasonStart = getStartDate(selectedYear);
+    isExpandedFilters = MyApp.isEventsFiltersExpanded ?? false;
+    countryFilter = MyApp.countryFilter ?? "All";
+    typeFilter = MyApp.typeFilter ?? -1;
     super.initState();
+  }
+
+  @override
+  void dispose(){
+    MyApp.eventsYear = selectedYear;
+    MyApp.isEventsFiltersExpanded = isExpandedFilters;
+    MyApp.countryFilter = countryFilter;
+    MyApp.typeFilter = typeFilter;
+    super.dispose();
   }
 
   @override
@@ -567,7 +570,6 @@ class _EventsState extends State<Events> {
       builder: (context, data){
         if (data.hasData && !isCallingAPI){
           List<EventListing> dataList = data.data!;
-          countries = getCountries(dataList);
           dataList = filterEvents(dataList);
           dataList = filterSearches(dataList);
           if(searchedWord != null){
