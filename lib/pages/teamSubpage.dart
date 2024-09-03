@@ -365,7 +365,7 @@ class _TeamSubpageState extends State<TeamSubpage> {
           child: Text("General Information", style: TextStyle(fontSize: 22)),
         ),
         Container(height: 6, color: Colors.lightBlue,),
-        (schoolName != null) ?  ListTile(
+        (schoolName != null && schoolName.isNotEmpty) ?  ListTile(
           leading: const Tooltip(message: "School", child: Icon(Icons.school)),
           title: Text(schoolName),
         ) : Container(height: 0),

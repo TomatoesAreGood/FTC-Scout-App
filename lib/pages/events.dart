@@ -409,7 +409,7 @@ class _EventsState extends State<Events> {
       
           DateTime end = DateTime.utc(0,0,endDay);
           DateTime start = DateTime.utc(0,0,startDay);
-      
+
           if(weekListings.isNotEmpty){
             return Column(
               children: [
@@ -418,7 +418,7 @@ class _EventsState extends State<Events> {
               ],
             );
           }else{
-            return const Padding(padding: EdgeInsets.all(0));
+            return const Padding(padding: EdgeInsets.zero);
           }
         },
       ),

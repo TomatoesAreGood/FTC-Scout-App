@@ -14,7 +14,10 @@ class TeamListing{
   const TeamListing({required this.city, required this.country, required this.rookieYear, required this.stateProv, required this.teamName, required this.teamNumber, required this.fullTeamName});
 
   String getDisplayLocation(){
-    return "$city, $stateProv, $country";
+    if(city.isNotEmpty && stateProv.isNotEmpty){
+      return "$city, $stateProv, $country";
+    }
+    return country;
   }
 
   static Future<TeamListing?> findTeam(String year, int page, int teamNum) async {
@@ -60,11 +63,10 @@ class TeamListing{
           city: teamList[i]['city'],
           stateProv: teamList[i]['stateProv'],
           country: teamList[i]['country'],
-          fullTeamName: teamList[i]['nameFull']
+          fullTeamName: teamList[i]['nameFull'] ?? ""
         )
       );
-    }   
-    
+    }       
     return allTeams;
   }
 }
@@ -87,7 +89,7 @@ class ExtendedTeamListing extends TeamListing{
           city: teamList[i]['city'],
           stateProv: teamList[i]['stateProv'],
           country: teamList[i]['country'],
-          fullTeamName: teamList[i]['nameFull'],
+          fullTeamName: teamList[i]['nameFull'] ?? "",
           year: teamList[i]['year']
         )
       );

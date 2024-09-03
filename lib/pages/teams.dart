@@ -317,10 +317,10 @@ class _TeamsState extends State<Teams> {
 
   Widget generateListView(List<TeamListing> teamList){
     return Expanded(
-      flex: 3,
       child: RefreshIndicator(
         onRefresh: refresh,
         child: ListView.builder(
+          itemExtent: 55,
           controller: controller,
           itemCount: teamList.length + 1,
           itemBuilder: (context, index){
@@ -335,7 +335,7 @@ class _TeamsState extends State<Teams> {
                     )
                   );
                 },
-                leading: SizedBox(width: 80, child: Text("${team.teamNumber}", style: const TextStyle(fontSize: 21), textAlign: TextAlign.center,)),
+                leading: SizedBox(width: 80, height:48 , child: Text("${team.teamNumber}", style: const TextStyle(fontSize: 21), textAlign: TextAlign.center,)),
                 title: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -345,10 +345,7 @@ class _TeamsState extends State<Teams> {
                 )
               );
             }else{
-              return const Padding(
-                padding: EdgeInsets.symmetric(vertical: 15),
-                child: Center(child: CircularProgressIndicator()),
-              );
+              return const Center(child: CircularProgressIndicator());
             }
           }
         ),

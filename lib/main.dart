@@ -23,11 +23,7 @@ void main() async{
 }
 
 class MyApp extends StatefulWidget {
-  static Map<String, List<EventListing>> yearlyEventListings = {};
-  static Map<String, YearlyTeamListing> yearlyTeamListings = {};
-  static List<ExtendedEventListing> favoritedEvents = [];
-  static List<ExtendedTeamListing> favoritedTeams = [];
-  static final Map<String, String> yearlyStartDates = {
+ static final Map<String, String> yearlyStartDates = {
     "2019":"2019-09-07",
     "2020":"2020-09-12",
     "2021":"2021-09-18",
@@ -35,6 +31,12 @@ class MyApp extends StatefulWidget {
     "2023":"2023-09-09",
     "2024":"2024-09-07"
   };
+
+  static Map<String, List<EventListing>> yearlyEventListings = {};
+  static Map<String, YearlyTeamListing> yearlyTeamListings = {};
+
+  static List<ExtendedEventListing> favoritedEvents = [];
+  static List<ExtendedTeamListing> favoritedTeams = [];
 
   const MyApp({super.key});
 
@@ -66,6 +68,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   int selectedIndex = 0;
+  final PageStorageBucket bucket = PageStorageBucket();
 
   void onItemTapped(int index){
     if(selectedIndex != index){
@@ -100,7 +103,7 @@ class _MyAppState extends State<MyApp> {
               onTap: onItemTapped,
             );
             SizedBox sizedNavBar =  SizedBox(
-              height: 12 * SizeConfig.heightMultiplier,
+              height: SizeConfig.heightMultiplier * 12,
               child: BottomNavigationBar(
                 iconSize: SizeConfig.heightMultiplier * 5,
                 unselectedFontSize: SizeConfig.heightMultiplier * 2.5,
@@ -119,7 +122,7 @@ class _MyAppState extends State<MyApp> {
               home: SafeArea(
                 child: Scaffold(
                     bottomNavigationBar: SizeConfig.isMobilePortrait ? navBar: sizedNavBar,
-                    body: [const Events(), const Teams(), const Favorited()][selectedIndex]
+                    body: PageStorage(bucket: bucket, child: [const Events(key: PageStorageKey<String>("pageOne")), const Teams(key: PageStorageKey<String>("pageTwo")), const Favorited()][selectedIndex])
                 ),
               )
             );
