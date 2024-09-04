@@ -87,6 +87,7 @@ class _EventsState extends State<Events> {
   bool isExpandedFilters = false;
 
   String? searchedWord;
+  ScrollController controller = ScrollController();
 
   void updateSearchedWord(String enteredWord){
     setState(() {
@@ -222,6 +223,7 @@ class _EventsState extends State<Events> {
                     selectedYear = newValue!;
                     allEventListings = fetchEvents(selectedYear);
                     seasonStart = getStartDate(selectedYear);
+                    controller.jumpTo(0);
                   });
                 }
               )
@@ -390,6 +392,7 @@ class _EventsState extends State<Events> {
     return RefreshIndicator(
       onRefresh: refresh,
       child: ListView.builder(
+        controller: controller,
         physics: const BouncingScrollPhysics(),
         itemCount: weeks.length,
         itemBuilder: (context, index){

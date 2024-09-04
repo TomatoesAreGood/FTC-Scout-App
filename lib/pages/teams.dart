@@ -340,12 +340,12 @@ class _TeamsState extends State<Teams> {
                     )
                   );
                 },
-                leading: SizedBox(width: 80, height:48 , child: Text("${team.teamNumber}", style: const TextStyle(fontSize: 21), textAlign: TextAlign.center,)),
+                leading: SizedBox(width: 80, height:48 , child: Text("${team.teamNumber}", style: const TextStyle(fontSize: 21), textAlign: TextAlign.center)),
                 title: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(team.teamName, overflow: TextOverflow.ellipsis,),
-                    Text(team.getDisplayLocation(), style: const TextStyle(fontStyle: FontStyle.italic, fontSize: 12),)
+                    Text(team.getDisplayLocation(), style: const TextStyle(fontStyle: FontStyle.italic, fontSize: 12), overflow: TextOverflow.ellipsis)
                   ],
                 )
               );
