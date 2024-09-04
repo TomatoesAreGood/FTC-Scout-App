@@ -9,8 +9,8 @@ class PrivacyPolicy extends StatefulWidget {
 }
 
 class _PrivacyPolicyState extends State<PrivacyPolicy> {
-  final String companyName = "Tomatoes";
-  final String appName = "FTC Scouter";
+  final String companyName = "GenericTomatoCompany";
+  final String appName = "Rams FTC Scouter";
 
   Widget generateTitle(String title){
     return Text(

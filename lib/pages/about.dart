@@ -29,7 +29,7 @@ class _AboutState extends State<About> {
                 text: TextSpan(
                   children: [
                     const TextSpan(
-                     text: "FTC Scouter",
+                     text: "Rams FTC Scouter",
                      style: TextStyle(fontStyle: FontStyle.italic, color: Colors.black, fontSize: 15)
                     ),
                     const TextSpan(
@@ -52,7 +52,7 @@ class _AboutState extends State<About> {
                 text: const TextSpan(
                   children: [
                     TextSpan(
-                     text: "FTC Scouter",
+                     text: "Rams FTC Scouter",
                      style: TextStyle(fontStyle: FontStyle.italic, color: Colors.black, fontSize: 15)
                     ),
                     TextSpan(
