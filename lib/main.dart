@@ -44,9 +44,7 @@ class MyApp extends StatefulWidget {
   static int? typeFilter;
 
   static String? teamsYear;
-  static int? teamsPage;
   static bool? isTeamsFiltersExpanded;
-
 
   const MyApp({super.key});
 

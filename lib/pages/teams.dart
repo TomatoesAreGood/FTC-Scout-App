@@ -23,14 +23,13 @@ class _TeamsState extends State<Teams> {
 
   bool isCallingAPI = false;
 
-  String selectedYear = "2024";
-  String countryFilter = "All";
+  late String selectedYear;
   static int pageNum = 1;
 
   final controller = ScrollController();
   final textController = TextEditingController();
 
-  bool filtersExpanded = false;
+  late bool filtersExpanded;
 
   dynamic fetchTeams(String year, int page) async{
     if(MyApp.yearlyTeamListings.containsKey(year) && page <= MyApp.yearlyTeamListings[selectedYear]!.page){
@@ -98,6 +97,7 @@ class _TeamsState extends State<Teams> {
       List<TeamListing> teamList = TeamListing.fromJson(json.decode(response.body) as Map<String, dynamic>);
       MyApp.yearlyTeamListings[selectedYear] = YearlyTeamListing(page: 1, teams: teamList);
       isCallingAPI = false;
+      pageNum = 1;
       return teamList;
     }else{
       throw Exception("API error ${response.statusCode}");
@@ -113,6 +113,8 @@ class _TeamsState extends State<Teams> {
   
   @override
   void initState(){
+    selectedYear = MyApp.teamsYear ?? "2024";
+    filtersExpanded = MyApp.isTeamsFiltersExpanded ?? false;
     teams = fetchTeams(selectedYear, pageNum);
     controller.addListener((){
       if(controller.position.maxScrollExtent == controller.offset){
@@ -127,6 +129,8 @@ class _TeamsState extends State<Teams> {
 
   @override 
   void dispose(){
+    MyApp.teamsYear = selectedYear;
+    MyApp.isTeamsFiltersExpanded = filtersExpanded;
     controller.dispose();
     textController.dispose();
     super.dispose();
@@ -229,6 +233,7 @@ class _TeamsState extends State<Teams> {
                   setState((){
                     selectedYear = newValue!;
                     teams = fetchNewTeams();
+                    controller.jumpTo(0);
                   });
                 }
               )
