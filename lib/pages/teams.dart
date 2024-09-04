@@ -31,10 +31,14 @@ class _TeamsState extends State<Teams> {
 
   late bool filtersExpanded;
 
-  dynamic fetchTeams(String year, int page) async{
-    if(MyApp.yearlyTeamListings.containsKey(year) && page <= MyApp.yearlyTeamListings[selectedYear]!.page){
-      pageNum = MyApp.yearlyTeamListings[year]!.page;
-      return MyApp.yearlyTeamListings[year]!.teams; 
+  dynamic fetchTeams(int page) async{
+    if(MyApp.yearlyTeamListings.containsKey(selectedYear) && page <= MyApp.yearlyTeamListings[selectedYear]!.page){
+      pageNum = MyApp.yearlyTeamListings[selectedYear]!.page;
+      return MyApp.yearlyTeamListings[selectedYear]!.teams; 
+    }
+
+    if(page == 1){
+      return fetchNewTeams();
     }
 
     String? user = dotenv.env['USER'];
@@ -42,18 +46,18 @@ class _TeamsState extends State<Teams> {
     String authorization = "$user:$token";
     String encodedToken = base64.encode(utf8.encode(authorization));
 
-    var response = await http.get(Uri.parse('https://ftc-api.firstinspires.org/v2.0/$year/teams?page=$page'), headers: {"Authorization": "Basic $encodedToken"});
+    var response = await http.get(Uri.parse('https://ftc-api.firstinspires.org/v2.0/$selectedYear/teams?page=$page'), headers: {"Authorization": "Basic $encodedToken"});
 
     if(response.statusCode == 200){
       List<TeamListing> teamList = TeamListing.fromJson(json.decode(response.body) as Map<String, dynamic>);
 
       if(page == 1){
-        MyApp.yearlyTeamListings[year] = YearlyTeamListing(page: page, teams: teamList);
+        MyApp.yearlyTeamListings[selectedYear] = YearlyTeamListing(page: page, teams: teamList);
         return teamList;
       }else{
-        MyApp.yearlyTeamListings[year]!.teams.addAll(teamList);
-        MyApp.yearlyTeamListings[year]!.page = page;
-        return MyApp.yearlyTeamListings[year]!.teams;
+        MyApp.yearlyTeamListings[selectedYear]!.teams.addAll(teamList);
+        MyApp.yearlyTeamListings[selectedYear]!.page = page;
+        return MyApp.yearlyTeamListings[selectedYear]!.teams;
       }
     }else{
       throw Exception("API error ${response.statusCode} on page $page");
@@ -115,12 +119,12 @@ class _TeamsState extends State<Teams> {
   void initState(){
     selectedYear = MyApp.teamsYear ?? "2024";
     filtersExpanded = MyApp.isTeamsFiltersExpanded ?? false;
-    teams = fetchTeams(selectedYear, pageNum);
+    teams = fetchTeams(pageNum);
     controller.addListener((){
       if(controller.position.maxScrollExtent == controller.offset){
         setState(() {
           pageNum++;
-          teams = fetchTeams(selectedYear, pageNum);
+          teams = fetchTeams(pageNum);
         });
       }
     });
@@ -366,6 +370,9 @@ class _TeamsState extends State<Teams> {
         if(data.hasData && !isCallingAPI){
           List<TeamListing> teamList = data.data!;
           return generateScaffold(generateListView(teamList));
+        }
+        if(!isCallingAPI){
+          return generateScaffold(Container(height: 0));
         }
         return generateScaffold(const Expanded(flex: 3, child: Center(child: CircularProgressIndicator())));
       },

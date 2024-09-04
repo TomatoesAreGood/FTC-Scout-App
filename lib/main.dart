@@ -101,7 +101,9 @@ class _MyAppState extends State<MyApp> {
           builder: (context, orientation) {
             SizeConfig.init(constraints, orientation);
 
-            BottomNavigationBar navBar = BottomNavigationBar(
+            late Widget bottomNavigationBar;
+
+            BottomNavigationBar defaultNavBar = BottomNavigationBar(
               items: const [
                 BottomNavigationBarItem(icon: Icon(Icons.calendar_month),label: "Events"),
                 BottomNavigationBarItem(icon: Icon(Icons.group), label: "Teams"),
@@ -110,10 +112,11 @@ class _MyAppState extends State<MyApp> {
               currentIndex: selectedIndex,
               onTap: onItemTapped,
             );
-            SizedBox sizedNavBar =  SizedBox(
+            
+           SizedBox phoneSizedNavBar =  SizedBox(
               height: SizeConfig.heightMultiplier * 12,
               child: BottomNavigationBar(
-                iconSize: SizeConfig.heightMultiplier * 5,
+                iconSize: SizeConfig.heightMultiplier * 5.5,
                 unselectedFontSize: SizeConfig.heightMultiplier * 2.5,
                 selectedFontSize: SizeConfig.heightMultiplier * 2.5,
                 items: const [
@@ -126,10 +129,36 @@ class _MyAppState extends State<MyApp> {
               ),
             );
 
+            SizedBox sizedNavBar =  SizedBox(
+              height: SizeConfig.heightMultiplier * 8.5,
+              child: BottomNavigationBar(
+                iconSize: SizeConfig.heightMultiplier * 3.5,
+                unselectedFontSize: SizeConfig.heightMultiplier * 2,
+                selectedFontSize: SizeConfig.heightMultiplier * 2,
+                items: const [
+                  BottomNavigationBarItem(icon: Icon(Icons.calendar_month),label: "Events"),
+                  BottomNavigationBarItem(icon: Icon(Icons.group), label: "Teams"),
+                  BottomNavigationBarItem(icon: Icon(Icons.star), label: "Favorited"),
+                ],
+                currentIndex: selectedIndex,
+                onTap: onItemTapped,
+              ),
+            );
+
+            if(SizeConfig.isMobilePortrait){
+              bottomNavigationBar = defaultNavBar; 
+            }else if(SizeConfig.isMobileLandscape){
+              bottomNavigationBar = phoneSizedNavBar;
+            }else{
+              bottomNavigationBar = sizedNavBar;
+            }
+
+           
+
             return MaterialApp(
               home: SafeArea(
                 child: Scaffold(
-                    bottomNavigationBar: SizeConfig.isMobilePortrait ? navBar: sizedNavBar,
+                    bottomNavigationBar: bottomNavigationBar,
                     body: PageStorage(bucket: bucket, child: [const Events(key: PageStorageKey<String>("pageOne")), const Teams(key: PageStorageKey<String>("pageTwo")), const Favorited()][selectedIndex])
                 ),
               )

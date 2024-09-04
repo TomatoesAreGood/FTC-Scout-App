@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/data/sizeConfig.dart';
 
 class Settings extends StatefulWidget {
   const Settings({super.key});
@@ -15,7 +16,7 @@ class _SettingsState extends State<Settings> {
         backgroundColor: Colors.lightGreen,
         title: const Text("Settings"),
       ),
-      body: const Center(child: Text("Nothing here yet")),
+      body: Center(child: Text("Nothing here yet", style: TextStyle(fontSize: SizeConfig.defaultFontSize),)),
     );
   }
 }

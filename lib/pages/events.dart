@@ -585,18 +585,13 @@ class _EventsState extends State<Events> {
           List<List<EventListing>> weeks = splitWeeks(seasonStart, dataList);
           return generateScaffold(Expanded(flex:3,child:generateListView(weeks)));      
         }
+        if(!isCallingAPI){
+          return generateScaffold(Container(height: 0));
+        }
         return generateScaffold(
           const Expanded(
-            flex: 3, 
             child: Center(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircularProgressIndicator(),
-                  Padding(padding: EdgeInsets.all(8)),
-                ],
-              ),
+                child: CircularProgressIndicator(),
             )
           )
         );

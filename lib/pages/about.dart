@@ -11,7 +11,8 @@ class About extends StatefulWidget {
 }
 
 class _AboutState extends State<About> {
-    
+  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,21 +25,21 @@ class _AboutState extends State<About> {
           padding: const EdgeInsets.all(8.0),
           child: ListView(
             children: [
-              Icon(Icons.info_outlined, size: SizeConfig.imageSizeMultiplier * 75,),
+              Center(child: Icon(Icons.info_outlined, size: SizeConfig.widthMultiplier * 50,)),
               RichText(
                 text: TextSpan(
                   children: [
-                    const TextSpan(
+                    TextSpan(
                      text: "Rams FTC Scouter",
-                     style: TextStyle(fontStyle: FontStyle.italic, color: Colors.black, fontSize: 15)
+                     style: TextStyle(fontStyle: FontStyle.italic, color: Colors.black, fontSize: SizeConfig.defaultFontSize)
                     ),
-                    const TextSpan(
+                    TextSpan(
                       text: " is a minimalistic archiver that stores and dynamically updates relevent information about FTC (FIRST Tech Challenge) teams and events. The app is designed to be catered towards all robotics teams and their mentors, as all team/event information is accessible to everyone. Search up events and teams, view all of a team's events for a year, or find out the rankings, schedule, and awards of each event. This app would not be possible without up to date information from the ",
-                      style: TextStyle(color: Colors.black, fontSize: 15)
+                      style: TextStyle(color: Colors.black, fontSize:  SizeConfig.defaultFontSize)
                     ),
                     TextSpan(
                       text: "FIRST Tech Challenge API.",
-                      style: const TextStyle(color: Colors.blue, decoration: TextDecoration.underline, fontSize: 15),
+                      style: TextStyle(color: Colors.blue, decoration: TextDecoration.underline, fontSize:  SizeConfig.defaultFontSize),
                       recognizer: TapGestureRecognizer()
                         ..onTap = (){
                           launchUrl(Uri.parse('https://ftc-events.firstinspires.org/services/API'), mode: LaunchMode.externalApplication);
@@ -49,15 +50,15 @@ class _AboutState extends State<About> {
               ),
               Container(height:15),
               RichText(
-                text: const TextSpan(
+                text: TextSpan(
                   children: [
                     TextSpan(
                      text: "Rams FTC Scouter",
-                     style: TextStyle(fontStyle: FontStyle.italic, color: Colors.black, fontSize: 15)
+                     style: TextStyle(fontStyle: FontStyle.italic, color: Colors.black, fontSize:  SizeConfig.defaultFontSize)
                     ),
                     TextSpan(
                       text: " is a solo project created by a programmer on the 16488 (Rams Robotics) team, which is based in Thornhill, Canada.",
-                      style: TextStyle(color: Colors.black, fontSize: 15)
+                      style: TextStyle(color: Colors.black, fontSize:  SizeConfig.defaultFontSize)
                     ),
                   ] 
                 )
