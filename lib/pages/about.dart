@@ -25,7 +25,7 @@ class _AboutState extends State<About> {
           padding: const EdgeInsets.all(8.0),
           child: ListView(
             children: [
-              Center(child: Icon(Icons.info_outlined, size: SizeConfig.widthMultiplier * 50,)),
+              Center(child: Icon(Icons.info_outlined, size: SizeConfig.defaultTitleSize * 15,)),
               RichText(
                 text: TextSpan(
                   children: [

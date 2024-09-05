@@ -157,8 +157,6 @@ class _EventsState extends State<Events> {
     final response = await http.get(Uri.parse('https://ftc-api.firstinspires.org/v2.0/$year/events'), headers: {"Authorization": "Basic $encodedToken"});
 
     if(response.statusCode == 200){
-      print("API CALL SUCCESS");
-      print(response.body.length);
       if(response.body.length < Events.expectedResponseLength[year]!){
         return fetchEvents(year);
       }else if(response.body.length > Events.expectedResponseLength[year]!){
@@ -183,8 +181,6 @@ class _EventsState extends State<Events> {
     final response = await http.get(Uri.parse('https://ftc-api.firstinspires.org/v2.0/$year/events'), headers: {"Authorization": "Basic $encodedToken"});
 
     if(response.statusCode == 200){
-      print("API CALL SUCCESS");
-      print(response.body.length);
       if(response.body.length < Events.expectedResponseLength[year]!){
         return refreshEvents(year);
       }else if(response.body.length > Events.expectedResponseLength[year]!){
@@ -353,10 +349,6 @@ class _EventsState extends State<Events> {
                   ],
                 ),
                 onTap: (){
-                  print(name);
-                  print(selectedYear);
-                  print(code);
-
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => 
@@ -386,7 +378,15 @@ class _EventsState extends State<Events> {
 
   Widget generateListView(List<List<EventListing>> weeks){
     if(weeks.isEmpty){
-      return const Center(child: Text("No events found"));
+      return ListView(
+        controller: controller,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 150, top: 150),
+            child: Center(child: Text("No events found",style: TextStyle(fontSize: SizeConfig.defaultFontSize),)),
+          )
+        ],
+      ) ;
     }
 
     return RefreshIndicator(

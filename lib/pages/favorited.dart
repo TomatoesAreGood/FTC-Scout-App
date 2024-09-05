@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/data/eventListing.dart';
+import 'package:myapp/data/sizeConfig.dart';
 import 'package:myapp/data/teamListing.dart';
 import 'package:myapp/main.dart';
 import 'package:myapp/pages/eventSubpage.dart';
@@ -46,10 +47,6 @@ class _FavoritedState extends State<Favorited> {
                   ],
                 ),
                 onTap: (){
-                  print(name);
-                  print(year);
-                  print(code);
-
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => 
@@ -164,7 +161,7 @@ class _FavoritedState extends State<Favorited> {
         title: const Text("Favorited"),
         backgroundColor: Colors.lightGreen,
       ),
-      body: MyApp.favoritedEvents.isEmpty && MyApp.favoritedTeams.isEmpty ? const Center(child: Text("Favorited events and teams will show up here")): generateScaffold()
+      body: MyApp.favoritedEvents.isEmpty && MyApp.favoritedTeams.isEmpty ? Center(child: Text("Favorited events and teams will show up here", style: TextStyle(fontSize: SizeConfig.defaultFontSize),)): generateScaffold()
     );
   }
 }
