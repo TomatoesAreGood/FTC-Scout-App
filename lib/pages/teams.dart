@@ -4,11 +4,11 @@ import 'package:myapp/data/sizeConfig.dart';
 import 'package:myapp/data/teamListing.dart';
 import 'package:myapp/data/yearlyTeamDivisions.dart';
 import 'package:myapp/pages/teamSubpage.dart';
+import 'package:myapp/userPreferences.dart';
 import 'package:myapp/widgets/drawer.dart';
 import 'dart:convert';
 import 'dart:async';
 import '../main.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class Teams extends StatefulWidget {
   const Teams({super.key});
@@ -41,8 +41,8 @@ class _TeamsState extends State<Teams> {
       return fetchNewTeams();
     }
 
-    String? user = dotenv.env['USER'];
-    String? token = dotenv.env['TOKEN'];
+    String? user = UserPreferences.getSavedUser();
+    String? token = UserPreferences.getSavedToken();
     String authorization = "$user:$token";
     String encodedToken = base64.encode(utf8.encode(authorization));
 
@@ -65,8 +65,8 @@ class _TeamsState extends State<Teams> {
   }
 
   dynamic refreshTeams() async{
-    String? user = dotenv.env['USER'];
-    String? token = dotenv.env['TOKEN'];
+    String? user = UserPreferences.getSavedUser();
+    String? token = UserPreferences.getSavedToken();
     String authorization = "$user:$token";
     String encodedToken = base64.encode(utf8.encode(authorization));
 
@@ -89,8 +89,8 @@ class _TeamsState extends State<Teams> {
       return MyApp.yearlyTeamListings[selectedYear]!.teams; 
     }
 
-    String? user = dotenv.env['USER'];
-    String? token = dotenv.env['TOKEN'];
+    String? user = UserPreferences.getSavedUser();
+    String? token = UserPreferences.getSavedToken();
     String authorization = "$user:$token";
     String encodedToken = base64.encode(utf8.encode(authorization));
 

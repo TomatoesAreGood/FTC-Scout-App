@@ -1,10 +1,11 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:myapp/data/hybridMatchData.dart';
 import 'package:myapp/pages/eventSubpage.dart';
 import 'dart:convert';
+
+import 'package:myapp/userPreferences.dart';
 
 class EventSchedule extends StatefulWidget {
   final String code;
@@ -26,8 +27,8 @@ class _EventScheduleState extends State<EventSchedule> {
       return EventSubpage.storedResults["schedule"];
     }
     isCallingAPI = true;
-    String? user = dotenv.env['USER'];
-    String? token = dotenv.env['TOKEN'];
+    String? user = UserPreferences.getSavedUser();
+    String? token = UserPreferences.getSavedToken();
     String authorization = "$user:$token";
     String encodedToken = base64.encode(utf8.encode(authorization));
 
@@ -48,8 +49,8 @@ class _EventScheduleState extends State<EventSchedule> {
 
   dynamic refreshSchedule() async{
     isCallingAPI = true;
-    String? user = dotenv.env['USER'];
-    String? token = dotenv.env['TOKEN'];
+    String? user = UserPreferences.getSavedUser();
+    String? token = UserPreferences.getSavedToken();
     String authorization = "$user:$token";
     String encodedToken = base64.encode(utf8.encode(authorization));
 

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:myapp/userPreferences.dart';
 
 class YearlyTeamDivisions{
   static Map<String, List> map = {
@@ -754,8 +754,8 @@ class YearlyTeamDivisions{
   };
 
   void printYearlyTeamDivisions(int year) async{
-    String? user = dotenv.env['USER'];
-    String? token = dotenv.env['TOKEN'];
+    String? user = UserPreferences.getSavedUser();
+    String? token = UserPreferences.getSavedToken();
     String authorization = "$user:$token";
     String encodedToken = base64.encode(utf8.encode(authorization));
 

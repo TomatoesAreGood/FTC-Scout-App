@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:myapp/data/teamListing.dart';
 import 'package:myapp/pages/events.dart';
 import 'package:myapp/pages/favorited.dart';
@@ -17,7 +16,6 @@ class YearlyTeamListing{
 }
 
 void main() async{
-  await dotenv.load(fileName: "lib/.env");
   WidgetsFlutterBinding.ensureInitialized();
   await UserPreferences.init();
   runApp(const MyApp());
@@ -107,10 +105,7 @@ class _MyAppState extends State<MyApp> {
         return OrientationBuilder(
           builder: (context, orientation) {
             SizeConfig.init(constraints, orientation);
-            // UserPreferences.preferences.remove("savedUser");
-            debugPrint(
-              "${UserPreferences.hasSavedCredentials()}"
-            );
+
             if(!UserPreferences.hasSavedCredentials()){ 
               return MaterialApp(
                 home: LoginPage(),

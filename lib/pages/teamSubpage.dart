@@ -2,11 +2,11 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:myapp/data/eventListing.dart';
 import 'package:myapp/data/teamListing.dart';
 import 'package:myapp/main.dart';
 import 'package:myapp/pages/eventSubpage.dart';
+import 'package:myapp/userPreferences.dart';
 
 class TeamSubpage extends StatefulWidget {
   final ExtendedTeamListing data;
@@ -35,8 +35,8 @@ class _TeamSubpageState extends State<TeamSubpage> {
       return TeamSubpage.storedResults[year];
     }
 
-    String? user = dotenv.env['USER'];
-    String? token = dotenv.env['TOKEN'];
+    String? user = UserPreferences.getSavedUser();
+    String? token = UserPreferences.getSavedToken();
     String authorization = "$user:$token";
     String encodedToken = base64.encode(utf8.encode(authorization));
 
