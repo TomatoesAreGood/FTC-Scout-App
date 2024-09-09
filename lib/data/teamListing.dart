@@ -47,7 +47,7 @@ class TeamListing{
   }
 
   static TeamListing singleFromJson(Map<String, dynamic> json){
-    return TeamListing(city: json['city'], country: json['country'], rookieYear: json['rookieYear'], stateProv: json['stateProv'], teamName: json['nameShort'], teamNumber: json['teamNumber'], fullTeamName: json['nameFull']);
+    return TeamListing(city: json['city'], country: json['country'], rookieYear: json['rookieYear'], stateProv: json['stateProv'], teamName: json['nameShort'], teamNumber: json['teamNumber'], fullTeamName: json['nameFull'] ?? "");
   }
 
   static List<TeamListing> fromJson(Map<String, dynamic> json){
