@@ -7,10 +7,37 @@ class UserPreferences {
   static late SharedPreferences preferences;
   static const teamsKey = "savedTeams";
   static const eventsKey = "savedEvents";
+  static const userKey = "savedUser";
+  static const tokenKey = "savedToken";
 
   static Future init() async{
     preferences = await SharedPreferences.getInstance();
     await preferences.reload();
+  }
+
+  static void logOut(){
+    preferences.remove(userKey);
+    preferences.remove(tokenKey);
+  }
+
+  static bool hasSavedCredentials(){
+    return getSavedUser() != null && getSavedToken() != null;
+  }
+
+  static Future setSavedUser(String user) async{
+    await preferences.setString(userKey, user);
+  }
+
+  static String? getSavedUser(){
+    return preferences.getString(userKey);
+  }
+
+  static Future setSavedToken(String token) async{
+    await preferences.setString(tokenKey, token);
+  }
+
+  static String? getSavedToken(){
+    return preferences.getString(tokenKey);
   }
 
   static Future setSavedEvents(List<ExtendedEventListing> list) async{

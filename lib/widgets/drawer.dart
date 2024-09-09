@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/main.dart';
 import 'package:myapp/pages/privacyPolicy.dart';
 import 'package:myapp/pages/about.dart';
 import 'package:myapp/pages/settings.dart';
+import 'package:myapp/userPreferences.dart';
 
 class MyDrawer extends StatefulWidget {
   const MyDrawer({super.key});
@@ -56,7 +58,17 @@ class _MyDrawerState extends State<MyDrawer> {
                 )
               );
             },
-          )
+          ),
+          ListTile(
+            leading: const Icon(Icons.logout),
+            title: const Text("Log Out"),
+            onTap: (){
+              UserPreferences.logOut();
+              setState(() {
+                MyApp.reload(context);
+              });
+            },
+          ),
         ],
       ),
     );

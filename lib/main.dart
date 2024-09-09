@@ -3,6 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:myapp/data/teamListing.dart';
 import 'package:myapp/pages/events.dart';
 import 'package:myapp/pages/favorited.dart';
+import 'package:myapp/pages/loginPage.dart';
 import 'package:myapp/pages/teams.dart';
 import 'package:myapp/userPreferences.dart';
 import 'data/eventListing.dart';
@@ -70,6 +71,12 @@ class MyApp extends StatefulWidget {
     UserPreferences.setSavedTeams(MyApp.favoritedTeams);
   }
 
+  static reload(BuildContext context){
+    return Navigator.pushReplacement(context, 
+      MaterialPageRoute(builder: (BuildContext context) => const MyApp())
+    );
+  }
+
   @override
   State<MyApp> createState() => _MyAppState();
 }
@@ -100,6 +107,15 @@ class _MyAppState extends State<MyApp> {
         return OrientationBuilder(
           builder: (context, orientation) {
             SizeConfig.init(constraints, orientation);
+            // UserPreferences.preferences.remove("savedUser");
+            debugPrint(
+              "${UserPreferences.hasSavedCredentials()}"
+            );
+            if(!UserPreferences.hasSavedCredentials()){ 
+              return MaterialApp(
+                home: LoginPage(),
+              );
+            }
 
             late Widget bottomNavigationBar;
 
