@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:icons_plus/icons_plus.dart';
 import 'package:myapp/data/sizeConfig.dart';
 import 'package:myapp/main.dart';
 import 'package:myapp/userPreferences.dart';
@@ -16,18 +17,9 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-          gradient: LinearGradient(
-        begin: Alignment.topRight,
-        end: Alignment.bottomLeft,
-        colors: [
-          Colors.blue,
-          Colors.red,
-        ],
-      )),
+    return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white,
         body: page(),
       ),
     );
@@ -37,56 +29,82 @@ class _LoginPageState extends State<LoginPage> {
     return Padding(
       padding: const EdgeInsets.all(32.0),
       child: Center(
-        child: ListView(
+        child: SingleChildScrollView(
           physics: ClampingScrollPhysics(),
-          children: [
-            icon(),
-            const SizedBox(height: 40),
-            inputField("User", userController),
-            const SizedBox(height: 20),
-            inputField("Token", tokenController),
-            const SizedBox(height: 25),
-            loginButton(),
-            const SizedBox(height: 10),
-            extraText(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children:[
+              Text("Login", style: TextStyle(fontSize: SizeConfig.defaultTitleSize * 2, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 10),
+              Text("A free FTC API account is needed to access this app. This sign-up is a one time thing.", style: TextStyle(fontSize: SizeConfig.defaultFontSize), textAlign: TextAlign.center),
+              const SizedBox(height: 35,),
+              icon(),
+              const SizedBox(height: 40),
+              inputField("User", userController),
+              const SizedBox(height: 20),
+              inputField("Token", tokenController),
+              const SizedBox(height: 40),
+              loginButton(),
+              const SizedBox(height: 10),
+              extraText(),
           ],
+          )
         ),
       ),
     );
   }
 
   Widget icon() {
-    return Container(
-      decoration: BoxDecoration(
-          border: Border.all(color: Colors.white, width: 2),
-          shape: BoxShape.circle),
-      child: Icon(Icons.person, color: Colors.white, size: SizeConfig.defaultFontSize * 12),
+    return Stack(
+      children: [
+        Container(
+          width: SizeConfig.defaultFontSize * 12,
+          height: SizeConfig.defaultFontSize * 12,
+          decoration: const BoxDecoration(
+            shape: BoxShape.circle,
+            color: Colors.black,
+          ),
+        ),
+        Icon(
+          MingCute.user_1_line,
+          size: SizeConfig.defaultFontSize * 12,
+          color: Colors.white,
+        ),
+      ],
     );
   }
 
-  Widget inputField(String hintText, TextEditingController controller,{isPassword = false}) {
+  Widget inputField(String hintText, TextEditingController controller) {
     var border = OutlineInputBorder(
-        borderRadius: BorderRadius.circular(18),
-        borderSide: const BorderSide(color: Colors.white));
+        borderRadius: BorderRadius.circular(25),
+        borderSide: const BorderSide(color: Colors.black));
+
+    var selectedBorder = OutlineInputBorder(
+      borderRadius: BorderRadius.circular(25),
+      borderSide: const BorderSide(
+        width: 2,
+        color: Colors.blue
+      ),
+    );
 
     return TextField(
-      style: const TextStyle(color: Colors.white),
+      style: const TextStyle(color: Colors.black),
       controller: controller,
       onChanged: (value){
         setState((){});
       },
       decoration: InputDecoration(
+        prefixIcon: hintText == "User" ? const Icon(Icons.person): const Icon(Icons.key),
         hintText: hintText,
         suffixIcon: controller.text.isNotEmpty ? IconButton(onPressed: (){
           setState(() {
             controller.clear();
           });
-        }, icon: const Icon(Icons.close, color: Colors.white,)): SizedBox(height: 0),
-        hintStyle: const TextStyle(color: Colors.white),
+        }, icon: const Icon(Icons.close, color: Colors.black,)): const SizedBox(height: 0),
+        hintStyle: const TextStyle(color: Colors.black),
         enabledBorder: border,
-        focusedBorder: border,
+        focusedBorder: selectedBorder,
       ),
-      obscureText: isPassword,
     );
   }
 
@@ -135,25 +153,28 @@ class _LoginPageState extends State<LoginPage> {
       },
       style: ElevatedButton.styleFrom(
         shape: const StadiumBorder(),
-        padding: const EdgeInsets.symmetric(vertical: 16),
+        backgroundColor: Colors.lightBlue[300],
+        padding: const EdgeInsets.symmetric(vertical: 12),
       ),
       child: const SizedBox(
-          width: double.infinity,
+          width: 125,
           child: Text(
-            "Sign in ",
+            "Log in ",
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 20),
+            style: TextStyle(fontSize: 20, color: Colors.white),
           )),
     );
   }
 
   Widget extraText() {
     return TextButton(
-      onPressed: (){debugPrint("asjklkljasf");}, 
-      child: Text(
+      onPressed: (){
+        debugPrint("asjklkljasf");
+      }, 
+      child: const Text(
         "Create an account",
         textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 16, color: Colors.white),
+        style: TextStyle(fontSize: 16, color: Colors.black),
       )
     );
   }
