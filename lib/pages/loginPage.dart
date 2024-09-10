@@ -72,8 +72,16 @@ class _LoginPageState extends State<LoginPage> {
     return TextField(
       style: const TextStyle(color: Colors.white),
       controller: controller,
+      onChanged: (value){
+        setState((){});
+      },
       decoration: InputDecoration(
         hintText: hintText,
+        suffixIcon: controller.text.isNotEmpty ? IconButton(onPressed: (){
+          setState(() {
+            controller.clear();
+          });
+        }, icon: const Icon(Icons.close, color: Colors.white,)): SizedBox(height: 0),
         hintStyle: const TextStyle(color: Colors.white),
         enabledBorder: border,
         focusedBorder: border,
@@ -113,7 +121,7 @@ class _LoginPageState extends State<LoginPage> {
             builder: (BuildContext context) => 
               AlertDialog(
                 contentPadding: EdgeInsets.zero,
-                title: const Text("Invalid user and/or token", maxLines: 2,textAlign: TextAlign.center, style: TextStyle(fontSize: 15)),
+                title: const Text("Invalid user/token", maxLines: 2,textAlign: TextAlign.center, style: TextStyle(fontSize: 18)),
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.pop(context),
