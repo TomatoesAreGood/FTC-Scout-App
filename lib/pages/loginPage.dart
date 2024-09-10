@@ -4,9 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:myapp/data/sizeConfig.dart';
 import 'package:myapp/main.dart';
+import 'package:myapp/pages/createAccount.dart';
 import 'package:myapp/userPreferences.dart';
 
 class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
@@ -27,10 +30,10 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget page() {
     return Padding(
-      padding: const EdgeInsets.all(32.0),
+      padding: const EdgeInsets.only(left: 32, right: 32, top: 32),
       child: Center(
         child: SingleChildScrollView(
-          physics: ClampingScrollPhysics(),
+          physics: const ClampingScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children:[
@@ -169,7 +172,12 @@ class _LoginPageState extends State<LoginPage> {
   Widget extraText() {
     return TextButton(
       onPressed: (){
-        debugPrint("asjklkljasf");
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => 
+              const CreateAccount()
+          )
+        );
       }, 
       child: const Text(
         "Create an account",
