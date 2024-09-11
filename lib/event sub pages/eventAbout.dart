@@ -43,6 +43,7 @@ class _AboutState extends State<About> {
   Widget build(BuildContext context) {
     return Expanded(
       child: ListView(
+        physics: const ClampingScrollPhysics(),
         children: [
           ListTile(
             leading: const Tooltip(message: "Event Type", child: Icon(Icons.type_specimen)),

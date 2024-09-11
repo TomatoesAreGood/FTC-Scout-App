@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:myapp/main.dart';
 import 'package:myapp/pages/privacyPolicy.dart';
 import 'package:myapp/pages/about.dart';
+import 'package:myapp/pages/reportProblem.dart';
 import 'package:myapp/pages/settings.dart';
 import 'package:myapp/userPreferences.dart';
 
@@ -16,12 +17,14 @@ class _MyDrawerState extends State<MyDrawer> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
+      child: Column(
         children: [
-          const DrawerHeader(
-            decoration: BoxDecoration(color: Colors.black),
-            child: Image(image:AssetImage('assets/logo.png')),
+          const SizedBox(
+            width: double.maxFinite,
+            child: DrawerHeader(
+              decoration: BoxDecoration(color: Colors.black,),
+              child: Image(image:AssetImage('assets/logo.png')),
+            ),
           ),
           ListTile(
             leading: const Icon(Icons.settings),
@@ -55,6 +58,18 @@ class _MyDrawerState extends State<MyDrawer> {
                 MaterialPageRoute(
                   builder: (context) => 
                     const PrivacyPolicy()
+                )
+              );
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.warning_amber),
+            title: const Text("Report a Problem"),
+             onTap: (){
+             Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => 
+                    const ReportProblem()
                 )
               );
             },

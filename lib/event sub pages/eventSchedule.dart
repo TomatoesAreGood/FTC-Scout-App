@@ -217,11 +217,14 @@ class _EventScheduleState extends State<EventSchedule> {
     if(schedules.isEmpty || schedules[0].isEmpty){
       return const Expanded(
         child: Center(
+          child: Padding(
+            padding: EdgeInsets.all(20),
             child: AutoSizeText(
               "No information has been published about this event. Please check back later.", 
               maxLines: 2, 
               textAlign: TextAlign.center,
             ),
+          ),
         )
       );
     }

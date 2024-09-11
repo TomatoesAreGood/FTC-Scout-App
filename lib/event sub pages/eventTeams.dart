@@ -120,10 +120,10 @@ class _EventTeamsState extends State<EventTeams> {
 
   Widget generateListTiles(List<TeamPerfomanceData> teamList){
     if(teamList.isEmpty){
-      return Expanded(
-        child: RefreshIndicator(
-          onRefresh: refresh,
-          child: const Center(
+      return const Expanded(
+        child: Center(
+          child: Padding(
+            padding: EdgeInsets.all(20),
             child: AutoSizeText(
               "No information has been published about this event. Please check back later.", 
               maxLines: 2, 

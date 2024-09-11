@@ -144,6 +144,7 @@ class _FavoritedState extends State<Favorited> {
 
   Widget generateScaffold(){
     return ListView(
+      physics: const ClampingScrollPhysics(),
       children:[
         MyApp.favoritedEvents.isNotEmpty ? const Padding(padding: EdgeInsets.all(5)): Container(height: 0),
         MyApp.favoritedEvents.isNotEmpty ? generateEvents(): Container(height: 0),
