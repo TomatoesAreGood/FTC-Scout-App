@@ -11,7 +11,6 @@ class CreateAccount extends StatefulWidget {
 }
 
 class _CreateAccountState extends State<CreateAccount> {
-
   Widget generateTitle(String title){
     return Text(
       title,
