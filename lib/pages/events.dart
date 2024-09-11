@@ -18,7 +18,7 @@ class Events extends StatefulWidget {
     "2021": 700495,
     "2022": 765067,
     "2023": 919249,
-    "2024": 158199,
+    "2024": 228636,
   };
   const Events({super.key});
 

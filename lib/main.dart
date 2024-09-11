@@ -163,9 +163,7 @@ class _MyAppState extends State<MyApp> {
             }else{
               bottomNavigationBar = sizedNavBar;
             }
-
-           
-
+            
             return MaterialApp(
               home: SafeArea(
                 child: Scaffold(
