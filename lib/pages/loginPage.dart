@@ -30,13 +30,14 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget page() {
     return Padding(
-      padding: const EdgeInsets.only(left: 32, right: 32, top: 32),
+      padding: const EdgeInsets.only(left: 32, right: 32),
       child: Center(
         child: SingleChildScrollView(
           physics: const ClampingScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children:[
+              const SizedBox(height: 30),
               Text("Login", style: TextStyle(fontSize: SizeConfig.defaultTitleSize * 2, fontWeight: FontWeight.bold)),
               const SizedBox(height: 10),
               Text("A free FTC API account is needed to access this app. This sign-up is a one time thing.", style: TextStyle(fontSize: SizeConfig.defaultFontSize), textAlign: TextAlign.center),
