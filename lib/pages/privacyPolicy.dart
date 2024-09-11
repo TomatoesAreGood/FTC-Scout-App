@@ -22,8 +22,7 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
               offset: Offset(0, -6))
         ],
         color: Colors.transparent,
-        decoration:
-        TextDecoration.underline,
+        decoration: TextDecoration.underline,
         decorationColor: Colors.grey,
         decorationThickness: 1,
         fontSize:SizeConfig.defaultTitleSize
@@ -46,9 +45,10 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
         title:  const Text("Privacy Policy"),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.only(left: 8, right: 8),
         child: ListView(
           children: [
+            SizedBox(height: SizeConfig.defaultFontSize),
             generateTitle("Introduction"),
             RichText(
               text: TextSpan(
@@ -93,16 +93,16 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
                 ]
               )
             ),
-            Container(height: SizeConfig.defaultFontSize),
+            SizedBox(height: SizeConfig.defaultFontSize),
             generateTitle("Third Parties"),
             RichText(
-              text:  TextSpan(
+              text: TextSpan(
                 children: [
                   TextSpan(text: "We do not exchange your personal information with any third parties.", style: TextStyle(color: Colors.black, fontSize: SizeConfig.defaultFontSize))
                 ]
               )
             ),
-            Container(height: SizeConfig.defaultFontSize),
+            SizedBox(height: SizeConfig.defaultFontSize),
             generateTitle("Location Information"),
             RichText(
               text:  TextSpan(
@@ -111,7 +111,7 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
                 ]
               )
             ),
-            Container(height: SizeConfig.defaultFontSize),
+            SizedBox(height: SizeConfig.defaultFontSize),
             generateTitle("Device Information"),
             RichText(
               text:  TextSpan(
@@ -120,7 +120,7 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
                 ]
               )
             ),
-            Container(height: SizeConfig.defaultFontSize),
+            SizedBox(height: SizeConfig.defaultFontSize),
             generateTitle("Cookies"),
             RichText(
               text:  TextSpan(
@@ -129,22 +129,23 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
                 ]
               )
             ),
-            Container(height: SizeConfig.defaultFontSize,),
+            SizedBox(height: SizeConfig.defaultFontSize,),
             RichText(
               text:  TextSpan(
                 children: [
                   TextSpan(text: 'This Service does not uses these “cookies” explicitly. However, the app may use third party code and libraries that use “cookies” to collection information and to improve their services. You have the option to either accept or refuse these cookies, and know when a cookie is being sent to your device. If you choose to refuse our cookies, you may not be able to use some portions of this Service.', style: TextStyle(color: Colors.black, fontSize: SizeConfig.defaultFontSize))                ]
               )
             ),
-            Container(height: 14),
+            SizedBox(height: SizeConfig.defaultFontSize),
             generateTitle("Changes to This Privacy Policy"),
             RichText(
-              text:  TextSpan(
+              text: TextSpan(
                 children: [
                   TextSpan(text: "We may update our Privacy Policy from time to time. Thus, you are advised to review this page periodically for any changes. We will notify you of any changes by posting the new Privacy Policy on this page. These changes are effective immediately, after they are posted on this page.", style: TextStyle(color: Colors.black, fontSize: SizeConfig.defaultFontSize))
                 ]
               )
             ),
+            SizedBox(height: SizeConfig.defaultFontSize),
           ],
         ),
       ),

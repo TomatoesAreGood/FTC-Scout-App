@@ -22,8 +22,9 @@ class _AboutState extends State<About> {
       ),
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.only(left:8, right: 8, bottom: 8),
           child: ListView(
+            physics: const ClampingScrollPhysics(),
             children: [
               Center(child: Icon(Icons.info_outlined, size: SizeConfig.defaultTitleSize * 15,)),
               RichText(

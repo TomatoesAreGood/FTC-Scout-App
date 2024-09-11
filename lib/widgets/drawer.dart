@@ -61,12 +61,30 @@ class _MyDrawerState extends State<MyDrawer> {
           ),
           ListTile(
             leading: const Icon(Icons.logout),
-            title: const Text("Log Out"),
+            title: const Text("Sign Out"),
             onTap: (){
-              UserPreferences.logOut();
-              setState(() {
-                MyApp.reload(context);
-              });
+              showDialog(
+                context: context,
+                builder: (BuildContext context) => AlertDialog(
+                  contentPadding: EdgeInsets.zero,
+                  title: const Text("Are you sure you want to sign out?", textAlign: TextAlign.center, style: TextStyle(fontSize: 15)),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        UserPreferences.logOut();
+                        setState(() {
+                          MyApp.reload(context);
+                        });
+                      },
+                      child: const Text('Yes'),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text('Cancel'),
+                    ),
+                  ],
+                )
+              );
             },
           ),
         ],
