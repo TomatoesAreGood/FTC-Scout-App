@@ -1,8 +1,8 @@
 class HybridMatchData{
   final List<int> blueTeam;
   final List<int> redTeam;
-  final int? scoreRedFinal;
-  final int? scoreBlueFinal;
+  final int scoreRedFinal;
+  final int scoreBlueFinal;
   final int matchNumber;
   final int seriesNumber;
   final int tournamentLevel;
