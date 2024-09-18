@@ -489,32 +489,20 @@ class _EventsState extends State<Events> {
     List<Widget> scaffoldChildren = [];
     if(isExpandedFilters){
       scaffoldChildren = [
-        Expanded(
-          flex:1,
-          child: Column(
-            children: [
-              Expanded(
-                flex:1,
-                child: Column(
-                  children: [
-                    const Expanded(
-                      flex:1,
-                      child: SizedBox(
-                        height: 20,
-                      ),
-                    ),
-                    generateFilters(),
-                    const Expanded(
-                      flex:1,
-                      child: SizedBox(
-                        height: 20
-                      ),
-                    ),   
-                  ],
+        Column(
+          children: [
+            Column(
+              children: [
+                const SizedBox(
+                  height: 10,
                 ),
-              )
-            ]
-          )
+                generateFilters(),
+                const SizedBox(
+                  height: 10
+                ),
+              ],
+            )
+          ]
         ),
         widget
       ];

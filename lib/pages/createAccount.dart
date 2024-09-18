@@ -74,6 +74,13 @@ class _CreateAccountState extends State<CreateAccount> {
             const SizedBox(height: 10),
             RichText(
               text: TextSpan(
+                text:"3. Navigate back to the app, and paste the user/token into the corresponding fields. Your user is unique but the token should follow this format: 7eaa6338-a097-4221-ac04-b6120fcc4d49",
+                style: TextStyle(color: Colors.black, fontSize: SizeConfig.defaultFontSize)
+              )
+            ),
+            const SizedBox(height: 10),
+            RichText(
+              text: TextSpan(
                 text:"Note: You shouldn't have to sign in multiple times, but save your token and user in a secure location in case.",
                 style: TextStyle(fontStyle: FontStyle.italic, color: Colors.black, fontSize: SizeConfig.defaultFontSize)
               )
