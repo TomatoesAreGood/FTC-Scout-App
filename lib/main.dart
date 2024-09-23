@@ -41,6 +41,7 @@ class MyApp extends StatefulWidget {
   static bool? isEventsFiltersExpanded;
   static String? countryFilter;
   static int? typeFilter;
+  static String? searchText;
 
   static String? teamsYear;
   static bool? isTeamsFiltersExpanded;
@@ -107,7 +108,7 @@ class _MyAppState extends State<MyApp> {
             SizeConfig.init(constraints, orientation);
 
             if(!UserPreferences.hasSavedCredentials()){ 
-              return MaterialApp(
+              return const MaterialApp(
                 home: LoginPage(),
               );
             }

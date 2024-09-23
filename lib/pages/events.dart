@@ -88,6 +88,8 @@ class _EventsState extends State<Events> {
 
   String? searchedWord;
   ScrollController controller = ScrollController();
+  TextEditingController searchController = TextEditingController();
+  bool firstTimeLoad = true;
 
   void updateSearchedWord(String enteredWord){
     setState(() {
@@ -219,7 +221,6 @@ class _EventsState extends State<Events> {
                     selectedYear = newValue!;
                     allEventListings = fetchEvents(selectedYear);
                     seasonStart = getStartDate(selectedYear);
-                    controller.jumpTo(0);
                   });
                 }
               )
@@ -434,7 +435,8 @@ class _EventsState extends State<Events> {
               height: 20,
             ),
             generateFilters(),
-            TextField(
+            TextField (
+              controller: searchController,
               onChanged: (value) => updateSearchedWord(value),
               decoration: const InputDecoration(
                 labelText: "Search",
@@ -459,6 +461,11 @@ class _EventsState extends State<Events> {
       ];
     }else{
       scaffoldChildren = [widget];
+    }
+
+    if(firstTimeLoad){
+      searchController.text = MyApp.searchText ?? "";
+      firstTimeLoad = false;
     }
 
     return Scaffold(
@@ -542,6 +549,7 @@ class _EventsState extends State<Events> {
     isExpandedFilters = MyApp.isEventsFiltersExpanded ?? false;
     countryFilter = MyApp.countryFilter ?? "All";
     typeFilter = MyApp.typeFilter ?? -1;
+    updateSearchedWord(MyApp.searchText ?? "");
     super.initState();
   }
 
@@ -551,39 +559,50 @@ class _EventsState extends State<Events> {
     MyApp.isEventsFiltersExpanded = isExpandedFilters;
     MyApp.countryFilter = countryFilter;
     MyApp.typeFilter = typeFilter;
+    MyApp.searchText = searchController.text;
+    searchController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context){
-    return FutureBuilder<dynamic>(
-      future: allEventListings,
-      builder: (context, data){
-        if (data.hasData && !isCallingAPI){
-          List<EventListing> dataList = data.data!;
-          dataList = filterEvents(dataList);
-          dataList = filterSearches(dataList);
-          if(searchedWord != null){
-            if(dataList.isEmpty){
-              return generateScaffold(const Expanded(flex:3, child: Center(child: Text("No events found"))));
-            } 
-            return generateScaffold(Expanded(flex:3,child:ListView(children:generateListTiles(dataList))));  
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return OrientationBuilder(
+          builder: (context, orientation) {
+            return FutureBuilder<dynamic>(
+              future: allEventListings,
+              builder: (context, data){
+                if (data.hasData && !isCallingAPI){
+                  List<EventListing> dataList = data.data!;
+                  dataList = filterEvents(dataList);
+                  dataList = filterSearches(dataList);
+                  
+                  if(searchedWord != null){
+                    if(dataList.isEmpty){
+                      return generateScaffold(const Expanded(flex:3, child: Center(child: Text("No events found"))));
+                    } 
+                    return generateScaffold(Expanded(flex:3,child:ListView(children:generateListTiles(dataList))));  
+                  }
+                  EventListing.mergeSortDate(dataList);
+                  List<List<EventListing>> weeks = splitWeeks(seasonStart, dataList);
+                  return generateScaffold(Expanded(flex:3,child:generateListView(weeks)));      
+                }
+                if(!isCallingAPI){
+                  return generateScaffold(Container(height: 0));
+                }
+                return generateScaffold(
+                  const Expanded(
+                    child: Center(
+                        child: CircularProgressIndicator(),
+                    )
+                  )
+                );
+              },
+            );
           }
-          EventListing.mergeSortDate(dataList);
-          List<List<EventListing>> weeks = splitWeeks(seasonStart, dataList);
-          return generateScaffold(Expanded(flex:3,child:generateListView(weeks)));      
-        }
-        if(!isCallingAPI){
-          return generateScaffold(Container(height: 0));
-        }
-        return generateScaffold(
-          const Expanded(
-            child: Center(
-                child: CircularProgressIndicator(),
-            )
-          )
         );
-      },
+      }
     );
   }
 }
