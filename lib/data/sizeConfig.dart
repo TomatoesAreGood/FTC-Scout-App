@@ -19,7 +19,6 @@ class SizeConfig {
 
 
   static void init(BoxConstraints constraints, Orientation orientation) {
-    print("INIT");
     screenWidth = constraints.maxWidth;
     screenHeight = constraints.maxHeight;
     

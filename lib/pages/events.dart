@@ -221,6 +221,7 @@ class _EventsState extends State<Events> {
                     selectedYear = newValue!;
                     allEventListings = fetchEvents(selectedYear);
                     seasonStart = getStartDate(selectedYear);
+                    controller.jumpTo(0);
                   });
                 }
               )
@@ -580,7 +581,19 @@ class _EventsState extends State<Events> {
                   
                   if(searchedWord != null){
                     if(dataList.isEmpty){
-                      return generateScaffold(const Expanded(flex:3, child: Center(child: Text("No events found"))));
+                      return generateScaffold(
+                        Expanded(
+                          child: ListView(
+                            controller: controller,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 150, top: 150),
+                                child: Center(child: Text("No events found",style: TextStyle(fontSize: SizeConfig.defaultFontSize),)),
+                              )
+                            ],
+                          ),
+                        )
+                      );
                     } 
                     return generateScaffold(Expanded(flex:3,child:ListView(children:generateListTiles(dataList))));  
                   }
