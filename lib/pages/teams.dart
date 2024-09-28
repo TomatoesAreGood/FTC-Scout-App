@@ -364,18 +364,26 @@ class _TeamsState extends State<Teams> {
 
   @override
   Widget build(BuildContext context) {
-   return FutureBuilder<dynamic>(
-      future: teams,
-      builder: (context, data){
-        if(data.hasData && !isCallingAPI){
-          List<TeamListing> teamList = data.data!;
-          return generateScaffold(generateListView(teamList));
-        }
-        if(!isCallingAPI){
-          return generateScaffold(Container(height: 0));
-        }
-        return generateScaffold(const Expanded(flex: 3, child: Center(child: CircularProgressIndicator())));
-      },
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return OrientationBuilder(
+          builder: (context, orientation) {
+            return FutureBuilder<dynamic>(
+              future: teams,
+              builder: (context, data){
+                if(data.hasData && !isCallingAPI){
+                  List<TeamListing> teamList = data.data!;
+                  return generateScaffold(generateListView(teamList));
+                }
+                if(!isCallingAPI){
+                  return generateScaffold(Container(height: 0));
+                }
+                return generateScaffold(const Expanded(flex: 3, child: Center(child: CircularProgressIndicator())));
+              },
+            );
+          }
+        );
+      }
     );
   }
 }
