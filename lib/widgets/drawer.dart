@@ -24,8 +24,8 @@ class _MyDrawerState extends State<MyDrawer> {
             const SizedBox(
               width: double.maxFinite,
               child: DrawerHeader(
-                decoration: BoxDecoration(color: Colors.black,),
-                child: Image(image:AssetImage('assets/logo.png')),
+                decoration: BoxDecoration(color: Color.fromARGB(255, 233, 227, 215),),
+                child: Image(image:AssetImage('assets/ScouterLogo1024.png')),
               ),
             ),
             ListTile(

@@ -55,9 +55,9 @@ dev_dependencies:
 flutter_icons:
   android: true
   ios: true
-  image_path: "assets/black_bg_resized_rams_logo.png"
-  adaptive_icon_background: "#000000"
-  adaptive_icon_foreground: "assets/play_store_1024.png"
+  image_path: "assets/ScouterLogo1024.png"
+  adaptive_icon_background: "#e9e3d7"
+  adaptive_icon_foreground: "assets/play_store_512.png"
 
 
 # For information on the generic Dart part of this file, see the
