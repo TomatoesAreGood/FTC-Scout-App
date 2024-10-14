@@ -31,11 +31,11 @@ class _AboutState extends State<About> {
                 text: TextSpan(
                   children: [
                     TextSpan(
-                     text: "Rams FTC Scouter",
+                     text: "FTC ScoutMaster",
                      style: TextStyle(fontStyle: FontStyle.italic, color: Colors.black, fontSize: SizeConfig.defaultFontSize)
                     ),
                     TextSpan(
-                      text: " is a minimalistic archiver that stores and dynamically updates relevent information about FTC (FIRST Tech Challenge) teams and events. The app is designed to be catered towards all robotics teams and their mentors, as all team/event information is accessible to everyone. Search up events and teams, view all of a team's events for a year, or find out the rankings, schedule, and awards of each event. This app would not be possible without up to date information from the ",
+                      text: " is a minimalistic archiver that stores and dynamically updates relevant information about FTC (FIRST Tech Challenge) teams and events. The app is designed to be catered towards all robotics teams and their mentors, as all team/event information is accessible to everyone. Search up events and teams, view all of a team's events for a year, or find out the rankings, schedule, and awards of each event. This app would not be possible without up to date information from the ",
                       style: TextStyle(color: Colors.black, fontSize:  SizeConfig.defaultFontSize)
                     ),
                     TextSpan(
@@ -54,7 +54,7 @@ class _AboutState extends State<About> {
                 text: TextSpan(
                   children: [
                     TextSpan(
-                     text: "Rams FTC Scouter",
+                     text: "FTC ScoutMaster",
                      style: TextStyle(fontStyle: FontStyle.italic, color: Colors.black, fontSize:  SizeConfig.defaultFontSize)
                     ),
                     TextSpan(
