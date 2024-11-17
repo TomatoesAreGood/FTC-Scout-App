@@ -9,9 +9,11 @@ class HybridMatchData{
   final bool isRedWin;
 
   static final Map<String, int> tournamentLevelMap = {
+    "OTHER": 0,
     "QUALIFICATION": 1,
     "SEMIFINAL" : 2,
     "FINAL" : 3,
+    "PLAYOFF" : 4
   };
 
   const HybridMatchData({required this.blueTeam, required this.redTeam, required this.scoreBlueFinal, required this.scoreRedFinal, required this.matchNumber, required this.seriesNumber, required this.tournamentLevel, required this.isRedWin});
@@ -41,7 +43,7 @@ class HybridMatchData{
           scoreRedFinal: schedule[i]['scoreRedFinal'] ?? 0,
           matchNumber: schedule[i]['matchNumber'],
           seriesNumber: schedule[i]['series'],
-          tournamentLevel: tournamentLevelMap[schedule[i]['tournamentLevel']]!,
+          tournamentLevel: tournamentLevelMap[schedule[i]['tournamentLevel']] ?? 0,
           isRedWin: schedule[i]['redWins']
         )
       );

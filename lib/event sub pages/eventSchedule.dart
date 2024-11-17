@@ -146,8 +146,10 @@ class _EventScheduleState extends State<EventSchedule> {
         leadingStr = "Q-${match.matchNumber}";
       }else if(match.tournamentLevel == 2){
         leadingStr = "SF-${match.matchNumber}.${match.seriesNumber}";
-      }else{
+      }else if(match.tournamentLevel == 3){
         leadingStr = "F-${match.matchNumber}.${match.seriesNumber}";
+      }else{
+        leadingStr = "P-${match.matchNumber}.${match.seriesNumber}";
       }
       Widget redScore = SizedBox(width:40, child: Text("${match.scoreRedFinal}", style: const TextStyle(color: Colors.red, fontSize: 20)));
       Widget blueScore = SizedBox(width: 40, child: Text("${match.scoreBlueFinal}", style: TextStyle(color: Colors.blue[600], fontSize: 20)));
@@ -228,7 +230,36 @@ class _EventScheduleState extends State<EventSchedule> {
         )
       );
     }
-
+    if(schedules.length == 3){
+       return Expanded(
+        child: RefreshIndicator(
+          onRefresh: refresh,
+          child: ListView.builder(
+            physics: const AlwaysScrollableScrollPhysics(),
+            itemCount: schedules.length,
+            itemBuilder: (context, index){
+              String title;
+              if(index == 0){
+                title = "Qualifications";
+              }else if(index == 1){
+                title = "Semifinals";
+              }else{
+                title = "Finals";
+              }
+              return Column(
+                children: [
+                  ExpansionTile(
+                    title: Text(title),
+                    children: generateListTiles(schedules[index])
+                  ),
+                  const Padding(padding: EdgeInsets.all(1))
+                ],
+              );
+            }
+          ),
+        ),
+      );
+    }
     return Expanded(
       child: RefreshIndicator(
         onRefresh: refresh,
@@ -239,14 +270,14 @@ class _EventScheduleState extends State<EventSchedule> {
             String title;
             if(index == 0){
               title = "Qualifications";
-            }else if(index == 1){
-              title = "Semifinals";
             }else{
-              title = "Finals";
+              title = "Playoffs";
             }
+
             return Column(
               children: [
                 ExpansionTile(
+                  key: PageStorageKey(title),
                   title: Text(title),
                   children: generateListTiles(schedules[index])
                 ),
@@ -278,10 +309,14 @@ class _EventScheduleState extends State<EventSchedule> {
         if(data.hasData && !isCallingAPI){
           List<List<HybridMatchData>> schedules = data.data!;
           List<HybridMatchData> qual = schedules[0];
-          List<HybridMatchData> playoffs = schedules[1];
-          List<HybridMatchData> semis = getTournamentType(playoffs, 2);
-          List<HybridMatchData> finals = getTournamentType(playoffs, 3);
 
+          List<HybridMatchData> semis = getTournamentType(schedules[1], 2);
+          List<HybridMatchData> finals = getTournamentType(schedules[1], 3);
+          List<HybridMatchData> playoffs = getTournamentType(schedules[1], 4);
+
+          if(playoffs.isNotEmpty){
+            return generateListView([qual, playoffs]);
+          }
           return generateListView([qual, semis, finals]);
         }
         return const Expanded(child: Center(child: CircularProgressIndicator()));

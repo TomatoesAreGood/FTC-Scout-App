@@ -480,6 +480,7 @@ class _EventsState extends State<Events> {
               setState(() {
                 isExpandedFilters = !isExpandedFilters;
                 searchedWord = null;
+                searchController.text = "";
               });
             }
           ),

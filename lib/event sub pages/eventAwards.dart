@@ -110,7 +110,8 @@ class _EventAwardsState extends State<EventAwards> {
             return Column(
               children: [
                 ExpansionTile(
-                  title: Text(awardName!),
+                  key: PageStorageKey(awardName ?? "Other"),
+                  title: Text(awardName ?? "Other"),
                   children: generateListTiles(teams)
                 ),
                 const Padding(padding: EdgeInsets.all(1))
