@@ -42,6 +42,18 @@ class _EventScheduleState extends State<EventSchedule> {
       EventSubpage.storedResults["schedule"] = scheduleData;
       isCallingAPI = false;
       return scheduleData;
+    }else if(qualResponse.statusCode == 200){
+      List<HybridMatchData> qualSchedule = HybridMatchData.fromJson(json.decode(qualResponse.body) as Map<String,dynamic>);
+      List<List<HybridMatchData>> scheduleData = [qualSchedule];
+      EventSubpage.storedResults["schedule"] = scheduleData;
+      isCallingAPI = false;
+      return scheduleData;
+    }else if(playoffResponse.statusCode == 200){
+      List<HybridMatchData> playoffSchedule = HybridMatchData.fromJson(json.decode(qualResponse.body) as Map<String,dynamic>);
+      List<List<HybridMatchData>> scheduleData = [playoffSchedule];
+      EventSubpage.storedResults["schedule"] = scheduleData;
+      isCallingAPI = false;
+      return scheduleData;
     }else{
       throw Exception("API error ${qualResponse.statusCode}, ${playoffResponse.statusCode}");
     }
@@ -61,6 +73,18 @@ class _EventScheduleState extends State<EventSchedule> {
       List<HybridMatchData> qualSchedule = HybridMatchData.fromJson(json.decode(qualResponse.body) as Map<String,dynamic>);
       List<HybridMatchData> playoffSchedule = HybridMatchData.fromJson(json.decode(playoffResponse.body) as Map<String,dynamic>);
       List<List<HybridMatchData>> scheduleData = [qualSchedule, playoffSchedule];
+      EventSubpage.storedResults["schedule"] = scheduleData;
+      isCallingAPI = false;
+      return scheduleData;
+    }else if(qualResponse.statusCode == 200){
+      List<HybridMatchData> qualSchedule = HybridMatchData.fromJson(json.decode(qualResponse.body) as Map<String,dynamic>);
+      List<List<HybridMatchData>> scheduleData = [qualSchedule];
+      EventSubpage.storedResults["schedule"] = scheduleData;
+      isCallingAPI = false;
+      return scheduleData;
+    }else if(playoffResponse.statusCode == 200){
+      List<HybridMatchData> playoffSchedule = HybridMatchData.fromJson(json.decode(qualResponse.body) as Map<String,dynamic>);
+      List<List<HybridMatchData>> scheduleData = [playoffSchedule];
       EventSubpage.storedResults["schedule"] = scheduleData;
       isCallingAPI = false;
       return scheduleData;
@@ -230,37 +254,7 @@ class _EventScheduleState extends State<EventSchedule> {
         )
       );
     }
-    if(schedules.length == 3){
-       return Expanded(
-        child: RefreshIndicator(
-          onRefresh: refresh,
-          child: ListView.builder(
-            physics: const AlwaysScrollableScrollPhysics(),
-            itemCount: schedules.length,
-            itemBuilder: (context, index){
-              String title;
-              if(index == 0){
-                title = "Qualifications";
-              }else if(index == 1){
-                title = "Semifinals";
-              }else{
-                title = "Finals";
-              }
-              return Column(
-                children: [
-                  ExpansionTile(
-                    title: Text(title),
-                    children: generateListTiles(schedules[index])
-                  ),
-                  const Padding(padding: EdgeInsets.all(1))
-                ],
-              );
-            }
-          ),
-        ),
-      );
-    }
-    return Expanded(
+      return Expanded(
       child: RefreshIndicator(
         onRefresh: refresh,
         child: ListView.builder(
@@ -268,12 +262,17 @@ class _EventScheduleState extends State<EventSchedule> {
           itemCount: schedules.length,
           itemBuilder: (context, index){
             String title;
-            if(index == 0){
+            if(schedules[index][0].tournamentLevel == 1){
               title = "Qualifications";
-            }else{
+            }else if(schedules[index][0].tournamentLevel == 2){
+              title = "Semifinals";
+            }else if(schedules[index][0].tournamentLevel == 3){
+              title = "Finals";
+            }else if(schedules[index][0].tournamentLevel == 4){
               title = "Playoffs";
+            }else{
+              title = "Other";
             }
-
             return Column(
               children: [
                 ExpansionTile(
@@ -308,8 +307,11 @@ class _EventScheduleState extends State<EventSchedule> {
       builder: (context, data){
         if(data.hasData && !isCallingAPI){
           List<List<HybridMatchData>> schedules = data.data!;
-          List<HybridMatchData> qual = schedules[0];
 
+          if(schedules.length == 1){
+            return generateListView(schedules);
+          }
+          List<HybridMatchData> qual = schedules[0];
           List<HybridMatchData> semis = getTournamentType(schedules[1], 2);
           List<HybridMatchData> finals = getTournamentType(schedules[1], 3);
           List<HybridMatchData> playoffs = getTournamentType(schedules[1], 4);

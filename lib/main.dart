@@ -115,14 +115,20 @@ class _MyAppState extends State<MyApp> {
 
             late Widget bottomNavigationBar;
 
-            BottomNavigationBar defaultNavBar = BottomNavigationBar(
-              items: const [
-                BottomNavigationBarItem(icon: Icon(Icons.calendar_month),label: "Events"),
-                BottomNavigationBarItem(icon: Icon(Icons.group), label: "Teams"),
-                BottomNavigationBarItem(icon: Icon(Icons.star), label: "Favorited"),
-              ],
-              currentIndex: selectedIndex,
-              onTap: onItemTapped,
+            SizedBox defaultNavBar =  SizedBox(
+              height: SizeConfig.heightMultiplier * 7.25,
+              child: BottomNavigationBar(
+                iconSize: SizeConfig.heightMultiplier * 3.25,
+                unselectedFontSize: SizeConfig.heightMultiplier * 1.5,
+                selectedFontSize: SizeConfig.heightMultiplier * 1.5,
+                items: const [
+                  BottomNavigationBarItem(icon: Icon(Icons.calendar_month),label: "Events"),
+                  BottomNavigationBarItem(icon: Icon(Icons.group), label: "Teams"),
+                  BottomNavigationBarItem(icon: Icon(Icons.star), label: "Favorited"),
+                ],
+                currentIndex: selectedIndex,
+                onTap: onItemTapped,
+              ),
             );
             
            SizedBox phoneSizedNavBar =  SizedBox(

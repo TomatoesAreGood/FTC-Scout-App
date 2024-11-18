@@ -260,7 +260,7 @@ class _TeamsState extends State<Teams> {
           context: context,
           builder: (BuildContext context) => AlertDialog(
             contentPadding: EdgeInsets.zero,
-            title: const Text("Team does not exist. Try a different year or double check your search.", maxLines: 2,textAlign: TextAlign.center, style: TextStyle(fontSize: 15)),
+            title: const Text("Team does not exist. Try a different year or double check your search.", maxLines: 3,textAlign: TextAlign.center, style: TextStyle(fontSize: 15)),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
