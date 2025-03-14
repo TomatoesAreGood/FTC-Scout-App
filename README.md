@@ -1,5 +1,5 @@
 # FTC Scout App
-A fully working app for FTC Robotics that uses the [_FIRST_ Tech Challenge API](https://ftc-events.firstinspires.org/services/API) to display dynamically updating information about all registered teams and events.
+A fully working app for FTC Robotics that uses the [_FIRST_ Tech Challenge API](https://ftc-events.firstinspires.org/services/API) to display updated information about all registered teams and events. Developed using Flutter and Dart.
 
 ## Features
 - Login page with saved UserPreferences for API credentials
