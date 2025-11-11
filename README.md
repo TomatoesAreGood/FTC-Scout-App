@@ -26,3 +26,13 @@ A fully working app for FTC Robotics that uses the [_FIRST_ Tech Challenge API](
   <img src="https://github.com/user-attachments/assets/fb56dd00-c7d3-4437-a0f7-cc71de92f17d" width="30%"/>
 </p>
 
+## Video Demo
+<p align="center">
+
+  <img src="https://github.com/user-attachments/assets/eb3219d0-e703-49f3-912c-6618fa2f0ab7" height="360"/>
+  &nbsp;&nbsp;&nbsp; <!-- adds some space between -->
+  <a href="https://www.youtube.com/watch?v=GV25rCPhBlA" target="_blank">
+    <img src="https://img.youtube.com/vi/GV25rCPhBlA/0.jpg" height="600"/>
+  </a>
+
+</p>
